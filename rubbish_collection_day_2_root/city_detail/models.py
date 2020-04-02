@@ -9,7 +9,7 @@ class City(models.Model):
         return self.name
 
     class Meta:
-        ordering = ("name", )
+        ordering = ("name",)
         verbose_name_plural = "Miejscowości"
         verbose_name = "Miejscowość"
 
@@ -18,14 +18,18 @@ class Street(models.Model):
     name = models.CharField(max_length=100, verbose_name="Ulica")
 
     class Meta:
-        ordering = ("name", )
+        ordering = ("name",)
         verbose_name_plural = "Ulice"
         verbose_name = "Ulica"
 
 
 class Address(models.Model):
-    city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, verbose_name="Miasto")
-    street = models.ForeignKey(Street, on_delete=models.SET_NULL, null=True, verbose_name="Ulica")
+    city = models.ForeignKey(
+        City, on_delete=models.SET_NULL, null=True, verbose_name="Miasto"
+    )
+    street = models.ForeignKey(
+        Street, on_delete=models.SET_NULL, null=True, verbose_name="Ulica"
+    )
 
     def __str__(self):
         return f"{self.city.name}, {self.street.name}"
