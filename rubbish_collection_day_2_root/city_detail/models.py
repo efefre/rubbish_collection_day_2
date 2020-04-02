@@ -21,3 +21,16 @@ class Street(models.Model):
         ordering = ("name", )
         verbose_name_plural = "Ulice"
         verbose_name = "Ulica"
+
+
+class Address(models.Model):
+    city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, verbose_name="Miasto")
+    street = models.ForeignKey(Street, on_delete=models.SET_NULL, null=True, verbose_name="Ulica")
+
+    def __str__(self):
+        return f"{self.city.name}, {self.street.name}"
+
+    class Meta:
+        verbose_name_plural = "Adresy odbioru odpadów"
+        verbose_name = "Adres odbioru odpadów"
+        unique_together = ("city", "street")
