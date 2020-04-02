@@ -12,3 +12,12 @@ class City(models.Model):
         ordering = ('name')
         verbose_name_plural = "Miejscowości"
         verbose_name = "Miejscowość"
+
+
+class Street(models.Model):
+    name = models.CharField(max_length=100, verbose_name="Ulica")
+
+    class Meta:
+        ordering = ("name", )
+        verbose_name_plural = "Ulice"
+        verbose_name = "Ulica"
