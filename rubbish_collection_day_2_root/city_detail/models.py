@@ -9,7 +9,7 @@ class City(models.Model):
         return self.name
 
     class Meta:
-        ordering = ('name')
+        ordering = ("name", )
         verbose_name_plural = "Miejscowości"
         verbose_name = "Miejscowość"
 
