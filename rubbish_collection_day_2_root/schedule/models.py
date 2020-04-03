@@ -11,3 +11,8 @@ class Date(models.Model):
     class Meta:
         verbose_name_plural = "Daty"
         verbose_name = "Data"
+
+
+class RubbishType(models.Model):
+    name = models.CharField(max_length=200, verbose_name="Nazwa frakcji")
+    mark_color = models.CharField(max_length=7, verbose_name="Kolor zaznaczenia w kalendarzu")
