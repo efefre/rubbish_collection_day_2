@@ -1,5 +1,4 @@
 from django.db import models
-from city_detail.models import Address
 
 
 # Create your models here.
@@ -52,18 +51,11 @@ class RubbishDistrict(models.Model):
         verbose_name="Frakcja",
     )
     date = models.ManyToManyField(
-        Date, related_name="districts", null=True, verbose_name="Daty"
-    )
-    address = models.ManyToManyField(
-        Address,
-        related_name="districts",
-        null=True,
-        verbose_name="Adres odbioru odpadów",
-        help_text="Adresy należące do tego regionu.",
+        Date, related_name="districts", blank=True, verbose_name="Daty"
     )
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.city_type} - {self.rubbish_type}: {self.name}"
 
     class Meta:
         verbose_name_plural = "Rejony odbioru odpadów"
