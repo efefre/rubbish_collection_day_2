@@ -56,7 +56,7 @@ class RubbishDistrict(models.Model):
         ("miasto", "Miasto"),
     ]
 
-    name = models.CharField(max_length=200, verbose_name="Nazwa")
+    name = models.CharField(max_length=200, verbose_name="Nazwa rejonu")
     city_type = models.CharField(
         choices=CITY_TYPE_OPTION,
         default="gmina",
