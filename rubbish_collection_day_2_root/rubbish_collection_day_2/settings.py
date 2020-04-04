@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'city_detail',
-    'schedule'
+    'schedule',
+    'solo'
 ]
 
 MIDDLEWARE = [
