@@ -1,7 +1,27 @@
 from django.db import models
+from solo.models import SingletonModel
 
 
 # Create your models here.
+class ScheduleConfiguration(SingletonModel):
+    site_name = models.CharField(max_length=255, verbose_name="Nazwa strony")
+    maintenance_mode = models.BooleanField(
+        default=False, verbose_name="Przerwa techniczna"
+    )
+    year = models.CharField(max_length=4, verbose_name="Rok", unique=True)
+    original_schedule = models.CharField(
+        max_length=255,
+        verbose_name="Link do harmonogramu",
+        help_text="Link do harmonogramu opublikowanego na stronie Urzędu Miasta",
+    )
+
+    def __str__(self):
+        return f"Konfiguracja strony: {self.site_name}"
+
+    class Meta:
+        verbose_name = "Konfiguracja"
+
+
 class Date(models.Model):
     date = models.DateField(verbose_name="Data")
 
