@@ -1,4 +1,5 @@
 from django.db import models
+from schedule.models import RubbishDistrict
 
 
 # Create your models here.
@@ -29,6 +30,11 @@ class Address(models.Model):
     )
     street = models.ForeignKey(
         Street, on_delete=models.SET_NULL, null=True, verbose_name="Ulica"
+    )
+    rubbish_district = models.ManyToManyField(
+        RubbishDistrict,
+        related_name="addresses",
+        verbose_name="Rejon",
     )
 
     def __str__(self):
