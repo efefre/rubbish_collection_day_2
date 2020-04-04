@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Date, RubbishType, RubbishDistrict
+from .models import Date, RubbishType, RubbishDistrict, ScheduleConfiguration
+from solo.admin import SingletonModelAdmin
 
 
 # Register your models here.
@@ -21,3 +22,4 @@ class RubbishDistrictAdmin(admin.ModelAdmin):
 admin.site.register(Date, DateAdmin)
 admin.site.register(RubbishType, RubbishTypeAdmin)
 admin.site.register(RubbishDistrict, RubbishDistrictAdmin)
+admin.site.register(ScheduleConfiguration, SingletonModelAdmin)
