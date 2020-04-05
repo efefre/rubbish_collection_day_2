@@ -56,7 +56,7 @@ class RubbishDistrict(models.Model):
         ("miasto", "Miasto"),
     ]
 
-    name = models.CharField(max_length=200, verbose_name="Nazwa")
+    name = models.CharField(max_length=200, verbose_name="Nazwa rejonu")
     city_type = models.CharField(
         choices=CITY_TYPE_OPTION,
         default="gmina",
@@ -75,7 +75,7 @@ class RubbishDistrict(models.Model):
     )
 
     def __str__(self):
-        return f"{self.city_type} - {self.rubbish_type}: {self.name}"
+        return f"{self.city_type.capitalize()} - {self.rubbish_type}: {self.name}"
 
     class Meta:
         verbose_name_plural = "Rejony odbioru odpadów"

@@ -15,8 +15,17 @@ class RubbishTypeAdmin(admin.ModelAdmin):
 
 
 class RubbishDistrictAdmin(admin.ModelAdmin):
+    list_display = ("name", "rubbish_type", "city_type")
     search_fields = ("name", "city_type", "rubbish_type")
-    ordering = ("city_type", "name")
+    list_filter = ("city_type", "rubbish_type", "name")
+    ordering = ("city_type", "rubbish_type", "name")
+    filter_horizontal = ("date",)
+    autocomplete_fields = ("rubbish_type",)
+
+    fieldsets = [
+        ("Rejon", {"fields": ["rubbish_type", "name", "city_type"]}),
+        ("Terminy odbioru odpadów", {"fields": ["date"]}),
+    ]
 
 
 admin.site.register(Date, DateAdmin)
