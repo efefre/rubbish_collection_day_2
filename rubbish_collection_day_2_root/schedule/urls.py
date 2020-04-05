@@ -5,5 +5,6 @@ app_name = "schedule"
 
 urlpatterns = [
     path("", HomeView.as_view(), name="home"),
-    path('ajax/load-streets/', LoadStreetView.as_view(), name='ajax_load_streets'),
+    path('ajax/load-streets/', LoadStreetView.as_view(), 
+         name='ajax_load_streets'),
     ]
