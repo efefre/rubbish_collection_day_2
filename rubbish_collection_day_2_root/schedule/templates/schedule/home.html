@@ -36,7 +36,6 @@
         });
         $(document).ready(function () {
             $('#search_button').attr("disabled", true);
-            $('select').addClass('form-control');
             $("#id_street").change(function () {
                 if ($("#id_city").val() != "" && $("#id_street").val() != "") {
                     $('#search_button').attr("disabled", false);
