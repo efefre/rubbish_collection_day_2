@@ -1,11 +1,11 @@
 from django.views.generic import FormView, TemplateView
-from .forms import ChooseAddress
+from .forms import ChooseAddressForm
 from city_detail.models import Address
 
 
 # Create your views here.
 class HomeView(FormView):
-    form_class = ChooseAddress
+    form_class = ChooseAddressForm
     template_name = "schedule/home.html"
 
 
