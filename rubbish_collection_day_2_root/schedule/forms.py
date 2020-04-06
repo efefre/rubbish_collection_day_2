@@ -20,3 +20,7 @@ class ChooseAddress(forms.ModelForm):
         labels = {
             "street": "Wybierz ulicę",
         }
+        widgets = {
+            "city": forms.Select(attrs={"class": "form-control"}),
+            "street": forms.Select(attrs={"class": "form-control"}),
+        }
