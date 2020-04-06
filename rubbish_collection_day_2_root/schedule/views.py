@@ -14,8 +14,8 @@ class LoadStreetView(TemplateView):
     template_name = "schedule/street_dropdown_list_options.html"
 
     def get_context_data(self, **kwargs):
-        city_id = self.request.GET.get('city')
-        streets = Address.objects.filter(city__pk=city_id).order_by('street')
+        city_name = self.request.GET.get('city')
+        streets = Address.objects.filter(city__name=city_name).order_by('street')
         context = super().get_context_data(**kwargs)
         context["streets"] = streets
         return context
