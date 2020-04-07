@@ -11,6 +11,17 @@
 
 <body>
     <h1>Kalendarz</h1>
+    Adres: {{address}}<br><br>
+    {%for rubbish_district in address.rubbish_district.all %}
+        <p>
+        Rejon: {{rubbish_district}}<br>
+        Daty (kolor: {{rubbish_district.rubbish_type.mark_color}}):
+        {%for date in rubbish_district.date.all %}
+            {{date}}
+        {%endfor%}
+        </p>
+    {%endfor%}
+
     {% for month, days in calendar.items %}
         <table border="0" xcellpadding="0" cellspacing="0">
             <tr>
