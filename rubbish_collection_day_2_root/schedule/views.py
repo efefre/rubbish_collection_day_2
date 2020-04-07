@@ -26,6 +26,10 @@ class CalendarView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        city_name= self.request.GET.get("city")
+        street_name= self.request.GET.get("street")
+
         context["calendar"] = days_for_calendar(2020)
         context["days_names_list"] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+        context["address"] = Address.objects.get(city__name=city_name, street__name=street_name)
         return context
