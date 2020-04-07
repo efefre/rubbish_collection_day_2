@@ -7,9 +7,9 @@
     <title>Home Page</title>
 </head>
 <body>
-    <h1>Home</h1>
+    <h1>Home</h1>   
     <div class="search-form">
-        <form method="GET" id="AddressForm" action="kalendarz/" data-streets-url="{% url 'schedule:ajax_load_streets' %}"
+        <form method="GET" id="AddressForm" action="{% url 'schedule:calendar' %}" data-streets-url="{% url 'schedule:ajax_load_streets' %}"
             novalidate autocomplete="off">
     
             {{form.as_p}}
