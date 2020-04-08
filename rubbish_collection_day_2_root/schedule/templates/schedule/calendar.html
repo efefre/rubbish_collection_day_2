@@ -1,0 +1,64 @@
+{% load calendar_extras %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar</title>
+</head>
+
+<body>
+    <h1>Kalendarz</h1>
+    Adres: {{address}}<br><br>
+    {%for rubbish_district in address.rubbish_district.all %}
+        <p>
+        Rejon: {{rubbish_district}}<br>
+        Daty (kolor: {{rubbish_district.rubbish_type.mark_color}}):
+        {%for date in rubbish_district.date.all %}
+            {{date}}
+        {%endfor%}
+        </p>
+    {%endfor%}
+
+    <p>Daty dla adresu:
+        {% for date, types in schedule_for_address.items %}
+            {{date}}  {{types}}   
+        {% endfor %}
+    </p>
+
+    {% for month, days in calendar.items %}
+        <table border="0" xcellpadding="0" cellspacing="0">
+            <tr>
+                <th colspan="7" class="month">{{month}}</th>
+            </tr>
+            <tr>
+                {% for day in days_names_list  %}
+                    <th class="{{day|lower}}">{{day}}</th>
+                {% endfor %}
+            </tr>
+            {% for month_name, weeks in calendar.items %}
+                {% if month_name in month %}
+                    {% for day_number in weeks  %}
+                        <tr>
+                            {% for day in days_names_list  %}
+                                <td class="{{day|lower}}">
+                                    {% with number=day_number|list_index:forloop.counter0 %}
+                                        {% if number == 0 %}
+                                            &nbsp;
+                                        {% else %}
+                                            {{number}}
+                                        {% endif %}
+                                    {% endwith %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        </table>
+    {% endfor%}
+</body>
+
+</html>

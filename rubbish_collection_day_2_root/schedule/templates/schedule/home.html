@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <title>Home Page</title>
+</head>
+<body>
+    <h1>Home</h1>   
+    <div class="search-form">
+        <form method="GET" id="AddressForm" action="{% url 'schedule:calendar' %}" data-streets-url="{% url 'schedule:ajax_load_streets' %}"
+            novalidate autocomplete="off">
+    
+            {{form.as_p}}
+    
+            <button type="submit" id="search_button" class="btn btn-default">Szukaj</button>
+        </form>
+    </div>
+    </div>
+    
+    <script>
+        $("#id_city").change(function () {
+            var url = $("#AddressForm").attr("data-streets-url");
+            var cityId = $(this).val();
+    
+            $.ajax({
+                url: url,
+                data: {
+                    'city': cityId
+                },
+                success: function (data) {
+                    $("#id_street").html(data);
+                }
+            });
+        });
+        $(document).ready(function () {
+            $('#search_button').attr("disabled", true);
+            $("#id_street").change(function () {
+                if ($("#id_city").val() != "" && $("#id_street").val() != "") {
+                    $('#search_button').attr("disabled", false);
+                };
+            });
+           
+            var pathname = window.location.pathname;
+            if (pathname.indexOf("kalendarz") > -1) {  
+                $('form#AddressForm').removeAttr('action');
+            }
+        });
+    </script>
+</body>
+</html>
