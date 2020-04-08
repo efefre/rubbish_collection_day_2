@@ -22,6 +22,12 @@
         </p>
     {%endfor%}
 
+    <p>Daty dla adresu:
+        {% for date, types in schedule_for_address.items %}
+            {{date}}  {{types}}   
+        {% endfor %}
+    </p>
+
     {% for month, days in calendar.items %}
         <table border="0" xcellpadding="0" cellspacing="0">
             <tr>
