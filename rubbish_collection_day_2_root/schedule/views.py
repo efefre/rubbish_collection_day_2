@@ -1,7 +1,10 @@
 from django.views.generic import FormView, TemplateView
+from django.db.models import Prefetch
 from .forms import ChooseAddressForm
 from city_detail.models import Address
+from schedule.models import RubbishDistrict
 from .utils import days_for_calendar
+from collections import defaultdict
 
 
 class HomeView(FormView):
@@ -28,25 +31,21 @@ class CalendarView(TemplateView):
         context = super().get_context_data(**kwargs)
         city_name = self.request.GET.get("city")
         street_name = self.request.GET.get("street")
-        address = Address.objects.get(city__name=city_name, street__name=street_name)
+        address = Address.objects.select_related("city", "street").get(
+            city__name=city_name, street__name=street_name
+        )
+        rubbish_districts = RubbishDistrict.objects.prefetch_related(
+            "date", "rubbish_type"
+        ).filter(addresses=address)
+        schedule_dates_for_address = defaultdict(list)
 
-        temp_schedule_list = []
-        schedule_for_address = {}
-        for rubbish_district in address.rubbish_district.all():
-            for date in rubbish_district.date.all():
-                temp_schedule_list.append(
-                    [date.date, rubbish_district.rubbish_type.name]
-                )
-
-        for i in temp_schedule_list:
-            if schedule_for_address.get(i[0]):
-                schedule_for_address[i[0]].append(i[1])
-            else:
-                schedule_for_address[i[0]] = [i[1]]
+        for district in rubbish_districts:
+            for date in district.date.all():
+                schedule_dates_for_address[date].append(district)
 
         context["calendar"] = days_for_calendar(2020)
         context["days_names_list"] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
         context["address"] = address
-        context["schedule_for_address"] = schedule_for_address
+        context["schedule_dates_for_address"] = dict(schedule_dates_for_address)
 
         return context
