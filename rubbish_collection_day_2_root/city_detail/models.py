@@ -4,7 +4,19 @@ from schedule.models import RubbishDistrict
 
 # Create your models here.
 class City(models.Model):
+    CITY_TYPE_OPTION = [
+        ("gmina", "Gmina"),
+        ("miasto", "Miasto"),
+    ]
+
     name = models.CharField(max_length=40, verbose_name="Miejscowość")
+
+    city_type = models.CharField(
+        choices=CITY_TYPE_OPTION,
+        default="gmina",
+        verbose_name="Typ miejscowości",
+        max_length=10,
+    )
 
     def __str__(self):
         return self.name
@@ -28,23 +40,11 @@ class Street(models.Model):
 
 
 class Address(models.Model):
-    CITY_TYPE_OPTION = [
-        ("gmina", "Gmina"),
-        ("miasto", "Miasto"),
-    ]
-
     city = models.ForeignKey(
         City, on_delete=models.SET_NULL, null=True, verbose_name="Miasto"
     )
     street = models.ForeignKey(
         Street, on_delete=models.SET_NULL, null=True, verbose_name="Ulica"
-    )
-
-    city_type = models.CharField(
-        choices=CITY_TYPE_OPTION,
-        default="gmina",
-        verbose_name="Typ miejscowości",
-        max_length=10,
     )
 
     rubbish_district = models.ManyToManyField(
