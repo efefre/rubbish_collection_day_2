@@ -28,16 +28,27 @@ class Street(models.Model):
 
 
 class Address(models.Model):
+    CITY_TYPE_OPTION = [
+        ("gmina", "Gmina"),
+        ("miasto", "Miasto"),
+    ]
+
     city = models.ForeignKey(
         City, on_delete=models.SET_NULL, null=True, verbose_name="Miasto"
     )
     street = models.ForeignKey(
         Street, on_delete=models.SET_NULL, null=True, verbose_name="Ulica"
     )
+
+    city_type = models.CharField(
+        choices=CITY_TYPE_OPTION,
+        default="gmina",
+        verbose_name="Typ miejscowości",
+        max_length=10,
+    )
+
     rubbish_district = models.ManyToManyField(
-        RubbishDistrict,
-        related_name="addresses",
-        verbose_name="Rejon",
+        RubbishDistrict, related_name="addresses", verbose_name="Rejon",
     )
 
     def __str__(self):
