@@ -24,11 +24,11 @@
     {% for month, days in calendar.items %}
         <table border="0" xcellpadding="0" cellspacing="0">
             <tr>
-                <th colspan="7" class="month">{{month}}</th>
+                <th colspan="7" class="month">{{month|translate_month_to_pl}}</th>
             </tr>
             <tr>
                 {% for day in days_names_list  %}
-                    <th class="{{day|lower}}">{{day}}</th>
+                    <th class="{{day|lower}}">{{day|translate_day_to_pl}}</th>
                 {% endfor %}
             </tr>
             {% for month_name, weeks in calendar.items %}
