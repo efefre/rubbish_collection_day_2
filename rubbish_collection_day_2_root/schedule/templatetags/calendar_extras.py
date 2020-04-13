@@ -46,3 +46,17 @@ def translate_day_to_pl(day):
         "Sun": "Ndz",
     }
     return day_names.get(day)
+
+
+@register.simple_tag
+def calendar_day(number, month, schedule_dates_for_address):
+    polish_holidays_list = polish_holidays(YEAR)
+
+    # ----- HOLIDAYS ----
+    date_from_calendar = datetime.strptime(
+        f"{YEAR}-{month}-{number}", "%Y-%B-%d"
+    ).date()
+    if polish_holidays_list.get(date_from_calendar):
+        return format_html(f"<span class='holiday'>{number}</span>")
+    else:
+        return number
