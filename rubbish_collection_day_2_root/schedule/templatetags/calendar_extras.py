@@ -1,6 +1,13 @@
 from django import template
+from django.utils.html import format_html
+from schedule.models import ScheduleConfiguration
+from schedule.utils import polish_holidays
+from datetime import datetime
 
 register = template.Library()
+
+config = ScheduleConfiguration.get_solo()
+YEAR = int(config.year)
 
 
 @register.filter
