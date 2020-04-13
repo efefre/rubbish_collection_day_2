@@ -23,38 +23,43 @@
             {% endfor %}
         {% endfor %}
     </p>
-
-    {% for month, days in calendar.items %}
-        <table border="0" xcellpadding="0" cellspacing="0">
-            <tr>
-                <th colspan="7" class="month">{{month|translate_month_to_pl}}</th>
-            </tr>
-            <tr>
-                {% for day in days_names_list  %}
-                    <th class="{{day|lower}}">{{day|translate_day_to_pl}}</th>
-                {% endfor %}
-            </tr>
-            {% for month_name, weeks in calendar.items %}
-                {% if month_name in month %}
-                    {% for day_number in weeks  %}
-                        <tr>
-                            {% for day in days_names_list  %}
-                                <td class="{{day|lower}}">
-                                    {% with number=day_number|list_index:forloop.counter0 %}
-                                        {% if number == 0 %}
-                                            &nbsp;
-                                        {% else %}
-                                            {% calendar_day number month schedule_dates_for_address %}
-                                        {% endif %}
-                                    {% endwith %}
-                                </td>
+    <div id="calendar">
+        <div id="calendar-days">
+        {% for month in calendar.keys %}
+            <div class="col-md-4 col-sm-6 col-xs-12 month {{month|lower}}">
+                <table border="0" xcellpadding="0" cellspacing="0">
+                    <tr>
+                        <th colspan="7" class="month">{{month|translate_month_to_pl}}</th>
+                    </tr>
+                    <tr>
+                        {% for day in days_names_list  %}
+                            <th class="{{day|lower}}">{{day|translate_day_to_pl}}</th>
+                        {% endfor %}
+                    </tr>
+                    {% for month_name, weeks in calendar.items %}
+                        {% if month_name in month %}
+                            {% for day_number in weeks  %}
+                                <tr>
+                                    {% for day in days_names_list  %}
+                                        <td class="{{day|lower}}">
+                                            {% with number=day_number|list_index:forloop.counter0 %}
+                                                {% if number == 0 %}
+                                                    &nbsp;
+                                                {% else %}
+                                                    {% calendar_day number month schedule_dates_for_address %}
+                                                {% endif %}
+                                            {% endwith %}
+                                        </td>
+                                    {% endfor %}
+                                </tr>
                             {% endfor %}
-                        </tr>
+                        {% endif %}
                     {% endfor %}
-                {% endif %}
-            {% endfor %}
-        </table>
-    {% endfor%}
+                </table>
+            </div>
+        {% endfor%}
+        </div>
+    </div>
 </body>
 
 </html>
