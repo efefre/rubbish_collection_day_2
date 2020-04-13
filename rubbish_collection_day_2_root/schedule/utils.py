@@ -3,23 +3,23 @@ import calendar
 
 
 def when_easter(year):
-        a = year % 19
-        b = int(year/100)
-        c = year % 100
-        d = int(b/4)
-        e = b % 4
-        f = int((b+8)/25)
-        g = int((b-f+1)/3)
-        h = (19*a+b-d-g+15) % 30
-        i = int(c/4)
-        k = c % 4
-        l = (32+2*e+2*i-h-k) % 7
-        m = int((a+11*h+22*l)/451)
-        p = (h+l-7*m+114) % 31
-        day = p+1
-        month = int((h+l-7*m+114)/31)
+    a = year % 19
+    b = int(year / 100)
+    c = year % 100
+    d = int(b / 4)
+    e = b % 4
+    f = int((b + 8) / 25)
+    g = int((b - f + 1) / 3)
+    h = (19 * a + b - d - g + 15) % 30
+    i = int(c / 4)
+    k = c % 4
+    l = (32 + 2 * e + 2 * i - h - k) % 7
+    m = int((a + 11 * h + 22 * l) / 451)
+    p = (h + l - 7 * m + 114) % 31
+    day = p + 1
+    month = int((h + l - 7 * m + 114) / 31)
 
-        return day, month
+    return day, month
 
 
 def polish_holidays(year):
@@ -40,17 +40,18 @@ def polish_holidays(year):
     boze_narodzenie2 = datetime.date(year, 12, 26)
 
     polish_holidays_list = {
-        "Nowy Rok": nowy_rok,
-        "Święto Trzech Króli": trzech_kroli,
-        "Wielkanoc": wielkanoc,
-        "Poniedziałek wielkanocny": poniedzialek_wielkanocny,
-        "Święto Pracy": swieto_pracy,
-        "Święto Konstytucji 3 Maja": konstytucji_3maja,
-        "Boże Ciało": boze_cialo,
-        "Wniebowzięcie NMP": wniebowziecie,
-        "Dzień Wszystkich Świętych": wszystkich_swietych,
-        "Boże narodzienie": boze_narodzenie1,
-        "Boże narodzenie (drugi dzień)": boze_narodzenie2
+        nowy_rok: "Nowy Rok",
+        trzech_kroli: "Święto Trzech Króli",
+        wielkanoc: "Wielkanoc",
+        poniedzialek_wielkanocny: "Poniedziałek wielkanocny",
+        swieto_pracy: "Święto Pracy",
+        konstytucji_3maja: "Święto Konstytucji 3 Maja",
+        boze_cialo: "Boże Ciało",
+        wniebowziecie: "Wniebowzięcie NMP",
+        wszystkich_swietych: "Dzień Wszystkich Świętych",
+        swieto_niepodleglosci: "Święto Niepodległości",
+        boze_narodzenie1: "Boże narodzienie",
+        boze_narodzenie2: "Boże narodzenie (drugi dzień)",
     }
     return polish_holidays_list
 
@@ -83,7 +84,7 @@ def days_for_calendar(year):
         "September": september,
         "October": october,
         "November": november,
-        "December": december
+        "December": december,
     }
 
     return months_for_calendar
