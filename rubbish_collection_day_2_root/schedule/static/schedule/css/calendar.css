@@ -1,0 +1,77 @@
+#calendar {
+    float: left;
+}
+
+#calendar>h2 {
+    text-align: center;
+    margin-top: 10px;
+}
+
+h3.address {
+    text-align: center;
+    font-weight: 200;
+}
+
+.top-icon {
+    position: relative;
+}
+
+#calendar-legend li {
+    display: inline-block !important;
+    padding: 3% 1% 1% 1%;
+    line-height: 25px;
+    font-weight: 200;
+}
+
+#calendar-legend p {
+    padding-left: 6%;
+    font-weight: 200;
+    padding-bottom: 3%;
+}
+
+#calendar-legend span {
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+#calendar-days {
+    clear: both;
+}
+
+div.month {
+    min-height: 380px;
+}
+
+@media only screen and (max-width: 360px) {
+    div.month {
+        padding: 0;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .month table {
+        margin: 0 auto;
+    }
+}
+
+.month th,
+.month td {
+    padding: 10px;
+    text-align: center;
+    line-height: 25px;
+}
+
+@media only screen and (max-width: 360px) {
+    .month th,
+    .month td {
+        padding: 8px;
+    }
+}
+
+.sun {
+    color: red;
+}
+
+.holiday {
+    color: red;
+}
