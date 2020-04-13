@@ -34,7 +34,7 @@ class AddressAdmin(admin.ModelAdmin):
     )
 
     fieldsets = [
-        ("Adres", {"fields": ["city_type", "city", "street"]}),
+        ("Adres", {"fields": ["city", "street"]}),
         ("Rejon", {"fields": ["rubbish_district"]}),
     ]
 
