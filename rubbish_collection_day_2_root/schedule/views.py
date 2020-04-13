@@ -1,5 +1,4 @@
 from django.views.generic import FormView, TemplateView
-from django.db.models import Prefetch
 from .forms import ChooseAddressForm
 from city_detail.models import Address
 from schedule.models import RubbishDistrict
@@ -34,9 +33,7 @@ class CalendarView(TemplateView):
         address = Address.objects.select_related("city", "street").get(
             city__name=city_name, street__name=street_name
         )
-        rubbish_districts = RubbishDistrict.objects.prefetch_related(
-            "date", "rubbish_type"
-        ).filter(addresses=address)
+        rubbish_districts = RubbishDistrict.objects.select_related("rubbish_type").prefetch_related('date').filter(addresses=address)
         schedule_dates_for_address = defaultdict(list)
 
         for district in rubbish_districts:
