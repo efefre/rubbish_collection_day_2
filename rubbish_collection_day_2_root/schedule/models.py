@@ -19,7 +19,7 @@ class ScheduleConfiguration(SingletonModel):
         return f"Konfiguracja strony: {self.site_name}"
 
     class Meta:
-        verbose_name = "Konfiguracja"
+        verbose_name = "Konfiguracja harmonogramu"
 
 
 class Date(models.Model):
