@@ -41,7 +41,7 @@
                                         {% if number == 0 %}
                                             &nbsp;
                                         {% else %}
-                                            {{number}}
+                                            {% calendar_day number month schedule_dates_for_address %}
                                         {% endif %}
                                     {% endwith %}
                                 </td>
