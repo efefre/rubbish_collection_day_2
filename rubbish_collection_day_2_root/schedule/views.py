@@ -38,7 +38,7 @@ class CalendarView(TemplateView):
 
         for district in rubbish_districts:
             for date in district.date.all():
-                schedule_dates_for_address[date].append(district)
+                schedule_dates_for_address[date.date].append(district)
 
         context["calendar"] = days_for_calendar(2020)
         context["days_names_list"] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
