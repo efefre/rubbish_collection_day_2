@@ -44,9 +44,9 @@
                                         <td class="{{day|lower}}">
                                             {% with number=day_number|list_index:forloop.counter0 %}
                                                 {% if number == 0 %}
-                                                    &nbsp;
+                                                    <span class="day">&nbsp;</span>
                                                 {% else %}
-                                                    {% calendar_day number month schedule_dates_for_address %}
+                                                    <span class="day">{% calendar_day number month schedule_dates_for_address %}</span>
                                                 {% endif %}
                                             {% endwith %}
                                         </td>
