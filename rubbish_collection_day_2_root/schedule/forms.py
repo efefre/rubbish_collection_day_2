@@ -1,11 +1,11 @@
 from django import forms
-from city_detail.models import Address
+from city_detail.models import Address, City
 
 
 class ChooseAddressForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        choices = [(o.city, o.city) for o in Address.objects.all()]
+        choices = [(o.name, o.name) for o in City.objects.all()]
         self.fields["city"] = forms.ChoiceField(
             choices=tuple([("", "---------")] + list(choices))
         )
