@@ -67,13 +67,16 @@ def calendar_day(number, month, schedule_dates_for_address):
                     rubbish.rubbish_type.name for rubbish in rubbish_detail
                 )
                 rubbish_marks = "-".join(
-                    rubbish.rubbish_type.mark_color for rubbish in rubbish_detail
+                    sorted(
+                        [rubbish.rubbish_type.css_name for rubbish in rubbish_detail]
+                    )
                 )
+
             else:
                 rubbish_names = rubbish_detail[0].rubbish_type.name
-                rubbish_marks = rubbish_detail[0].rubbish_type.mark_color
+                rubbish_marks = rubbish_detail[0].rubbish_type.css_name
             return format_html(
-                f"<span class='mark-rubbish rubbish-{rubbish_marks.replace('#','')}'>{number}</span>"
+                f"<span class='mark-rubbish {rubbish_marks.replace('#','')}-rubbish'>{number}</span>"
             )
         else:
             return f"{number}"
