@@ -53,7 +53,7 @@ class CalendarView(TemplateView):
         return context
 
 
-class DynamicSvgCssView(TemplateView):
+class DynamicCssNameView(TemplateView):
     template_name = "schedule/css/mark-rubbish.css"
     content_type = "text/css"
 
