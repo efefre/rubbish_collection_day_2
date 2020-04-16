@@ -1,0 +1,14 @@
+.mark-rubbish {
+    height: 25px;
+    width: 25px;
+    display: inline-block;
+}
+
+
+{% for css_class in rubbish_type_css %}
+    .{{css_class}}-rubbish {
+        color: orange !important;
+    }
+    
+    
+{% endfor %}
