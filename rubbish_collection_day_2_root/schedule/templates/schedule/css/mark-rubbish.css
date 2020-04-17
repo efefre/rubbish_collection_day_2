@@ -7,8 +7,6 @@
 
 {% for css_class in rubbish_type_css %}
     .{{css_class}}-rubbish {
-        color: orange !important;
+        background: url('#') left top no-repeat;
     }
-    
-    
 {% endfor %}
