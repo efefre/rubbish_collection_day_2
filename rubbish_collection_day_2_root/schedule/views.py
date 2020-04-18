@@ -82,6 +82,7 @@ class DynamicCssNameView(TemplateView):
 
 class GenerateSvgView(TemplateView):
     template_name = "schedule/svg/generate-svg.svg"
+    content_type = "image/svg+xml"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
