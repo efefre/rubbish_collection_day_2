@@ -41,6 +41,12 @@ class RubbishType(models.Model):
         unique=True,
         help_text="Podaj HEX zaczynająć od #. ",
     )
+    css_name = models.CharField(
+        max_length=3,
+        verbose_name="Skrótowa nazwa frakcji",
+        unique=True,
+        help_text="Trzy litery związane z nazwą frakcji.",
+    )
 
     def __str__(self):
         return f"{self.name}"
