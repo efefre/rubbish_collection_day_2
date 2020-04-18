@@ -6,7 +6,9 @@
 
 
 {% for css_class in rubbish_type_css %}
-    .{{css_class}}-rubbish {
-        background: url('#') left top no-repeat;
+    {% with css_class|add:"-rubbish" as class_name %}
+    .{{class_name}} {
+        background: url({% url "schedule:svg" class_name=class_name %}) left top no-repeat;
     }
+    {% endwith %}
 {% endfor %}
