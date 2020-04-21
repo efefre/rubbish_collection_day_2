@@ -78,3 +78,28 @@ class DynamicCssNameView(TemplateView):
         context["rubbish_type_css"] = css_names
 
         return context
+
+
+class GenerateSvgView(TemplateView):
+    template_name = "schedule/svg/generate-svg.svg"
+    content_type = "image/svg+xml"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        class_name = kwargs.get("class_name")
+
+        rubbish_types_details = RubbishType.objects.all()
+        rubbish_colors = {}
+
+        for rubbish in rubbish_types_details:
+            rubbish_colors[rubbish.css_name] = rubbish.mark_color
+
+        rubbish_types_from_url = (class_name.replace("-rubbish", "")).split("-")
+
+        color_svg = []
+
+        for rubbish in rubbish_types_from_url:
+            color_svg.append(rubbish_colors.get(rubbish))
+
+        context["color_svg"] = color_svg
+        return context

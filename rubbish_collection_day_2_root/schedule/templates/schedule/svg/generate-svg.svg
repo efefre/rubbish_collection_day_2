@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg width="100%"
+    height="100%" viewBox="0 0 105 105" version="1.1" xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/"
+    style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
+    <rect x="0" y="0" width="104.167" height="104.167" style="fill:none;" />
+    {% if color_svg|length == 1 %}
+    <clipPath id="_clip1">
+        <rect x="0" y="0" width="104.167" height="104.167" />
+    </clipPath>
+    <g clip-path="url(#_clip1)">
+        <circle cx="52.083" cy="52.083" r="47.917" style="fill:#fff;stroke:{{color_svg.0}};stroke-width:8.33px;" />
+    </g>
+    {% elif color_svg|length == 2 %}
+    <clipPath id="_clip1">
+        <rect x="0" y="0" width="104.167" height="104.167" />
+    </clipPath>
+    <g clip-path="url(#_clip1)">
+        <circle cx="52.083" cy="52.083" r="47.917" style="fill:#fff;stroke:{{color_svg.0}};stroke-width:8.33px;" />
+        <clipPath id="_clip2">
+            <rect x="0" y="0" width="54.167" height="104.167" />
+        </clipPath>
+        <g clip-path="url(#_clip2)">
+            <circle cx="52.083" cy="52.083" r="47.917" style="fill:#fff;stroke:{{color_svg.1}};stroke-width:8.33px;" />
+        </g>
+        <rect x="43.75" y="0" width="16.667" height="104.167" style="fill:#fff;" />
+    </g>
+    {% elif color_svg|length == 3 %}
+    <clipPath id="_clip1">
+        <rect x="1.272" y="0" width="104.167" height="104.167" />
+    </clipPath>
+    <g clip-path="url(#_clip1)">
+        <circle cx="53.355" cy="52.083" r="47.917" style="fill:#fff;stroke:{{color_svg.0}};stroke-width:8.33px;" />
+        <clipPath id="_clip2">
+            <rect x="1.272" y="0" width="54.167" height="104.167" />
+        </clipPath>
+        <g clip-path="url(#_clip2)">
+            <circle cx="53.355" cy="52.083" r="47.917" style="fill:#fff;stroke:{{color_svg.1}};stroke-width:8.33px;" />
+        </g>
+        <clipPath id="_clip3">
+            <path d="M53.355,12.5l68.75,91.667l-137.5,0l68.75,-91.667Z" />
+        </clipPath>
+        <g clip-path="url(#_clip3)">
+            <circle cx="53.355" cy="52.083" r="47.917" style="fill:#fff;stroke:{{color_svg.2}};stroke-width:8.33px;" />
+        </g>
+        <rect x="45.022" y="0" width="16.667" height="50" style="fill:#fff;" />
+        <path d="M1.044,69.862l9.813,13.471l40.415,-29.439l-9.813,-13.472l-40.415,29.44Z" style="fill:#fff;" />
+        <path d="M105.438,69.862l-9.813,13.471l-40.414,-29.439l9.813,-13.472l40.414,29.44Z" style="fill:#fff;" />
+    </g>
+    {% elif color_svg|length == 4 %}
+    <clipPath id="_clip1">
+        <rect x="1.68" y="3.054" width="104.167" height="104.167" />
+    </clipPath>
+    <g clip-path="url(#_clip1)">
+        <circle cx="53.764" cy="55.138" r="47.917" style="fill:#fff;stroke:{{color_svg.0}};stroke-width:8.33px;" />
+        <clipPath id="_clip2">
+            <rect x="53.764" y="3.054" width="52.083" height="52.083" />
+        </clipPath>
+        <g clip-path="url(#_clip2)">
+            <circle cx="53.764" cy="55.138" r="47.917" style="fill:#fff;stroke:{{color_svg.1}};stroke-width:8.33px;" />
+        </g>
+        <clipPath id="_clip3">
+            <rect x="53.764" y="55.138" width="52.083" height="52.083" />
+        </clipPath>
+        <g clip-path="url(#_clip3)">
+            <circle cx="53.764" cy="55.138" r="47.917" style="fill:#fff;stroke:{{color_svg.2}};stroke-width:8.33px;" />
+        </g>
+        <clipPath id="_clip4">
+            <rect x="1.68" y="3.054" width="52.083" height="52.083" />
+        </clipPath>
+        <g clip-path="url(#_clip4)">
+            <circle cx="53.764" cy="55.138" r="47.917" style="fill:#fff;stroke:{{color_svg.3}};stroke-width:8.33px;" />
+        </g>
+        <rect x="45.43" y="-1.112" width="16.667" height="116.667" style="fill:#fff;" />
+        <path d="M-2.486,46.804l0,16.667l112.5,0l0,-16.667l-112.5,0Z" style="fill:#fff;" />
+    </g>
+    {% elif color_svg|length == 5 %}
+    <clipPath id="_clip1">
+        <rect x="2.5" y="0" width="104.167" height="104.167" />
+    </clipPath>
+    <g clip-path="url(#_clip1)">
+        <circle cx="54.583" cy="52.083" r="47.917" style="fill:#fff;stroke:{{color_svg.0}};stroke-width:8.33px;" />
+        <clipPath id="_clip2">
+            <rect x="19.166" y="54.167" width="63.542" height="52.083" />
+        </clipPath>
+        <g clip-path="url(#_clip2)">
+            <circle cx="54.583" cy="52.083" r="47.917" style="fill:#fff;stroke:{{color_svg.1}};stroke-width:8.33px;" />
+        </g>
+        <clipPath id="_clip3">
+            <rect x="65" y="62.5" width="45.833" height="41.667" />
+        </clipPath>
+        <g clip-path="url(#_clip3)">
+            <clipPath id="_clip4">
+                <rect x="54.583" y="52.083" width="52.083" height="52.083" />
+            </clipPath>
+            <g clip-path="url(#_clip4)">
+                <circle cx="54.583" cy="52.083" r="47.917" style="fill:#fff;stroke:{{color_svg.2}};stroke-width:8.33px;" />
+            </g>
+        </g>
+        <clipPath id="_clip5">
+            <rect x="54.583" y="0" width="52.083" height="62.5" />
+        </clipPath>
+        <g clip-path="url(#_clip5)">
+            <circle cx="54.583" cy="52.083" r="47.917" style="fill:#fff;stroke:{{color_svg.3}};stroke-width:8.33px;" />
+        </g>
+        <clipPath id="_clip6">
+            <rect x="2.5" y="0" width="52.083" height="37.5" />
+        </clipPath>
+        <g clip-path="url(#_clip6)">
+            <circle cx="54.583" cy="52.083" r="47.917" style="fill:#fff;stroke:{{color_svg.4}};stroke-width:8.33px;" />
+        </g>
+        <rect x="52.5" y="0" width="16.667" height="29.167" style="fill:#fff;" />
+        <path d="M74.171,74.183l-16.277,3.582l6.267,28.485l16.277,-3.581l-6.267,-28.486Z" style="fill:#fff;" />
+        <path d="M38.646,74.096l-13.652,-9.56l-16.729,23.892l13.652,9.56l16.729,-23.892Z" style="fill:#fff;" />
+        <path d="M26.631,52.251l5.838,-15.611l-27.318,-10.217l-5.839,15.611l27.319,10.217Z" style="fill:#fff;" />
+        <path d="M109.06,61.931l-0.643,-16.654l-29.145,1.125l0.643,16.655l29.145,-1.126Z" style="fill:#fff;" />
+    </g>
+    {% endif %}
+</svg>
