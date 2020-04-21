@@ -98,11 +98,8 @@ class GenerateSvgView(TemplateView):
 
         color_svg = []
 
-        if len(rubbish_types_from_url) > 1:
-            for rubbish in rubbish_types_from_url:
-                color_svg.append(rubbish_colors.get(rubbish))
-        else:
-            color_svg = rubbish_colors.get(rubbish_types_from_url[0])
+        for rubbish in rubbish_types_from_url:
+            color_svg.append(rubbish_colors.get(rubbish))
 
         context["color_svg"] = color_svg
         return context
