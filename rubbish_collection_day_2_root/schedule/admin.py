@@ -9,11 +9,6 @@ class DateAdmin(admin.ModelAdmin):
     ordering = ("date",)
 
 
-class RubbishTypeAdmin(admin.ModelAdmin):
-    search_fields = ("name",)
-    ordering = ("name",)
-
-
 class RubbishDistrictAdmin(admin.ModelAdmin):
     list_display = ("name", "rubbish_type", "city_type")
     search_fields = ("name", "city_type", "rubbish_type")
@@ -25,6 +20,21 @@ class RubbishDistrictAdmin(admin.ModelAdmin):
     fieldsets = [
         ("Rejon", {"fields": ["rubbish_type", "name", "city_type"]}),
         ("Terminy odbioru odpadów", {"fields": ["date"]}),
+    ]
+
+
+class RubbishDistrictInline(admin.TabularInline):
+    model = RubbishDistrict
+    fields = ("name", "city_type")
+    ordering = ("city_type", "name")
+
+
+class RubbishTypeAdmin(admin.ModelAdmin):
+    search_fields = ("name",)
+    ordering = ("name",)
+
+    inlines = [
+        RubbishDistrictInline,
     ]
 
 
