@@ -1,17 +1,56 @@
-from django.contrib import admin
+from django.contrib import admin, messages
+from django.db import IntegrityError
+
+from django.urls import path
+from django.http import HttpResponseRedirect
 from .models import Date, RubbishType, RubbishDistrict, ScheduleConfiguration
 from solo.admin import SingletonModelAdmin
+from datetime import datetime, timedelta
 
 
 # Register your models here.
 class DateAdmin(admin.ModelAdmin):
     search_fields = ("date",)
     ordering = ("date",)
+    change_list_template = "admin/schedule/date/date_change_list.html"
 
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [path("add-many-dates/", self.add_many_dates)]
+        return custom_urls + urls
 
-class RubbishTypeAdmin(admin.ModelAdmin):
-    search_fields = ("name",)
-    ordering = ("name",)
+    def add_many_dates(self, request):
+        if request.method == "POST":
+            start_date = datetime.strptime(
+                request.POST.get("start-date"), "%Y-%m-%d"
+            ).date()
+            end_date = datetime.strptime(
+                request.POST.get("end-date"), "%Y-%m-%d"
+            ).date()
+
+            delta = end_date - start_date
+            add_new_dates = None
+
+            ex_date = []
+
+            for i in range(delta.days + 1):
+                day = start_date + timedelta(days=i)
+                try:
+                    Date.objects.create(date=day)
+                except IntegrityError:
+                    ex_date.append(day.strftime("%Y-%m-%d"))
+                else:
+                    add_new_dates = True
+            if ex_date:
+                self.message_user(
+                    request,
+                    f"Te daty już istnieją: {', '.join(ex_date)}",
+                    level=messages.ERROR,
+                )
+
+            if add_new_dates:
+                self.message_user(request, "Dodano nowe daty")
+        return HttpResponseRedirect("../")
 
 
 class RubbishDistrictAdmin(admin.ModelAdmin):
@@ -25,6 +64,21 @@ class RubbishDistrictAdmin(admin.ModelAdmin):
     fieldsets = [
         ("Rejon", {"fields": ["rubbish_type", "name", "city_type"]}),
         ("Terminy odbioru odpadów", {"fields": ["date"]}),
+    ]
+
+
+class RubbishDistrictInline(admin.TabularInline):
+    model = RubbishDistrict
+    fields = ("name", "city_type")
+    ordering = ("city_type", "name")
+
+
+class RubbishTypeAdmin(admin.ModelAdmin):
+    search_fields = ("name",)
+    ordering = ("name",)
+
+    inlines = [
+        RubbishDistrictInline,
     ]
 
 

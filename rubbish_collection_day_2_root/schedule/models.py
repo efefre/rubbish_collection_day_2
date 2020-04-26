@@ -23,7 +23,7 @@ class ScheduleConfiguration(SingletonModel):
 
 
 class Date(models.Model):
-    date = models.DateField(verbose_name="Data")
+    date = models.DateField(verbose_name="Data", unique=True)
 
     def __str__(self):
         return f"{self.date}"
