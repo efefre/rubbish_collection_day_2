@@ -2,7 +2,7 @@
 
 {% block object-tools %}
 
-<form id="generate-dates" method="post" action="add-dates/">
+<form id="add-many-dates" method="post" action="add-many-dates/">
     {% csrf_token %}
     <div class="row">
       <div class="col">
@@ -12,7 +12,7 @@
         <input type="date" class="form-control" id="end-date" name="end-date" placeholder="Data końcowa">
       </div>
     </div>
-    <button type="submit" class="btn btn-primary">Generuj daty</button>
+    <button type="submit" class="btn btn-primary">Dodaj daty</button>
 </form>
 
 {{block.super}}
