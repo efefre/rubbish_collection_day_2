@@ -16,10 +16,10 @@ class DateAdmin(admin.ModelAdmin):
 
     def get_urls(self):
         urls = super().get_urls()
-        custom_urls = [path("add-dates/", self.add_dates)]
+        custom_urls = [path("add-many-dates/", self.add_many_dates)]
         return custom_urls + urls
 
-    def add_dates(self, request):
+    def add_many_dates(self, request):
         if request.method == "POST":
             start_date = datetime.strptime(
                 request.POST.get("start-date"), "%Y-%m-%d"
