@@ -30,18 +30,24 @@ class DateAdmin(admin.ModelAdmin):
 
             delta = end_date - start_date
             add_new_dates = None
+
+            ex_date = []
+
             for i in range(delta.days + 1):
                 day = start_date + timedelta(days=i)
-
                 try:
                     Date.objects.create(date=day)
                 except IntegrityError:
-                    self.message_user(
-                        request, f"Ta data już istnieje: {day}",
-                        level=messages.ERROR
-                    )
+                    ex_date.append(day.strftime("%Y-%m-%d"))
                 else:
                     add_new_dates = True
+            if ex_date:
+                self.message_user(
+                    request,
+                    f"Te daty już istnieją: {', '.join(ex_date)}",
+                    level=messages.ERROR,
+                )
+
             if add_new_dates:
                 self.message_user(request, "Dodano nowe daty")
         return HttpResponseRedirect("../")
