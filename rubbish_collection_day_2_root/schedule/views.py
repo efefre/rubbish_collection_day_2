@@ -5,6 +5,7 @@ from schedule.models import RubbishDistrict, RubbishType
 from .utils import days_for_calendar
 from collections import defaultdict
 from itertools import combinations
+from schedule.models import ScheduleConfiguration
 
 
 class HomeView(FormView):
@@ -22,6 +23,10 @@ class LoadStreetView(TemplateView):
         context = super().get_context_data(**kwargs)
         context["streets"] = streets
         return context
+
+
+config = ScheduleConfiguration.get_solo()
+YEAR = int(config.year)
 
 
 class CalendarView(TemplateView):
@@ -45,7 +50,8 @@ class CalendarView(TemplateView):
             for date in district.date.all():
                 schedule_dates_for_address[date.date].append(district)
 
-        context["calendar"] = days_for_calendar(2020)
+        context["year"] = YEAR
+        context["calendar"] = days_for_calendar(YEAR)
         context["days_names_list"] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
         context["address"] = address
         context["schedule_dates_for_address"] = dict(schedule_dates_for_address)
