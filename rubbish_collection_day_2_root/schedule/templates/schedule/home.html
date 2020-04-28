@@ -1,13 +1,14 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <title>Home Page</title>
-</head>
-<body>
-    <h1>Home</h1>   
+{% extends "schedule/base.html" %}
+
+{% block title %}
+    Strona główna
+{% endblock  %}
+{% block description %}
+    Pobierz na telefon harmonogram odbioru odpadów w gminie Wołomin - 2020 r.
+{% endblock %}
+
+
+    {% block search %} 
     <div class="search-form">
         <form method="GET" id="AddressForm" action="{% url 'schedule:calendar' %}" data-streets-url="{% url 'schedule:ajax_load_streets' %}"
             novalidate autocomplete="off">
@@ -48,5 +49,4 @@
             }
         });
     </script>
-</body>
-</html>
+    {% endblock  %}
