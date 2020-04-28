@@ -1,0 +1,279 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="utf-8" />
+    <title>{% block title %}{% endblock %} | Harmonogram odbioru odpadów - gmina Wołomin</title>
+    <meta name="description" content="{% block description %}{% endblock %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <link rel="shortcut icon" href="{% static 'schedule/img/favicon.ico' %}" />
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i|Roboto:300,300i,400,400i,700,700i"
+        rel="stylesheet">
+
+    <!-- Latest compiled and minified CSS - Bootstra -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+
+    <!-- Optional theme - Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+        crossorigin="anonymous">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" type="text/css" media="all" href="{% static 'schedule/css/calendar.css' %}?v=20190126" />
+    <link rel="stylesheet" type="text/css" media="all" href="{% static 'schedule/css/main.css' %}?v=20190126" />
+    <link rel="stylesheet" type="text/css" media="all" href="{% static 'web_pages/css/info-pages.css' %}?v=20190126" />
+    <link rel="stylesheet" type="text/css" media="print" href="{% static 'schedule/css/print.css' %}?v=20190126">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+    <!-- Latest compiled and minified JavaScript - Bootstra -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+
+    <script>
+        $(window).on('load', function () {
+            if (!areCookiesEnabled()) $('#noCookies').modal('show');
+            else {
+                var infoCookiesRodo = getCookie("infoCookiesRodo");
+                if (infoCookiesRodo != null && infoCookiesRodo != "") return;
+                else $('#infoRodo').modal('show');
+            };
+            });
+        </script>
+</head>
+
+<body>
+    <!-- Modal no cookies -->
+    <div class="modal" tabindex="-1" role="dialog" id="noCookies">
+        <div class="modal-dialog dal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Uwaga! Nasz serwis korzysta z cookies.</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Wygląda na to, że Twoja przeglądarka nie akceptuje cookies. W związku z tym niektóre opcje
+                        serwisu mogą nie działać
+                        prawidłowo. Szczegóły w
+                        <a href="/info/polityka-prywatnosci">Polityce prywatności</a>.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Zamknij</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal RODO-->
+    <div class="modal fade" id="infoRodo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+        aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalLongTitle">Klauzula informacyjna</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="rozwijany-tekst">
+                        <div class="skrot-tektsu">
+                            <p>Strona wykorzystuje pliki cookies – dzięki temu działa prawidłowo i korzysta z narzędzi
+                                analitycznych. Szczegóły znajdziesz poniżej i w polityce prywatności.</p>
+                        </div>
+
+                        <div class="wiecej-tekstu" style="display: none;">
+                            <hr>
+                            <p>Na tej stronie wykorzystuję pliki cookies. Cookies to niewielkie informacje tekstowe,
+                                przechowywane na Twoim
+                                urządzeniu końcowym – na przykład na komputerze, tablecie, smartfonie. Mogą być
+                                odczytywane przeze mnie
+                                (cookies własne) lub przez podmioty trzecie (cookies podmiotów trzecich).</p>
+                            <p>Niektóre używane przeze mnie cookies są usuwane po zakończeniu sesji przeglądarki
+                                internetowej – to znaczy
+                                po jej zamknięciu (cookies sesyjne). Inne cookies są zachowywane na Twoim urządzeniu
+                                końcowym i umożliwiają
+                                rozpoznanie Twojej przeglądarki przy kolejnym wejściu na stronę (trwałe cookies).</p>
+                            <h3>Zgoda na cookies</h3>
+                            <p>Podczas pierwszej wizyty na stronie zobaczysz informację na temat stosowania plików
+                                cookies. Istnieje
+                                możliwość takiej konfiguracji przeglądarki internetowej, która uniemożliwia
+                                przechowywanie plików cookies
+                                na Twoim urządzeniu końcowym. Możesz je również samodzielnie usunąć.</p>
+                            <p>Przeglądarki zarządzają ustawieniami cookies na różne sposoby. Pod poniższymi linkami
+                                znajdziesz informacje
+                                o sposobach usunięcia cookies w najpopularniejszych przeglądarkach internetowych:</p>
+                            <ol>
+                                <li><a href="https://support.mozilla.org/pl/kb/usuwanie-ciasteczek" target="_blank">Firefox</a></li>
+                                <li><a href="https://support.google.com/chrome/answer/95647?hl=pl" target="_blank">Chrome</a></li>
+                                <li><a href="https://support.microsoft.com/pl-pl/help/17442/windows-internet-explorer-delete-manage-cookies#ie=ie-11"
+                                        target="_blank">Internet Explorer</a></li>
+                            </ol>
+                            <p>Pamiętaj, że wyłączenie lub ograniczenie obsługi plików cookies może spowodować
+                                trudności w korzystaniu ze
+                                strony, jak również z wielu innych stron internetowych, które stosują cookies.</p>
+                            <h3>Cookies własne</h3>
+                            <p>Cookies własne wykorzystuję, aby strona mogła działać prawidłowo.</p>
+                            <h3>Cookies podmiotów trzecich</h3>
+                            <p>Na tej stronie, podobnie jak na większości współczesnych stron internetowych, korzystam
+                                z narzędzi
+                                analitycznych pochodzących od podmiotów trzecich, co wiąże się z wykorzystaniem plików
+                                cookies podmiotów
+                                trzecich.</p>
+                            <h4>Google Analytics</h4>
+                            <p>Korzystam z narzędzia Google Analytics zapewnianego przez Google LLC, 1600 Amphitheatre
+                                Parkway, Mountain
+                                View, CA 94043, USA. Działania w tym zakresie realizuję, opierając się na moim prawnie
+                                uzasadnionym
+                                interesie, polegającym na tworzeniu statystyk i ich analizie w celu optymalizacji mojej
+                                strony
+                                internetowej.</p>
+                            <p>Google Analytics w sposób automatyczny gromadzi informacje o tym, jak korzystasz z mojej
+                                strony. Te
+                                informacje są najczęściej przekazywane do serwerów w Stanach Zjednoczonych i tam
+                                przechowywane.</p>
+                            <p>Twój adres IP jest anonimizowany, czyli skracany najszybciej, jak to możliwe – na
+                                najwcześniejszym etapie
+                                sieci zbierającej dane.</p>
+                            <p>Jeżeli nie wyrażasz zgody, aby firma Google przetwarzała i gromadziła dane dotyczące
+                                korzystania przez
+                                Ciebie z mojej strony, możesz zainstalować <a href="https://tools.google.com/dlpage/gaoptout"
+                                    target="_blank">odpowiednią
+                                    wtyczkę do przeglądarki</a>.</p>
+
+                            <p>Szczegóły dotyczące przetwarzaniem danych w ramach Google Analytics znajdziesz <a href="https://support.google.com/analytics/answer/6004245"
+                                    target="_blank">pod tym linkiem</a>.</p>
+
+                            <h4>Hotjar</h4>
+                            <p>Korzystam z narzędzia Hotjar zapewnianego przez Hotjar Ltd, Level 2 St Julians Business
+                                Centre, 3, Elia
+                                Zammit Street St Julians STJ 1000, Malta, Europe. Działania w tym zakresie realizuję,
+                                opierając się na moim
+                                prawnie uzasadnionym interesie, polegającym na tworzeniu statystyk i ich analizie w
+                                celu optymalizacji
+                                mojej strony internetowej.</p>
+                            <p>Hotjar automatycznie gromadzi informacje o tym, jak korzystasz z mojej strony.</p>
+
+                            <p>Twój adres IP jest zawsze anonimizowany, zanim zostanie zapisany.</p>
+
+                            <p>Możesz sprzeciwić się tworzeniu Twojego anonimowego profilu oraz przechowywaniu
+                                informacji na Twój temat
+                                przez Hotjar - aby to zrobić, przejdź do <a href="https://www.hotjar.com/legal/compliance/opt-out"
+                                    target="_blank">strony
+                                    Hotjar</a>.</p>
+
+                            <p>Szczegóły dotyczące przetwarzania danych w ramach Hotjar znajdziesz <a href="https://www.hotjar.com/legal/policies/privacy"
+                                    target="_blank">pod tym linkiem</a>.</p>
+                            <p>&nbsp;</p>
+                        </div>
+                        <a class="przycisk-wiecej" href="#">czytaj więcej</a>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="agree" onclick="setCookie('infoCookiesRodo', 1, 365);">Rozumiem
+                        i akceptuję</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-default" id="nav-menu">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1"
+                    aria-expanded="false">
+                    <span class="sr-only">Menu</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Wersja Beta</span>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="{% url 'schedule:home' %}">Strona główna</a></li>
+                    <li><a href="/info/o-projekcie">O projekcie</a></li>
+                    <li><a href="/info/pomoc">Pomoc</a></li>
+                    <li><a href="/info/kontakt">Kontakt</a></li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+    <header class="container-fluid">
+        <div class="header">
+
+            <div class="header-text col-sm-6 col-xs-7">
+                <h1>Kalendarz odbioru odpadów<br>w gminie Wołomin</h1>
+                <ul>
+                    <li>zmieszane</li>
+                    <li>segregowane</li>
+                    <li>zielone i biodegradowalne</li>
+                    <li>gabaryty</li>
+                    <li>popiół</li>
+                </ul>
+                <a href="{% url 'schedule:home' %}#search" class="button" role="button">Zobacz</a>
+            </div>
+            <div class="header-img col-sm-6 col-xs-5">
+                <img src="{% static 'schedule/img/header-img.png' %}" alt="">
+            </div>
+
+
+        </div>
+    </header>
+
+    <main class="container">
+
+        {% block search %}
+
+        {% endblock %}
+
+
+        {% block content %}
+
+        {% endblock %}
+
+        <button onclick="topFunction()" id="toTop" title="Wróć do góry"><span class="glyphicon glyphicon-arrow-up"></span></button>
+    </main>
+
+    <footer>
+        <div class="footer">
+            <p>Ostatnia aktualizacja: <em>marzec 2020 r.</em><br />
+                Sprawdź, czy daty na wydruku odpowiadają danym udostępnionym przez <a href="https://wolomin.org/?s=harmonogram+odbioru+odpadów" target="_blank">Urząd Miejski w Wołominie.</a><br>
+                <a href="/info/polityka-prywatnosci" id="privacy-policy">Polityka prywatności</a></p>
+        </div>
+    </footer>
+    <script>
+        // button in header
+        $('a.button').on('click', function (e) {
+            // add scroll on page without "update message"
+            if ($('.update, .info').length == 0) {
+                e.preventDefault();
+                $('html, body').animate({
+                    scrollTop: $("#search").offset().top
+                }, 1000);
+            }
+        });
+
+        window.onscroll = function () {
+            scrollFunction()
+        };
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                document.getElementById("toTop").style.display = "block";
+            } else {
+                document.getElementById("toTop").style.display = "none";
+            }
+        }
+        // When the user clicks on the button, scroll to the top of the document
+        function topFunction() {
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+        }
+
+        $(".przycisk-wiecej").on("click", function () {
+            return $(this).hasClass("active") ? ($(this).removeClass("active"), $(this).text("czytaj więcej"),
+                $(this).parent().find(".wiecej-tekstu").fadeOut()) : ($(this).addClass("active"), $(this).text(
+                "zwiń tekst"), $(this).parent().find(".wiecej-tekstu").fadeIn()), !1
+        })
+    </script>
+    <script src="{% static 'schedule/js/zgodaRodo.js' %}"></script>
+</body>
+
+</html>
