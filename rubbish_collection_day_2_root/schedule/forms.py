@@ -10,6 +10,7 @@ class ChooseAddressForm(forms.ModelForm):
             choices=tuple([("", "---------")] + list(choices))
         )
         self.fields["city"].label = "Wybierz miejscowość"
+        self.fields["city"].widget.attrs["class"] = "form-control"
 
     class Meta:
         model = Address
@@ -21,6 +22,5 @@ class ChooseAddressForm(forms.ModelForm):
             "street": "Wybierz ulicę",
         }
         widgets = {
-            "city": forms.Select(attrs={"class": "form-control"}),
             "street": forms.Select(attrs={"class": "form-control"}),
         }
