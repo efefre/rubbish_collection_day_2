@@ -10,6 +10,9 @@
 {% block description %}
     Wydrukuj kalendarz odbioru odpadów dla adresu {{city_name}} - {{street_name}}. Możesz go również pobrać na telefon.
 {% endblock %}
+{% block search %}
+    {% include 'schedule/search.html' %}
+{% endblock  %}
 
 {% block content %}
     <div id="content">
