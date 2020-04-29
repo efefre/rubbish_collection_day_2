@@ -50,6 +50,7 @@ class CalendarView(TemplateView):
             for date in district.date.all():
                 schedule_dates_for_address[date.date].append(district)
 
+        context["form"] = ChooseAddressForm
         context["year"] = YEAR
         context["calendar"] = days_for_calendar(YEAR)
         context["days_names_list"] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
