@@ -19,7 +19,7 @@ class HomeView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['technical_break'] = TECH_BREAK
+        context["technical_break"] = TECH_BREAK
         return context
 
 
@@ -33,9 +33,6 @@ class LoadStreetView(TemplateView):
         context = super().get_context_data(**kwargs)
         context["streets"] = streets
         return context
-
-
-
 
 
 class CalendarView(TemplateView):
@@ -65,7 +62,7 @@ class CalendarView(TemplateView):
         context["days_names_list"] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
         context["address"] = address
         context["schedule_dates_for_address"] = dict(schedule_dates_for_address)
-
+        context["technical_break"] = TECH_BREAK
         return context
 
 
