@@ -69,7 +69,7 @@
                                             {% if number == 0 %}
                                             <span class="day">&nbsp;</span>
                                             {% else %}
-                                            <span class="day">{% calendar_day number month schedule_dates_for_address %}</span>
+                                                {% calendar_day number month schedule_dates_for_address %}
                                             {% endif %}
                                         {% endwith %}
                                     </td>
@@ -90,6 +90,5 @@
         </div>
         {% endif %}
     </div>
-
     {% next_year schedule_dates_for_address %}
 {% endblock  %}
