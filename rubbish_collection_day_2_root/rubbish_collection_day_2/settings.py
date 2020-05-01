@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'city_detail',
     'schedule',
+    'web_pages',
     'solo',
     'debug_toolbar',
 ]

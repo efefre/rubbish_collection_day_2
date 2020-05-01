@@ -1,0 +1,45 @@
+{% extends "schedule/base.html" %}
+
+{% block title %}
+    {{page.title }}
+{% endblock %}
+
+{% block description %}
+    {{page.meta_description}}
+{% endblock description %}
+
+{% block content %}
+    <div class="info">
+        <h2>{{page.title}}</h2>
+        {{page.body|safe}}
+    </div>
+    <!-- The Modal -->
+    <div id="myModal" class="modal-info">
+        <span class="close-info">&times;</span>
+        <img class="modal-content-info" id="img01">
+        <div id="caption-info"></div>
+    </div>
+
+    <script>
+        // Get the modal
+        var modal = document.getElementById('myModal');
+
+        // Get the image and insert it inside the modal - use its "alt" text as a caption
+        var img = document.querySelector('.myImg');
+        var modalImg = document.getElementById("img01");
+
+        function OpenModal(src){
+            modal.style.display = "block";
+            modalImg.src = src;
+        };
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close-info")[0];
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() { 
+            modal.style.display = "none";
+        }
+    </script>
+{% endblock content %}
+
