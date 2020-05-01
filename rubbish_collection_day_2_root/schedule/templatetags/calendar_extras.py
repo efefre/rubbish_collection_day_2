@@ -83,7 +83,7 @@ def calendar_day(number, month, schedule_dates_for_address):
 
 @register.simple_tag
 def next_year(schedule_dates_for_address):
-    next_year_dates = []
+    next_year_dates = [f"<h2 class='next-year'>{YEAR + 1}</h2>"]
     ordered_dates = collections.OrderedDict(sorted(schedule_dates_for_address.items()))
 
     for date, rubbish_detail in ordered_dates.items():
