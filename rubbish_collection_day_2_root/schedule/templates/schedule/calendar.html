@@ -90,5 +90,15 @@
         </div>
         {% endif %}
     </div>
-    {% next_year schedule_dates_for_address %}
+    {% next_year schedule_dates_for_address as next_year_dates %}
+    {%if next_year_dates%}
+    <div id="next-year">
+        <h2>{{year|add:1}}</h2>
+        <ul>
+        {% for day in next_year_dates %}
+            <li>{{day|safe}}</li>
+        {% endfor%}
+        </ul>
+    </div>
+    {% endif %}
 {% endblock  %}
