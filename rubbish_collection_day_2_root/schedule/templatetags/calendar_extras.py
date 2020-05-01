@@ -3,6 +3,7 @@ from django.utils.html import format_html
 from schedule.models import ScheduleConfiguration
 from schedule.utils import polish_holidays
 from datetime import datetime
+import collections
 
 register = template.Library()
 
@@ -71,7 +72,6 @@ def calendar_day(number, month, schedule_dates_for_address):
                         [rubbish.rubbish_type.css_name for rubbish in rubbish_detail]
                     )
                 )
-
             else:
                 rubbish_names = rubbish_detail[0].rubbish_type.name
                 rubbish_marks = rubbish_detail[0].rubbish_type.css_name
@@ -80,3 +80,27 @@ def calendar_day(number, month, schedule_dates_for_address):
             )
         else:
             return f"{number}"
+
+@register.simple_tag
+def next_year(schedule_dates_for_address):
+    next_year_dates = []
+    ordered_dates = collections.OrderedDict(sorted(schedule_dates_for_address.items()))
+
+    for date, rubbish_detail in ordered_dates.items():
+        date_str = date.strftime("%d-%m-%Y")
+        if str(YEAR + 1) in date_str:
+            if len(rubbish_detail) > 1:
+                rubbish_names = ", ".join(
+                    rubbish.rubbish_type.name for rubbish in rubbish_detail
+                )
+                rubbish_marks = "-".join(
+                    sorted(
+                        [rubbish.rubbish_type.css_name for rubbish in rubbish_detail]
+                    )
+                )
+            else:
+                rubbish_names = rubbish_detail[0].rubbish_type.name
+                rubbish_marks = rubbish_detail[0].rubbish_type.css_name
+
+            next_year_dates.append(f"<span class='mark-rubbish {rubbish_marks.replace('#','')}-rubbish'></span>{date}")
+    return format_html("".join(next_year_dates))
