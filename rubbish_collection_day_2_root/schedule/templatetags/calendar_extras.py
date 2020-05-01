@@ -83,7 +83,7 @@ def calendar_day(number, month, schedule_dates_for_address):
 
 @register.simple_tag
 def next_year(schedule_dates_for_address):
-    next_year_dates = [f"<h2 class='next-year'>{YEAR + 1}</h2>"]
+    next_year_dates = []
     ordered_dates = collections.OrderedDict(sorted(schedule_dates_for_address.items()))
 
     for date, rubbish_detail in ordered_dates.items():
@@ -103,4 +103,4 @@ def next_year(schedule_dates_for_address):
                 rubbish_marks = rubbish_detail[0].rubbish_type.css_name
 
             next_year_dates.append(f"<span class='mark-rubbish {rubbish_marks.replace('#','')}-rubbish'></span>{date} <span class='sr-only'>{rubbish_names}</span>")
-    return format_html("".join(next_year_dates))
+    return next_year_dates
