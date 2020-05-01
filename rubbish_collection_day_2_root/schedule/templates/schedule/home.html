@@ -7,10 +7,16 @@
     Pobierz na telefon harmonogram odbioru odpadów w gminie Wołomin - 2020 r.
 {% endblock %}
 
-
-    {% block search %} 
-    {% include 'schedule/search.html' %}
-    <div class="for-print">
-        <h2>Wybierz właściwy adres, aby wydrukować kalendarz.</h2>
+{% block search %} 
+    {% if technical_break and user.is_authenticated or not technical_break %}
+         {% include 'schedule/search.html' %}
+        <div class="for-print">
+            <h2>Wybierz właściwy adres, aby wydrukować kalendarz.</h2>
+        </div>
+    {% else %}
+        <div style="margin-top: 30px; text-align: center" class="alert alert-warning" role="alert">
+        <p>Przepraszamy. W tej chwili trwa przerwa techniczna.<br/>
+        Zapraszamy później.</p>
     </div>
-    {% endblock  %}
+    {% endif %}
+{% endblock  %}
