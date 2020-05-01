@@ -4,80 +4,90 @@
 
 
 {% block title %}
-Kalendarz: {{address}}
+    Kalendarz: {{address}}
 {% endblock  %}
 
 {% block description %}
-Wydrukuj kalendarz odbioru odpadów dla adresu {{city_name}} - {{street_name}}. Możesz go również pobrać na telefon.
+    Wydrukuj kalendarz odbioru odpadów dla adresu {{city_name}} - {{street_name}}. Możesz go również pobrać na telefon.
 {% endblock %}
+
 {% block search %}
-{% include 'schedule/search.html' %}
+    {% if technical_break and user.is_authenticated or not technical_break %}
+        {% include 'schedule/search.html' %}
+    {% endif %}
 {% endblock  %}
 
 {% block content %}
-<div id="content">
-    <div id="calendar">
-        <h2>{{year}}</h2>
-        <h3 class="address">{{address}}</h3>
-        <div class="sr-only">
-            <p>Daty odbioru odpadów:
-                {% for date, districts in schedule_dates_for_address.items %}
-                <ul>
-                    <strong>{{date}}</strong>:
-                    {% for district in districts %}
-                    <li>{{district.rubbish_type}}</li>
-                    {% endfor %}
-                </ul>
-                {% endfor %}
-            </p>
-        </div>
-
-        <div id="calendar-legend">
-            <ul>
-                <li><span class="all-rubbish"></span>zmieszane</li>
-                <li><span class="rec-rubbish"></span>segregowane</li>
-                <li><span class="bio-rubbish"></span>zielone i biodegradowalne</li>
-                <li><span class="big-rubbish"></span>wielkogabarytowe i zużyty sprzęt elektryczny i elektroniczny</li>
-                <li><span class="ash-rubbish"></span>popiół</li>
-            </ul>
-            <p><strong>UWAGA!</strong> W przypadku odbioru różnych odpadów tego samego dnia zaznaczenie na kalendarzu
-                składa się z kilku kolorów odpowiadających rodzajowi odpadów.</p>
-        </div>
-        <div id="calendar-days">
-            {% for month in calendar.keys %}
-            <div class="col-md-4 col-sm-6 col-xs-12 month {{month|lower}}">
-                <table border="0" xcellpadding="0" cellspacing="0">
-                    <tr>
-                        <th colspan="7" class="month">{{month|translate_month_to_pl}}</th>
-                    </tr>
-                    <tr>
-                        {% for day in days_names_list  %}
-                        <th class="{{day|lower}}">{{day|translate_day_to_pl}}</th>
+    <div id="content">
+    {% if technical_break and user.is_authenticated or not technical_break %}
+        <div id="calendar">
+            <h2>{{year}}</h2>
+            <h3 class="address">{{address}}</h3>
+            <div class="sr-only">
+                <p>Daty odbioru odpadów:
+                    {% for date, districts in schedule_dates_for_address.items %}
+                    <ul>
+                        <strong>{{date}}</strong>:
+                        {% for district in districts %}
+                        <li>{{district.rubbish_type}}</li>
                         {% endfor %}
-                    </tr>
-                    {% for month_name, weeks in calendar.items %}
-                        {% if month_name in month %}
-                            {% for day_number in weeks  %}
-                            <tr>
-                                {% for day in days_names_list  %}
-                                <td class="{{day|lower}}">
-                                    {% with number=day_number|list_index:forloop.counter0 %}
-                                        {% if number == 0 %}
-                                        <span class="day">&nbsp;</span>
-                                        {% else %}
-                                        <span class="day">{% calendar_day number month schedule_dates_for_address %}</span>
-                                        {% endif %}
-                                    {% endwith %}
-                                </td>
-                                {% endfor %}
-                            </tr>
-                            {% endfor %}
-                        {% endif %}
+                    </ul>
                     {% endfor %}
-                </table>
+                </p>
             </div>
-            {% endfor%}
+
+            <div id="calendar-legend">
+                <ul>
+                    <li><span class="all-rubbish"></span>zmieszane</li>
+                    <li><span class="rec-rubbish"></span>segregowane</li>
+                    <li><span class="bio-rubbish"></span>zielone i biodegradowalne</li>
+                    <li><span class="big-rubbish"></span>wielkogabarytowe i zużyty sprzęt elektryczny i elektroniczny</li>
+                    <li><span class="ash-rubbish"></span>popiół</li>
+                </ul>
+                <p><strong>UWAGA!</strong> W przypadku odbioru różnych odpadów tego samego dnia zaznaczenie na kalendarzu
+                    składa się z kilku kolorów odpowiadających rodzajowi odpadów.</p>
+            </div>
+            <div id="calendar-days">
+                {% for month in calendar.keys %}
+                <div class="col-md-4 col-sm-6 col-xs-12 month {{month|lower}}">
+                    <table border="0" xcellpadding="0" cellspacing="0">
+                        <tr>
+                            <th colspan="7" class="month">{{month|translate_month_to_pl}}</th>
+                        </tr>
+                        <tr>
+                            {% for day in days_names_list  %}
+                            <th class="{{day|lower}}">{{day|translate_day_to_pl}}</th>
+                            {% endfor %}
+                        </tr>
+                        {% for month_name, weeks in calendar.items %}
+                            {% if month_name in month %}
+                                {% for day_number in weeks  %}
+                                <tr>
+                                    {% for day in days_names_list  %}
+                                    <td class="{{day|lower}}">
+                                        {% with number=day_number|list_index:forloop.counter0 %}
+                                            {% if number == 0 %}
+                                            <span class="day">&nbsp;</span>
+                                            {% else %}
+                                            <span class="day">{% calendar_day number month schedule_dates_for_address %}</span>
+                                            {% endif %}
+                                        {% endwith %}
+                                    </td>
+                                    {% endfor %}
+                                </tr>
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                    </table>
+                </div>
+                {% endfor%}
+            </div>
         </div>
+        {% else %}
+            <div style="margin-top: 30px; text-align: center" class="alert alert-warning" role="alert">
+            <p>Przepraszamy. W tej chwili trwa przerwa techniczna.<br/>
+            Zapraszamy później.</p>
+        </div>
+        {% endif %}
     </div>
-</div>
 {% endblock  %}
