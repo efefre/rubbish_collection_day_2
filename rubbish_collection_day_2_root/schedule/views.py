@@ -8,9 +8,19 @@ from itertools import combinations
 from schedule.models import ScheduleConfiguration
 
 
+config = ScheduleConfiguration.get_solo()
+YEAR = int(config.year)
+TECH_BREAK = config.maintenance_mode
+
+
 class HomeView(FormView):
     form_class = ChooseAddressForm
     template_name = "schedule/home.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['technical_break'] = TECH_BREAK
+        return context
 
 
 # Street - dropdown list option
@@ -25,8 +35,7 @@ class LoadStreetView(TemplateView):
         return context
 
 
-config = ScheduleConfiguration.get_solo()
-YEAR = int(config.year)
+
 
 
 class CalendarView(TemplateView):
