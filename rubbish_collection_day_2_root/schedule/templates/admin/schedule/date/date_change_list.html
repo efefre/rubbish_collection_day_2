@@ -1,18 +1,14 @@
 {% extends 'admin/change_list.html' %}
 
 {% block object-tools %}
-
-<form id="add-many-dates" method="post" action="add-many-dates/">
+<h2 style="background: #f8f8f8; padding: 5px 0; font-weight: 300">Dodaj daty z zakresu</h2>
+<form id="add-many-dates" method="post" action="add-many-dates/" class="form-inline" style="margin-bottom: 35px">
     {% csrf_token %}
-    <div class="row">
-      <div class="col">
-        <input type="date" class="form-control" id="start-date" name="start-date" placeholder="Data początkowa">
-      </div>
-      <div class="col">
-        <input type="date" class="form-control" id="end-date" name="end-date" placeholder="Data końcowa">
-      </div>
-    </div>
-    <button type="submit" class="btn btn-primary">Dodaj daty</button>
+      <label for="start-date" style="color:#999">Data początkowa</label>
+      <input type="date" class="form-control" id="start-date" name="start-date">
+      <label for="end-date" style="color:#999">Data końcowa</label>
+      <input type="date" class="form-control" id="end-date" name="end-date" placeholder="Data końcowa">
+      <button type="submit" style="font-size: 13px; border: 1px solid #ccc;border-radius: 4px;background: #fff;box-shadow: 0 -15px 20px -10px rgba(0, 0, 0, 0.15) inset;cursor: pointer; height: 24px;line-height: 1;padding: 4px 8px;margin: 0;color: #333;">Dodaj daty</button>
 </form>
 
 {{block.super}}
