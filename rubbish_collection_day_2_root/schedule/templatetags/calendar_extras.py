@@ -76,7 +76,7 @@ def calendar_day(number, month, schedule_dates_for_address):
                 rubbish_names = rubbish_detail[0].rubbish_type.name
                 rubbish_marks = rubbish_detail[0].rubbish_type.css_name
             return format_html(
-                f"<span class='sr-only'>{rubbish_names}</span><span class='mark-rubbish {rubbish_marks.replace('#','')}-rubbish'>{number}</span>"
+                f"<span class='sr-only'>{rubbish_names}</span><span class='mark-rubbish {rubbish_marks.replace('#','')}-rubbish' data-toggle='tooltip' data-placement='top' title='{rubbish_names}'>{number}</span>"
             )
         else:
             return format_html(f"<span class='day'>{number}</span>")
@@ -102,5 +102,5 @@ def next_year(schedule_dates_for_address):
                 rubbish_names = rubbish_detail[0].rubbish_type.name
                 rubbish_marks = rubbish_detail[0].rubbish_type.css_name
 
-            next_year_dates.append(f"<span class='mark-rubbish {rubbish_marks.replace('#','')}-rubbish'></span>{date} <span class='sr-only'>{rubbish_names}</span>")
+            next_year_dates.append(f"<span class='sr-only'>{rubbish_names}</span><span class='mark-rubbish {rubbish_marks.replace('#','')}-rubbish' data-toggle='tooltip' data-placement='top' title='{rubbish_names}'></span>{date}")
     return next_year_dates
