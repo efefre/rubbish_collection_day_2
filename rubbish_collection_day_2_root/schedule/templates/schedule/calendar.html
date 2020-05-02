@@ -92,7 +92,7 @@
     </div>
     {% next_year schedule_dates_for_address as next_year_dates %}
     {%if next_year_dates%}
-    <div id="next-year">
+    <div id="next-year" class="col-md-12 col-sm-12 col-xs-12">
         <h2>{{year|add:1}}</h2>
         <ul>
         {% for day in next_year_dates %}
