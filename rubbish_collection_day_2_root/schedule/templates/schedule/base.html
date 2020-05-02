@@ -273,6 +273,10 @@
                 $(this).parent().find(".wiecej-tekstu").fadeOut()) : ($(this).addClass("active"), $(this).text(
                 "zwiń tekst"), $(this).parent().find(".wiecej-tekstu").fadeIn()), !1
         })
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
     </script>
     <script src="{% static 'schedule/js/zgodaRodo.js' %}"></script>
 </body>

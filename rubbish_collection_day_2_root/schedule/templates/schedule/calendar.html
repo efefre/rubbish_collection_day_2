@@ -38,11 +38,9 @@
 
             <div id="calendar-legend">
                 <ul>
-                    <li><span class="all-rubbish"></span>zmieszane</li>
-                    <li><span class="rec-rubbish"></span>segregowane</li>
-                    <li><span class="bio-rubbish"></span>zielone i biodegradowalne</li>
-                    <li><span class="big-rubbish"></span>wielkogabarytowe i zużyty sprzęt elektryczny i elektroniczny</li>
-                    <li><span class="ash-rubbish"></span>popiół</li>
+                {% for type in rubbish_types%}
+                    <li><span class="{{type.css_name}}-rubbish"></span>{{type.name|lower}}</li>
+                {% endfor %}
                 </ul>
                 <p><strong>UWAGA!</strong> W przypadku odbioru różnych odpadów tego samego dnia zaznaczenie na kalendarzu
                     składa się z kilku kolorów odpowiadających rodzajowi odpadów.</p>
@@ -69,7 +67,7 @@
                                             {% if number == 0 %}
                                             <span class="day">&nbsp;</span>
                                             {% else %}
-                                            <span class="day">{% calendar_day number month schedule_dates_for_address %}</span>
+                                                {% calendar_day number month schedule_dates_for_address %}
                                             {% endif %}
                                         {% endwith %}
                                     </td>
@@ -90,4 +88,15 @@
         </div>
         {% endif %}
     </div>
+    {% next_year schedule_dates_for_address as next_year_dates %}
+    {%if next_year_dates%}
+    <div id="next-year" class="col-md-12 col-sm-12 col-xs-12">
+        <h2>{{year|add:1}}</h2>
+        <ul>
+        {% for day in next_year_dates %}
+            <li>{{day|safe}}</li>
+        {% endfor%}
+        </ul>
+    </div>
+    {% endif %}
 {% endblock  %}
