@@ -63,6 +63,7 @@ class CalendarView(TemplateView):
         context["address"] = address
         context["schedule_dates_for_address"] = dict(schedule_dates_for_address)
         context["technical_break"] = TECH_BREAK
+        context["rubbish_types"] = RubbishType.objects.all()
         return context
 
 
