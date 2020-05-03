@@ -88,3 +88,31 @@ def days_for_calendar(year):
     }
 
     return months_for_calendar
+
+
+def replace_polish_characters(word):
+    polish_characters = {
+        'ą':'a',
+        'ć':'c',
+        'ę':'e',
+        'ł':'l',
+        'ń':'n',
+        'ó':'o',
+        'ś':'s',
+        'ź':'z',
+        'ż':'Z',
+        'Ą':'A',
+        'Ć':'C',
+        'Ę':'E',
+        'Ł':'L',
+        'Ń':'N',
+        'Ó':'O',
+        'Ś':'S',
+        'Ź':'Z',
+        'Ż':'Z',
+    }
+    new_word = ''
+    for letter in word:
+        new_letter = polish_characters.get(letter, letter)
+        new_word += new_letter
+    return new_word
