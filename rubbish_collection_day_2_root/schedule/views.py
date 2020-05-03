@@ -1,11 +1,16 @@
 from django.views.generic import FormView, TemplateView
+from django.http import HttpResponse
+from django.utils.text import slugify
+
 from .forms import ChooseAddressForm
 from city_detail.models import Address
 from schedule.models import RubbishDistrict, RubbishType
-from .utils import days_for_calendar
+from .utils import days_for_calendar, replace_polish_characters
 from collections import defaultdict
 from itertools import combinations
 from schedule.models import ScheduleConfiguration
+import datetime
+import csv
 
 
 config = ScheduleConfiguration.get_solo()
@@ -117,3 +122,56 @@ class GenerateSvgView(TemplateView):
 
         context["color_svg"] = color_svg
         return context
+
+
+def ical(request):
+    if request.method == "GET":
+        city_name = request.GET.get("city")
+        street_name = request.GET.get("street")
+        address = Address.objects.select_related("city", "street").get(
+            city__name=city_name, street__name=street_name
+        )
+        rubbish_districts = (
+            RubbishDistrict.objects.select_related("rubbish_type")
+            .prefetch_related("date")
+            .filter(addresses=address)
+        )
+
+        now = datetime.datetime.utcnow()
+        date_dtstamp = now.strftime("%Y%m%dT%H%M%SZ")
+
+        response = HttpResponse(content_type="text/calendar")
+        response[
+            "Content-Disposition"
+        ] = f'attachment; filename="kalendarz-odbioru-odpadow-{replace_polish_characters(city_name)}-{replace_polish_characters(street_name)}.ics"'
+        writer = csv.writer(response)
+        writer.writerow(["BEGIN:VCALENDAR"])
+        writer.writerow(["PRODID:-//Google Inc//Google Calendar 70.9054//EN"])
+        writer.writerow(["VERSION:2.0"])
+        writer.writerow(["CALSCALE:GREGORIAN"])
+        writer.writerow(["METHOD:PUBLISH"])
+        writer.writerow(["X-WR-TIMEZONE:Europe/Warsaw"])
+
+        for district in rubbish_districts:
+            for date in district.date.all():
+                date_dtstart_or_dtend = date.date.strftime("%Y%m%d")
+                data_description = date.date.strftime("%d-%m-%Y")
+                writer.writerow(["BEGIN:VEVENT"])
+                writer.writerow(["DTSTART:{}T060000Z".format(date_dtstart_or_dtend)])
+                writer.writerow(["DTEND:{}T070000Z".format(date_dtstart_or_dtend)])
+                writer.writerow(["DTSTAMP:{}".format(date_dtstamp)])
+                writer.writerow(["CLASS:PRIVATE"])
+                writer.writerow(
+                    [
+                        f"DESCRIPTION:{district.rubbish_type.name}: {data_description}. Odpady należy wystawić do godziny 6:00."
+                    ]
+                )
+                writer.writerow(
+                    [
+                        f"SUMMARY:Odbiór odpadów: {district.rubbish_type.name} - {data_description}."
+                    ]
+                )
+                writer.writerow(["END:VEVENT"])
+        writer.writerow(["END:VCALENDAR"])
+
+        return response
