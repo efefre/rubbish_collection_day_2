@@ -12,7 +12,7 @@ class ScheduleConfiguration(SingletonModel):
     original_schedule = models.CharField(
         max_length=255,
         verbose_name="Link do harmonogramu",
-        help_text="Link do harmonogramu opublikowanego na stronie Urzędu Miasta",
+        help_text="Link do harmonogramu opublikowanego na stronie UM",
     )
 
     def __str__(self):
