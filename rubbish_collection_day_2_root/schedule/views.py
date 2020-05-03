@@ -153,7 +153,7 @@ def ical(request):
         writer.writerow(["X-WR-TIMEZONE:Europe/Warsaw"])
 
         for district in rubbish_districts:
-            for date in district.date.all():
+            for date in district.date.filter(date__gte=now.date()):
                 date_dtstart_or_dtend = date.date.strftime("%Y%m%d")
                 data_description = date.date.strftime("%d-%m-%Y")
                 writer.writerow(["BEGIN:VEVENT"])
