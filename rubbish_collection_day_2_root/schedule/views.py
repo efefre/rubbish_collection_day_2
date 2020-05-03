@@ -1,21 +1,19 @@
-from django.views.generic import FormView, TemplateView
-from django.http import HttpResponse
-from django.utils.text import slugify
-
-from .forms import ChooseAddressForm
-from city_detail.models import Address
-from schedule.models import RubbishDistrict, RubbishType
-from .utils import days_for_calendar, replace_polish_characters
+import csv
+import datetime
 from collections import defaultdict
 from itertools import combinations
+
+from django.http import HttpResponse
+from django.views.generic import FormView, TemplateView
+
+from city_detail.models import Address
+from schedule.forms import ChooseAddressForm
+from schedule.models import RubbishDistrict, RubbishType
 from schedule.models import ScheduleConfiguration
-import datetime
-import csv
+from .utils import days_for_calendar, repl_char
 
 
-config = ScheduleConfiguration.get_solo()
-YEAR = int(config.year)
-TECH_BREAK = config.maintenance_mode
+CONFIG = ScheduleConfiguration.get_solo()
 
 
 class HomeView(FormView):
@@ -24,7 +22,7 @@ class HomeView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["technical_break"] = TECH_BREAK
+        context["technical_break"] = CONFIG.maintenance_mode
         return context
 
 
@@ -34,7 +32,8 @@ class LoadStreetView(TemplateView):
 
     def get_context_data(self, **kwargs):
         city_name = self.request.GET.get("city")
-        streets = Address.objects.filter(city__name=city_name).order_by("street")
+        streets = Address.objects.filter(
+                  city__name=city_name).order_by("street")
         context = super().get_context_data(**kwargs)
         context["streets"] = streets
         return context
@@ -62,12 +61,13 @@ class CalendarView(TemplateView):
                 schedule_dates_for_address[date.date].append(district)
 
         context["form"] = ChooseAddressForm
-        context["year"] = YEAR
-        context["calendar"] = days_for_calendar(YEAR)
-        context["days_names_list"] = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+        context["year"] = int(CONFIG.year)
+        context["calendar"] = days_for_calendar(int(CONFIG.year))
+        context["days_names_list"] = ["Mon", "Tue", "Wed",
+                                      "Thu", "Fri", "Sat", "Sun"]
         context["address"] = address
         context["schedule_dates_for_address"] = dict(schedule_dates_for_address)
-        context["technical_break"] = TECH_BREAK
+        context["technical_break"] = CONFIG.maintenance_mode
         context["rubbish_types"] = RubbishType.objects.all()
         return context
 
@@ -143,7 +143,7 @@ def ical(request):
         response = HttpResponse(content_type="text/calendar")
         response[
             "Content-Disposition"
-        ] = f'attachment; filename="kalendarz-odbioru-odpadow-{replace_polish_characters(city_name)}-{replace_polish_characters(street_name)}.ics"'
+        ] = f'attachment; filename="kalendarz-odbioru-odpadow-{repl_char(city_name)}-{repl_char(street_name)}.ics"'
         writer = csv.writer(response)
         writer.writerow(["BEGIN:VCALENDAR"])
         writer.writerow(["PRODID:-//Google Inc//Google Calendar 70.9054//EN"])
