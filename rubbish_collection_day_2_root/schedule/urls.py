@@ -5,6 +5,7 @@ from .views import (
     CalendarView,
     DynamicCssNameView,
     GenerateSvgView,
+    ical,
 )
 
 app_name = "schedule"
@@ -19,4 +20,5 @@ urlpatterns = [
         name="mark-rubbish-css",
     ),
     path("calendar/svg/<str:class_name>.svg", GenerateSvgView.as_view(), name="svg"),
+    path("calendar/ical/", ical, name="ical_calendar"),
 ]
