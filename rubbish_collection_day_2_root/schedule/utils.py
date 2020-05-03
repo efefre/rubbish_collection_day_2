@@ -90,26 +90,29 @@ def days_for_calendar(year):
     return months_for_calendar
 
 
-def replace_polish_characters(word):
+def repl_char(word):
+    """
+    Replace polish characters like: ą, ę, etc.
+    """
     polish_characters = {
-        'ą':'a',
-        'ć':'c',
-        'ę':'e',
-        'ł':'l',
-        'ń':'n',
-        'ó':'o',
-        'ś':'s',
-        'ź':'z',
-        'ż':'Z',
-        'Ą':'A',
-        'Ć':'C',
-        'Ę':'E',
-        'Ł':'L',
-        'Ń':'N',
-        'Ó':'O',
-        'Ś':'S',
-        'Ź':'Z',
-        'Ż':'Z',
+        'ą': 'a',
+        'ć': 'c',
+        'ę': 'e',
+        'ł': 'l',
+        'ń': 'n',
+        'ó': 'o',
+        'ś': 's',
+        'ź': 'z',
+        'ż': 'Z',
+        'Ą': 'A',
+        'Ć': 'C',
+        'Ę': 'E',
+        'Ł': 'L',
+        'Ń': 'N',
+        'Ó': 'O',
+        'Ś': 'S',
+        'Ź': 'Z',
+        'Ż': 'Z',
     }
     new_word = ''
     for letter in word:
