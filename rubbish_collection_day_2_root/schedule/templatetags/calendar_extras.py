@@ -8,7 +8,7 @@ import collections
 register = template.Library()
 
 config = ScheduleConfiguration.get_solo()
-YEAR = int(config.year)
+YEAR = config.year
 
 
 @register.filter
