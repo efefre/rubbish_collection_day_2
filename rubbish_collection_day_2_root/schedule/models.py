@@ -8,7 +8,7 @@ class ScheduleConfiguration(SingletonModel):
     maintenance_mode = models.BooleanField(
         default=False, verbose_name="Przerwa techniczna"
     )
-    year = models.CharField(max_length=4, verbose_name="Rok", unique=True)
+    year = models.IntegerField(verbose_name="Rok", unique=True)
     original_schedule = models.CharField(
         max_length=255,
         verbose_name="Link do harmonogramu",
