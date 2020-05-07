@@ -12,14 +12,14 @@
 {% endblock %}
 
 {% block search %}
-    {% if technical_break and user.is_authenticated or not technical_break %}
+    {% if config.maintenance_mode and user.is_authenticated or not config.maintenance_mode %}
         {% include 'schedule/search.html' %}
     {% endif %}
 {% endblock  %}
 
 {% block content %}
     <div id="content">
-    {% if technical_break and user.is_authenticated or not technical_break %}
+    {% if config.maintenance_mode and user.is_authenticated or not config.maintenance_mode %}
         <div id="calendar">
             <h2>{{year}}</h2>
             <h3 class="address">{{address}}</h3>
