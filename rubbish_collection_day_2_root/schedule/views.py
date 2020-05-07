@@ -57,8 +57,7 @@ class CalendarView(TemplateView):
                 schedule_dates_for_address[date.date].append(district)
 
         context["form"] = ChooseAddressForm
-        context["year"] = int(CONFIG().year)
-        context["calendar"] = days_for_calendar(int(CONFIG().year))
+        context["calendar"] = days_for_calendar(CONFIG().year)
         context["days_names_list"] = ["Mon", "Tue", "Wed",
                                       "Thu", "Fri", "Sat", "Sun"]
         context["address"] = address
