@@ -4,15 +4,16 @@ from solo.models import SingletonModel
 
 # Create your models here.
 class ScheduleConfiguration(SingletonModel):
-    site_name = models.CharField(max_length=255, verbose_name="Nazwa strony")
+    site_name = models.CharField(max_length=255, verbose_name="Nazwa strony", default="Calendar")
     maintenance_mode = models.BooleanField(
         default=False, verbose_name="Przerwa techniczna"
     )
-    year = models.IntegerField(verbose_name="Rok", unique=True)
+    year = models.IntegerField(verbose_name="Rok", unique=True, default=2020)
     original_schedule = models.CharField(
         max_length=255,
         verbose_name="Link do harmonogramu",
         help_text="Link do harmonogramu opublikowanego na stronie UM",
+        default="localhost"
     )
 
     def __str__(self):
