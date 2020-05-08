@@ -12,16 +12,16 @@
 {% endblock %}
 
 {% block search %}
-    {% if technical_break and user.is_authenticated or not technical_break %}
+    {% if config.maintenance_mode and user.is_authenticated or not config.maintenance_mode %}
         {% include 'schedule/search.html' %}
     {% endif %}
 {% endblock  %}
 
 {% block content %}
     <div id="content">
-    {% if technical_break and user.is_authenticated or not technical_break %}
+    {% if config.maintenance_mode and user.is_authenticated or not config.maintenance_mode %}
         <div id="calendar">
-            <h2>{{year}}</h2>
+            <h2>{{config.year}}</h2>
             <h3 class="address">{{address}}</h3>
             <div class="sr-only">
                 <p>Daty odbioru odpadów:
@@ -91,7 +91,7 @@
     {% next_year schedule_dates_for_address as next_year_dates %}
     {%if next_year_dates%}
     <div id="next-year" class="col-md-12 col-sm-12 col-xs-12">
-        <h2>{{year|add:1}}</h2>
+        <h2>{{config.year|add:1}}</h2>
         <ul>
         {% for day in next_year_dates %}
             <li>{{day|safe}}</li>

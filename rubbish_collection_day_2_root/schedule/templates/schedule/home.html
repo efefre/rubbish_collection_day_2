@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block search %} 
-    {% if technical_break and user.is_authenticated or not technical_break %}
+    {% if config.maintenance_mode and user.is_authenticated or not config.maintenance_mode %}
          {% include 'schedule/search.html' %}
         <div class="for-print">
             <h2>Wybierz właściwy adres, aby wydrukować kalendarz.</h2>

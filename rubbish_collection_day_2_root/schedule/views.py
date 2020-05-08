@@ -13,17 +13,13 @@ from schedule.models import ScheduleConfiguration
 from .utils import days_for_calendar, repl_char
 
 
-CONFIG = ScheduleConfiguration.get_solo()
+def CONFIG():
+    return ScheduleConfiguration.get_solo()
 
 
 class HomeView(FormView):
     form_class = ChooseAddressForm
     template_name = "schedule/home.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["technical_break"] = CONFIG.maintenance_mode
-        return context
 
 
 # Street - dropdown list option
@@ -61,13 +57,11 @@ class CalendarView(TemplateView):
                 schedule_dates_for_address[date.date].append(district)
 
         context["form"] = ChooseAddressForm
-        context["year"] = int(CONFIG.year)
-        context["calendar"] = days_for_calendar(int(CONFIG.year))
+        context["calendar"] = days_for_calendar(CONFIG().year)
         context["days_names_list"] = ["Mon", "Tue", "Wed",
                                       "Thu", "Fri", "Sat", "Sun"]
         context["address"] = address
         context["schedule_dates_for_address"] = dict(schedule_dates_for_address)
-        context["technical_break"] = CONFIG.maintenance_mode
         context["rubbish_types"] = RubbishType.objects.all()
         return context
 
