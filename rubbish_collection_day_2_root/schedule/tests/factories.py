@@ -58,3 +58,10 @@ class StreetFactory(factory.django.DjangoModelFactory):
     FACTORY_FOR = Street
 
     name = factory.Iterator(["Polna", "Ogrodowa"], cycle=False)
+
+
+class AddressFactory(factory.django.DjangoModelFactory):
+    FACTORY_FOR = Address
+
+    city = factory.SubFactory(CityFactory)
+    street = factory.SubFactory(StreetFactory)
