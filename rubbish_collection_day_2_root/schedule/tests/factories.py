@@ -2,7 +2,7 @@ import datetime
 import factory
 from schedule.models import (ScheduleConfiguration, Date,
                              RubbishType, RubbishDistrict)
-
+from city_detail.models import City, Street, Address
 
 
 class ScheduleConfigurationFactory(factory.django.DjangoModelFactory):
@@ -45,3 +45,10 @@ class RubbishDistrictFactory(factory.django.DjangoModelFactory):
     city_type = "miasto"
     rubbish_type = factory.SubFactory(RubbishTypeFactory)
     date = factory.SubFactory(DateFactory)
+
+
+class CityFactory(factory.django.DjangoModelFactory):
+    FACTORY_FOR = City
+
+    name = "Wołomin"
+    city_type = "miasto"
