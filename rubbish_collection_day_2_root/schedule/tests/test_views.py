@@ -1,16 +1,22 @@
 import pytest
 from django.urls import reverse
+import factories
 
-
+@pytest.mark.django_db
 class TestViewsWithoutLogin:
-    @pytest.mark.django_db
     def test_home_view(self, client):
         url = reverse("schedule:home")
         response = client.get(url)
         assert response.status_code == 200
 
-    @pytest.mark.django_db
     def test_ajax_load_streets(self, client):
         url = reverse("schedule:ajax_load_streets")
+        response = client.get(url)
+        assert response.status_code == 200
+
+    def test_calendar_view(self, client):
+        address = factories.AddressFactory()
+        url = reverse("schedule:calendar")
+        url = f"{url}?city={address.city}&street={address.street}"
         response = client.get(url)
         assert response.status_code == 200
