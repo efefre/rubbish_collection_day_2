@@ -1,12 +1,14 @@
 import datetime
 import factory
+import factory.fuzzy
 from schedule.models import (ScheduleConfiguration, Date,
                              RubbishType, RubbishDistrict)
 from city_detail.models import City, Street, Address
 
 
 class ScheduleConfigurationFactory(factory.django.DjangoModelFactory):
-    FACTORY_FOR = ScheduleConfiguration
+    class Meta:
+        model = ScheduleConfiguration
 
     site_name = "Test Page"
     maintenance_mode = False
@@ -15,7 +17,8 @@ class ScheduleConfigurationFactory(factory.django.DjangoModelFactory):
 
 
 class DateFactory(factory.django.DjangoModelFactory):
-    FACTORY_FOR = Date
+    class Meta:
+        model = Date
 
     date = factory.fuzzy.FuzzyDate(
         datetime.date(2020, 1, 1), datetime.date(2021, 3, 31),
@@ -23,7 +26,8 @@ class DateFactory(factory.django.DjangoModelFactory):
 
 
 class RubbishTypeFactory(factory.django.DjangoModelFactory):
-    FACTORY_FOR = RubbishType
+    class Meta:
+        model = RubbishType
 
     name = factory.Iterator(
         ["All Rubbish", "Bio Rubbish", "Recycled Rubbish",
@@ -39,7 +43,8 @@ class RubbishTypeFactory(factory.django.DjangoModelFactory):
 
 
 class RubbishDistrictFactory(factory.django.DjangoModelFactory):
-    FACTORY_FOR = RubbishDistrict
+    class Meta:
+        model = RubbishDistrict
 
     name = "Rejon 1"
     city_type = "miasto"
@@ -48,20 +53,23 @@ class RubbishDistrictFactory(factory.django.DjangoModelFactory):
 
 
 class CityFactory(factory.django.DjangoModelFactory):
-    FACTORY_FOR = City
+    class Meta:
+        model = City
 
     name = "Wołomin"
     city_type = "miasto"
 
 
 class StreetFactory(factory.django.DjangoModelFactory):
-    FACTORY_FOR = Street
+    class Meta:
+        model = Street
 
     name = factory.Iterator(["Polna", "Ogrodowa"], cycle=False)
 
 
 class AddressFactory(factory.django.DjangoModelFactory):
-    FACTORY_FOR = Address
+    class Meta:
+        model = Address
 
     city = factory.SubFactory(CityFactory)
     street = factory.SubFactory(StreetFactory)
