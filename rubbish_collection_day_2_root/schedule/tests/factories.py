@@ -1,6 +1,8 @@
 import datetime
 import factory
-from schedule.models import ScheduleConfiguration, Date, RubbishType
+from schedule.models import (ScheduleConfiguration, Date,
+                             RubbishType, RubbishDistrict)
+
 
 
 class ScheduleConfigurationFactory(factory.django.DjangoModelFactory):
@@ -34,3 +36,12 @@ class RubbishTypeFactory(factory.django.DjangoModelFactory):
     css_name = factory.Iterator(
         ["all", "bio", "rec", "ash", "big"], cycle=False
     )
+
+
+class RubbishDistrictFactory(factory.django.DjangoModelFactory):
+    FACTORY_FOR = RubbishDistrict
+
+    name = "Rejon 1"
+    city_type = "miasto"
+    rubbish_type = factory.SubFactory(RubbishTypeFactory)
+    date = factory.SubFactory(DateFactory)
