@@ -2,6 +2,7 @@ import pytest
 from django.urls import reverse
 import factories
 
+
 @pytest.mark.django_db
 class TestViewsWithoutLogin:
     def test_home_view(self, client):
@@ -23,7 +24,10 @@ class TestViewsWithoutLogin:
 
     def test_generate_svg_view(self, client):
         rubbish_district = factories.RubbishDistrictFactory()
-        url = reverse("schedule:svg", kwargs={'class_name': rubbish_district.rubbish_type.css_name})
+        url = reverse(
+            "schedule:svg",
+            kwargs={"class_name": rubbish_district.rubbish_type.css_name},
+        )
         response = client.get(url)
         assert response.status_code == 200
 
