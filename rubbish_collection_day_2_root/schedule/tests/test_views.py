@@ -23,6 +23,13 @@ class TestViewsWithoutLogin:
 
     def test_generate_svg_view(self, client):
         rubbish_district = factories.RubbishDistrictFactory()
-        url = reverse("schedule:svg", kwargs={'class_name': rubbish_district.rubbish_type.css_name })
+        url = reverse("schedule:svg", kwargs={'class_name': rubbish_district.rubbish_type.css_name})
+        response = client.get(url)
+        assert response.status_code == 200
+
+    def test_ical_view(self, client):
+        address = factories.AddressFactory()
+        url = reverse("schedule:ical_calendar")
+        url = f"{url}?city={address.city}&street={address.street}"
         response = client.get(url)
         assert response.status_code == 200
