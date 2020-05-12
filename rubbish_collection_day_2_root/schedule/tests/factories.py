@@ -49,7 +49,15 @@ class RubbishDistrictFactory(factory.django.DjangoModelFactory):
     name = "Rejon 1"
     city_type = "miasto"
     rubbish_type = factory.SubFactory(RubbishTypeFactory)
-    date = factory.SubFactory(DateFactory)
+
+    @factory.post_generation
+    def date(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            for day in extracted:
+                self.date.add(day)
 
 
 class CityFactory(factory.django.DjangoModelFactory):
