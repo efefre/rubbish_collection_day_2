@@ -4,7 +4,7 @@ import factories
 
 
 @pytest.mark.django_db
-class TestViewsWithoutLogin:
+class TestUrls:
     def test_home_view(self, client):
         url = reverse("schedule:home")
         response = client.get(url)
