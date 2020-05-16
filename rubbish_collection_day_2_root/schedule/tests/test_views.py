@@ -7,7 +7,7 @@ from requests_html import HTML
 @pytest.fixture(autouse=True)
 def reset_factory_boy_sequences():
     factories.StreetFactory.name.reset()
-    
+
 
 @pytest.mark.django_db
 class TestUrls:
@@ -109,7 +109,9 @@ class TestMaintenanceModeOn:
 @pytest.mark.django_db
 class TestMaintenanceModeOff:
     def test_home_page_as_user(self, client):
-        maintenance_mode = factories.ScheduleConfigurationFactory(maintenance_mode=False)
+        maintenance_mode = factories.ScheduleConfigurationFactory(
+            maintenance_mode=False
+        )
         response = (client.get(reverse("schedule:home"))).rendered_content
 
         site = HTML(html=response)
@@ -119,8 +121,40 @@ class TestMaintenanceModeOff:
         assert city_label is not None
 
     def test_home_page_as_admin(self, admin_client):
-        maintenance_mode = factories.ScheduleConfigurationFactory(maintenance_mode=False)
+        maintenance_mode = factories.ScheduleConfigurationFactory(
+            maintenance_mode=False
+        )
         response = (admin_client.get(reverse("schedule:home"))).rendered_content
+
+        site = HTML(html=response)
+        alert_box = site.find("div.maintenance-mode", first=True)
+        city_label = site.find("#AddressForm > p:nth-child(1) > label", first=True)
+        assert alert_box is None
+        assert city_label is not None
+
+    def test_calendar_page_as_user(self, client):
+        maintenance_mode = factories.ScheduleConfigurationFactory(
+            maintenance_mode=False
+        )
+        address = factories.AddressFactory()
+        url = reverse("schedule:calendar")
+        url = f"{url}?city={address.city}&street={address.street}"
+        response = (client.get(url)).content
+
+        site = HTML(html=response)
+        alert_box = site.find("div.maintenance-mode", first=True)
+        city_label = site.find("#AddressForm > p:nth-child(1) > label", first=True)
+        assert alert_box is None
+        assert city_label is not None
+
+    def test_calendar_page_as_admin(self, admin_client):
+        maintenance_mode = factories.ScheduleConfigurationFactory(
+            maintenance_mode=False
+        )
+        address = factories.AddressFactory()
+        url = reverse("schedule:calendar")
+        url = f"{url}?city={address.city}&street={address.street}"
+        response = (admin_client.get(url)).content
 
         site = HTML(html=response)
         alert_box = site.find("div.maintenance-mode", first=True)
