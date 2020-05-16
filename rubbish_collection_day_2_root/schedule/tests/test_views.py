@@ -47,23 +47,23 @@ class TestMaintenanceModeOn:
         response = (client.get(reverse("schedule:home"))).rendered_content
 
         site = HTML(html=response)
-        alert_box = site.find("div.alert-warning", first=True).text
+        alert_box = site.find("div.maintenance-mode", first=True).text
         city_label = site.find("#AddressForm > p:nth-child(1) > label", first=True)
         assert (
             alert_box
             == "Przepraszamy. W tej chwili trwa przerwa techniczna.\nZapraszamy później."
         )
-        assert city_label == None
+        assert city_label is None
 
     def test_home_page_as_admin(self, admin_client):
         maintenance_mode = factories.ScheduleConfigurationFactory(maintenance_mode=True)
         response = (admin_client.get(reverse("schedule:home"))).rendered_content
 
         site = HTML(html=response)
-        alert_box = site.find("div.alert-warning", first=True).text
+        alert_box = site.find("div.maintenance-mode", first=True).text
         city_label = site.find("#AddressForm > p:nth-child(1) > label", first=True)
         assert (
             alert_box
             != "Przepraszamy. W tej chwili trwa przerwa techniczna.\nZapraszamy później."
         )
-        assert city_label != None
+        assert city_label is not None
