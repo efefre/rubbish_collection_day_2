@@ -1,8 +1,7 @@
 import datetime
 import factory
 import factory.fuzzy
-from schedule.models import (ScheduleConfiguration, Date,
-                             RubbishType, RubbishDistrict)
+from schedule.models import ScheduleConfiguration, Date, RubbishType, RubbishDistrict
 from city_detail.models import City, Street, Address
 
 
@@ -30,16 +29,13 @@ class RubbishTypeFactory(factory.django.DjangoModelFactory):
         model = RubbishType
 
     name = factory.Iterator(
-        ["All Rubbish", "Bio Rubbish", "Recycled Rubbish",
-         "Ash", "Big Rubbish"],
+        ["All Rubbish", "Bio Rubbish", "Recycled Rubbish", "Ash", "Big Rubbish"],
         cycle=False,
     )
     mark_color = factory.Iterator(
         ["#F45B70", "#70CEAE", "#6095BD", "#9E9E9E", "#BC8F71"], cycle=False
     )
-    css_name = factory.Iterator(
-        ["all", "bio", "rec", "ash", "big"], cycle=False
-    )
+    css_name = factory.Iterator(["all", "bio", "rec", "ash", "big"], cycle=False)
 
 
 class RubbishDistrictFactory(factory.django.DjangoModelFactory):
