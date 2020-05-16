@@ -48,7 +48,10 @@ class TestMaintenanceModeOn:
 
         site = HTML(html=response)
         alert_box = site.find("div.alert-warning", first=True).text
+        city_label = site.find("#AddressForm > p:nth-child(1) > label", first=True)
         assert (
             alert_box
             == "Przepraszamy. W tej chwili trwa przerwa techniczna.\nZapraszamy później."
         )
+        assert city_label == None
+
