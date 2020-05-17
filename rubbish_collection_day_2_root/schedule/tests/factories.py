@@ -77,3 +77,12 @@ class AddressFactory(factory.django.DjangoModelFactory):
 
     city = factory.SubFactory(CityFactory)
     street = factory.SubFactory(StreetFactory)
+
+    @factory.post_generation
+    def rubbish_district(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            for district in extracted:
+                self.rubbish_district.add(district)
