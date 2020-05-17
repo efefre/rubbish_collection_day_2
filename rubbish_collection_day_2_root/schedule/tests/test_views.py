@@ -7,6 +7,9 @@ from requests_html import HTML
 @pytest.fixture(autouse=True)
 def reset_factory_boy_sequences():
     factories.StreetFactory.name.reset()
+    factories.RubbishTypeFactory.name.reset()
+    factories.RubbishTypeFactory.mark_color.reset()
+    factories.RubbishTypeFactory.css_name.reset()
 
 
 @pytest.mark.django_db
