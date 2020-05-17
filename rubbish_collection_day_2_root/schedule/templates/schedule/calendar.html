@@ -43,7 +43,10 @@
                 {% endfor %}
                 </ul>
                 <p><strong>UWAGA!</strong> W przypadku odbioru różnych odpadów tego samego dnia zaznaczenie na kalendarzu
-                    składa się z kilku kolorów odpowiadających rodzajowi odpadów.</p>
+                    składa się z kilku kolorów odpowiadających rodzajowi odpadów.
+                    {% if more_tha_5_rubbish_on_same_day %}<br>Jeżeli tego samego dnia odbieranych jest <strong>ponad 5 rodzajów odpadów</strong>, obok daty zostanie wyświetlony czerwony wykrzynik.{% endif %}
+                    </p>
+
             </div>
             <div id="calendar-days">
                 {% for month in calendar.keys %}
@@ -82,7 +85,7 @@
             </div>
         </div>
         {% else %}
-            <div style="margin-top: 30px; text-align: center" class="alert alert-warning" role="alert">
+            <div style="margin-top: 30px; text-align: center" class="alert alert-warning maintenance-mode" role="alert">
             <p>Przepraszamy. W tej chwili trwa przerwa techniczna.<br/>
             Zapraszamy później.</p>
         </div>

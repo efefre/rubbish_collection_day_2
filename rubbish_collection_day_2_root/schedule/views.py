@@ -56,6 +56,8 @@ class CalendarView(TemplateView):
             for date in district.date.all():
                 schedule_dates_for_address[date.date].append(district)
 
+        more_than_5_rubbish_on_same_day = [
+            i for i in schedule_dates_for_address.values() if len(i) > 5]
         context["form"] = ChooseAddressForm
         context["calendar"] = days_for_calendar(CONFIG().year)
         context["days_names_list"] = ["Mon", "Tue", "Wed",
@@ -63,6 +65,7 @@ class CalendarView(TemplateView):
         context["address"] = address
         context["schedule_dates_for_address"] = dict(schedule_dates_for_address)
         context["rubbish_types"] = RubbishType.objects.all()
+        context["more_than_5_rubbish_on_same_day"] = more_than_5_rubbish_on_same_day
         return context
 
 

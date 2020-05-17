@@ -110,5 +110,14 @@
         <path d="M29.05,53.559l5.838,-15.611l-27.318,-10.217l-5.839,15.61l27.319,10.218Z" style="fill:#fff;" />
         <path d="M107.13,46.457l-4.537,-16.037l-28.065,7.94l4.537,16.037l28.065,-7.94Z" style="fill:#fff;" />
     </g>
+    {% elif color_svg|length > 5 %}
+        <clipPath id="_clip1">
+            <rect id="more_than_51" serif:id="more_than_5" x="0" y="0" width="104.167" height="104.167"/>
+        </clipPath>
+        <g clip-path="url(#_clip1)">
+            <g transform="matrix(1,0,0,1,-137.874,-120.569)">
+                <text x="210.118px" y="170.646px" style="font-family:'Arial Black';font-weight:500;font-size:52px;fill:rgb(255,0,0);">!</text>
+            </g>
+        </g>
     {% endif %}
 </svg>
