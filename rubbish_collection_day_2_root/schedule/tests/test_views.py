@@ -228,8 +228,8 @@ class TestCalendarView:
                     rubbish_marks = site.find(f"div.{month} span.mark-rubbish")
 
                     for mark in rubbish_marks:
-                        if mark.text == day:
-                            assert mark.text == day
+                        if int(day) is int(mark.text):
+                            assert int(mark.text) == int(day)
 
     def test_next_year_dates(self, client):
         date_all_1 = factories.DateFactory(date=datetime.date(2021,1,4))
