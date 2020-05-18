@@ -4,7 +4,9 @@ from solo.models import SingletonModel
 
 # Create your models here.
 class ScheduleConfiguration(SingletonModel):
-    site_name = models.CharField(max_length=255, verbose_name="Nazwa strony", default="Calendar")
+    site_name = models.CharField(
+        max_length=255, verbose_name="Nazwa strony", default="Calendar"
+    )
     maintenance_mode = models.BooleanField(
         default=False, verbose_name="Przerwa techniczna"
     )
@@ -13,25 +15,25 @@ class ScheduleConfiguration(SingletonModel):
         max_length=255,
         verbose_name="Link do harmonogramu",
         help_text="Link do harmonogramu opublikowanego na stronie UM",
-        default="localhost"
+        default="localhost",
     )
-
-    def __str__(self):
-        return f"Konfiguracja strony: {self.site_name}"
 
     class Meta:
         verbose_name = "Konfiguracja harmonogramu"
+
+    def __str__(self):
+        return f"Konfiguracja strony: {self.site_name}"
 
 
 class Date(models.Model):
     date = models.DateField(verbose_name="Data", unique=True)
 
-    def __str__(self):
-        return f"{self.date}"
-
     class Meta:
         verbose_name_plural = "Daty"
         verbose_name = "Data"
+
+    def __str__(self):
+        return f"{self.date}"
 
 
 class RubbishType(models.Model):
@@ -49,12 +51,12 @@ class RubbishType(models.Model):
         help_text="Trzy litery związane z nazwą frakcji.",
     )
 
-    def __str__(self):
-        return f"{self.name}"
-
     class Meta:
         verbose_name_plural = "Frakcje śmieci"
         verbose_name = "Frakcja"
+
+    def __str__(self):
+        return f"{self.name}"
 
 
 class RubbishDistrict(models.Model):
@@ -81,10 +83,10 @@ class RubbishDistrict(models.Model):
         Date, related_name="districts", blank=True, verbose_name="Daty"
     )
 
-    def __str__(self):
-        return f"{self.city_type.capitalize()} - {self.rubbish_type}: {self.name}"
-
     class Meta:
         verbose_name_plural = "Rejony odbioru odpadów"
         verbose_name = "Rejon"
         unique_together = ("name", "city_type", "rubbish_type")
+
+    def __str__(self):
+        return f"{self.city_type.capitalize()} - {self.rubbish_type}: {self.name}"

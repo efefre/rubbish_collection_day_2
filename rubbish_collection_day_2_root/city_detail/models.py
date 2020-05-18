@@ -18,25 +18,25 @@ class City(models.Model):
         max_length=10,
     )
 
-    def __str__(self):
-        return self.name
-
     class Meta:
         ordering = ("name",)
         verbose_name_plural = "Miejscowości"
         verbose_name = "Miejscowość"
 
+    def __str__(self):
+        return self.name
+
 
 class Street(models.Model):
     name = models.CharField(max_length=100, verbose_name="Ulica")
-
-    def __str__(self):
-        return self.name
 
     class Meta:
         ordering = ("name",)
         verbose_name_plural = "Ulice"
         verbose_name = "Ulica"
+
+    def __str__(self):
+        return self.name
 
 
 class Address(models.Model):
@@ -51,10 +51,10 @@ class Address(models.Model):
         RubbishDistrict, related_name="addresses", verbose_name="Rejon",
     )
 
-    def __str__(self):
-        return f"{self.city.name}, {self.street.name}"
-
     class Meta:
         verbose_name_plural = "Adresy odbioru odpadów"
         verbose_name = "Adres odbioru odpadów"
         unique_together = ("city", "street")
+
+    def __str__(self):
+        return f"{self.city.name}, {self.street.name}"
