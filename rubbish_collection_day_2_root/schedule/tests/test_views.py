@@ -2,6 +2,7 @@ import pytest
 from django.urls import reverse
 import factories
 from requests_html import HTML
+from schedule.utils import polish_holidays
 
 
 @pytest.fixture(autouse=True)
@@ -209,13 +210,22 @@ class TestCalendarView:
             )
         )
 
-        for district in address.rubbish_district.all():
-            assert district.date.count() == 2
-
         url = reverse("schedule:calendar")
         url = f"{url}?city={address.city}&street={address.street}"
         response = (client.get(url)).content
 
         site = HTML(html=response)
-        rubbish_marks = site.find("span.mark-rubbish")
-        assert len(rubbish_marks) == 10
+
+        for district in address.rubbish_district.all():
+            for date in district.date.all():
+                year = int(date.date.strftime('%Y'))
+                month = date.date.strftime('%B').lower()
+                day = date.date.strftime('%d')
+
+                polish_holidays_dict = polish_holidays(year)
+                if not polish_holidays_dict.get(date):
+                    rubbish_marks = site.find(f"div.{month} span.mark-rubbish")
+
+                    for mark in rubbish_marks:
+                        if mark.text == day:
+                            assert mark.text == day
