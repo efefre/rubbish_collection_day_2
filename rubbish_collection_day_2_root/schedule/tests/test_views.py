@@ -219,9 +219,9 @@ class TestCalendarView:
 
         for district in address.rubbish_district.all():
             for date in district.date.all():
-                year = int(date.date.strftime('%Y'))
-                month = date.date.strftime('%B').lower()
-                day = date.date.strftime('%d')
+                year = int(date.date.strftime("%Y"))
+                month = date.date.strftime("%B").lower()
+                day = date.date.strftime("%d")
 
                 polish_holidays_dict = polish_holidays(year)
                 if not polish_holidays_dict.get(date):
@@ -232,32 +232,32 @@ class TestCalendarView:
                             assert int(mark.text) == int(day)
 
     def test_next_year_dates(self, client):
-        date_all_1 = factories.DateFactory(date=datetime.date(2021,1,4))
-        date_all_2 = factories.DateFactory(date=datetime.date(2021,2,10))
+        date_all_1 = factories.DateFactory(date=datetime.date(2021, 1, 4))
+        date_all_2 = factories.DateFactory(date=datetime.date(2021, 2, 10))
         district_all = factories.RubbishDistrictFactory.create(
             date=(date_all_1, date_all_2)
         )
 
-        date_bio_1 = factories.DateFactory(date=datetime.date(2021,1,7))
-        date_bio_2 = factories.DateFactory(date=datetime.date(2021,2,12))
+        date_bio_1 = factories.DateFactory(date=datetime.date(2021, 1, 7))
+        date_bio_2 = factories.DateFactory(date=datetime.date(2021, 2, 12))
         district_bio = factories.RubbishDistrictFactory.create(
             date=(date_bio_1, date_bio_2)
         )
 
-        date_rec_1 = factories.DateFactory(date=datetime.date(2021,1,12))
-        date_rec_2 = factories.DateFactory(date=datetime.date(2021,2,15))
+        date_rec_1 = factories.DateFactory(date=datetime.date(2021, 1, 12))
+        date_rec_2 = factories.DateFactory(date=datetime.date(2021, 2, 15))
         district_rec = factories.RubbishDistrictFactory.create(
             date=(date_rec_1, date_rec_2)
         )
 
-        date_ash_1 = factories.DateFactory(date=datetime.date(2021,1,15))
-        date_ash_2 = factories.DateFactory(date=datetime.date(2021,2,17))
+        date_ash_1 = factories.DateFactory(date=datetime.date(2021, 1, 15))
+        date_ash_2 = factories.DateFactory(date=datetime.date(2021, 2, 17))
         district_ash = factories.RubbishDistrictFactory.create(
             date=(date_ash_1, date_ash_2)
         )
 
-        date_big_1 = factories.DateFactory(date=datetime.date(2021,1,21))
-        date_big_2 = factories.DateFactory(date=datetime.date(2021,2,23))
+        date_big_1 = factories.DateFactory(date=datetime.date(2021, 1, 21))
+        date_big_2 = factories.DateFactory(date=datetime.date(2021, 2, 23))
         district_big = factories.RubbishDistrictFactory.create(
             date=(date_big_1, date_big_2)
         )
