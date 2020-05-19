@@ -300,3 +300,21 @@ class TestDynamicCssView():
         assert f"{rubbish_type3.css_name}-rubbish.svg" in site.text
         assert f"{rubbish_type4.css_name}-rubbish.svg" in site.text
         assert f"{rubbish_type5.css_name}-rubbish.svg" in site.text
+
+    def test_svg_name_in_css(self, client):
+        rubbish_type1 = factories.RubbishTypeFactory()
+        rubbish_type2 = factories.RubbishTypeFactory()
+        rubbish_type3 = factories.RubbishTypeFactory()
+        rubbish_type4 = factories.RubbishTypeFactory()
+        rubbish_type5 = factories.RubbishTypeFactory()
+
+        url = reverse("schedule:mark-rubbish-css")
+        response = (client.get(url)).content
+
+        site = HTML(html=response)
+
+        assert f"{rubbish_type1.css_name}-rubbish.svg" in site.text
+        assert f"{rubbish_type2.css_name}-rubbish.svg" in site.text
+        assert f"{rubbish_type3.css_name}-rubbish.svg" in site.text
+        assert f"{rubbish_type4.css_name}-rubbish.svg" in site.text
+        assert f"{rubbish_type5.css_name}-rubbish.svg" in site.text
