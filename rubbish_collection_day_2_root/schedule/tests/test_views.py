@@ -280,3 +280,23 @@ class TestCalendarView:
 
         next_year_dates = site.find("div#next-year span.mark-rubbish")
         assert len(next_year_dates) == 10
+
+@pytest.mark.django_db
+class TestDynamicCssView():
+    def test_class_name(self, client):
+        rubbish_type1 = factories.RubbishTypeFactory()
+        rubbish_type2 = factories.RubbishTypeFactory()
+        rubbish_type3 = factories.RubbishTypeFactory()
+        rubbish_type4 = factories.RubbishTypeFactory()
+        rubbish_type5 = factories.RubbishTypeFactory()
+
+        url = reverse("schedule:mark-rubbish-css")
+        response = (client.get(url)).content
+
+        site = HTML(html=response)
+
+        assert f"{rubbish_type1.css_name}-rubbish.svg" in site.text
+        assert f"{rubbish_type2.css_name}-rubbish.svg" in site.text
+        assert f"{rubbish_type3.css_name}-rubbish.svg" in site.text
+        assert f"{rubbish_type4.css_name}-rubbish.svg" in site.text
+        assert f"{rubbish_type5.css_name}-rubbish.svg" in site.text
