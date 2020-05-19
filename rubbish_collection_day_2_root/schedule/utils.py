@@ -1,5 +1,6 @@
 import datetime
 import calendar
+from itertools import combinations
 
 
 def when_easter(year):
@@ -119,3 +120,15 @@ def repl_char(word):
         new_letter = polish_characters.get(letter, letter)
         new_word += new_letter
     return new_word
+
+def rubbish_combinations(rubbish_all_types: 'list') -> 'list':
+    all_css_combination = []
+    i = 1
+    while i <= len(rubbish_all_types):
+        rub_combinations = combinations(rubbish_all_types, i)
+        for comb in rub_combinations:
+            all_css_combination.append(sorted(list(comb)))
+
+        i += 1
+    css_names = ["-".join(_) for _ in all_css_combination]
+    return css_names
