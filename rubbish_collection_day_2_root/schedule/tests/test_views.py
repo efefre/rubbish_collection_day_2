@@ -321,8 +321,15 @@ class TestDynamicCssView:
 
         site = HTML(html=response)
 
-        assert f"{rubbish_type1.css_name}-rubbish.svg" in site.text
-        assert f"{rubbish_type2.css_name}-rubbish.svg" in site.text
-        assert f"{rubbish_type3.css_name}-rubbish.svg" in site.text
-        assert f"{rubbish_type4.css_name}-rubbish.svg" in site.text
-        assert f"{rubbish_type5.css_name}-rubbish.svg" in site.text
+        rubbish_type_css = [
+            rubbish_type1.css_name,
+            rubbish_type2.css_name,
+            rubbish_type3.css_name,
+            rubbish_type4.css_name,
+            rubbish_type5.css_name,
+        ]
+
+        all_rubbish_combinations = rubbish_combinations(rubbish_type_css)
+
+        for css_name in all_rubbish_combinations:
+            assert f"{css_name}-rubbish.svg" in site.text
