@@ -384,3 +384,24 @@ class TestGenerateSvgView:
         assert f"stroke:{rubbish_type1.mark_color}" in site.html
         assert f"stroke:{rubbish_type2.mark_color}" in site.html
         assert f"stroke:{rubbish_type3.mark_color}" in site.html
+
+    def test_four_color_mark(self, client):
+        rubbish_type1 = factories.RubbishTypeFactory()
+        rubbish_type2 = factories.RubbishTypeFactory()
+        rubbish_type3 = factories.RubbishTypeFactory()
+        rubbish_type4 = factories.RubbishTypeFactory()
+
+        url = reverse(
+            "schedule:svg",
+            kwargs={
+                "class_name": f"{rubbish_type1.css_name}-{rubbish_type2.css_name}-{rubbish_type3.css_name}-{rubbish_type4.css_name}-rubbish"
+            },
+        )
+
+        response = (client.get(url)).content
+
+        site = HTML(html=response)
+        assert f"stroke:{rubbish_type1.mark_color}" in site.html
+        assert f"stroke:{rubbish_type2.mark_color}" in site.html
+        assert f"stroke:{rubbish_type3.mark_color}" in site.html
+        assert f"stroke:{rubbish_type4.mark_color}" in site.html
