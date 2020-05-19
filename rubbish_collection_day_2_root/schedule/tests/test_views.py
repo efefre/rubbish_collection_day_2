@@ -333,3 +333,18 @@ class TestDynamicCssView:
 
         for css_name in all_rubbish_combinations:
             assert f"{css_name}-rubbish.svg" in site.text
+
+
+@pytest.mark.django_db
+class TestGenerateSvgView:
+    def test_one_color_mark(self, client):
+        rubbish_type1 = factories.RubbishTypeFactory()
+
+        url = reverse(
+            "schedule:svg", kwargs={"class_name": f"{rubbish_type1.css_name}-rubbish"}
+        )
+
+        response = (client.get(url)).content
+
+        site = HTML(html=response)
+        assert f"stroke:{rubbish_type1.mark_color}" in site.html
