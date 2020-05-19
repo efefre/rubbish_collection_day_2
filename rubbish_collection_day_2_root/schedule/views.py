@@ -1,7 +1,7 @@
 import csv
 import datetime
 from collections import defaultdict
-from itertools import combinations
+
 
 from django.http import HttpResponse
 from django.views.generic import FormView, TemplateView
@@ -10,7 +10,7 @@ from city_detail.models import Address
 from schedule.forms import ChooseAddressForm
 from schedule.models import RubbishDistrict, RubbishType
 from schedule.models import ScheduleConfiguration
-from .utils import days_for_calendar, repl_char
+from .utils import days_for_calendar, repl_char, rubbish_combinations
 
 
 def CONFIG():
@@ -77,21 +77,11 @@ class DynamicCssNameView(TemplateView):
         context = super().get_context_data(**kwargs)
         rubbish_type = RubbishType.objects.all()
 
-        all_css_combination = []
         rubbish_type_css = []
         for rubbish in rubbish_type:
             rubbish_type_css.append(rubbish.css_name)
 
-        i = 1
-        while i <= len(rubbish_type_css):
-            rub_combinations = combinations(rubbish_type_css, i)
-            for comb in rub_combinations:
-                all_css_combination.append(sorted(list(comb)))
-
-            i += 1
-        css_names = ["-".join(_) for _ in all_css_combination]
-
-        context["rubbish_type_css"] = css_names
+        context["rubbish_type_css"] = rubbish_combinations(rubbish_type_css)
 
         return context
 
