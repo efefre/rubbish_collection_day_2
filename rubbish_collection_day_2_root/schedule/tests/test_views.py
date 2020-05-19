@@ -3,7 +3,7 @@ from django.urls import reverse
 import factories
 import datetime
 from requests_html import HTML
-from schedule.utils import polish_holidays
+from schedule.utils import polish_holidays, rubbish_combinations
 
 
 @pytest.fixture(autouse=True)
@@ -281,8 +281,9 @@ class TestCalendarView:
         next_year_dates = site.find("div#next-year span.mark-rubbish")
         assert len(next_year_dates) == 10
 
+
 @pytest.mark.django_db
-class TestDynamicCssView():
+class TestDynamicCssView:
     def test_class_name(self, client):
         rubbish_type1 = factories.RubbishTypeFactory()
         rubbish_type2 = factories.RubbishTypeFactory()
@@ -295,11 +296,18 @@ class TestDynamicCssView():
 
         site = HTML(html=response)
 
-        assert f"{rubbish_type1.css_name}-rubbish.svg" in site.text
-        assert f"{rubbish_type2.css_name}-rubbish.svg" in site.text
-        assert f"{rubbish_type3.css_name}-rubbish.svg" in site.text
-        assert f"{rubbish_type4.css_name}-rubbish.svg" in site.text
-        assert f"{rubbish_type5.css_name}-rubbish.svg" in site.text
+        rubbish_type_css = [
+            rubbish_type1.css_name,
+            rubbish_type2.css_name,
+            rubbish_type3.css_name,
+            rubbish_type4.css_name,
+            rubbish_type5.css_name,
+        ]
+
+        all_rubbish_combinations = rubbish_combinations(rubbish_type_css)
+
+        for css_name in all_rubbish_combinations:
+            assert f".{css_name}-rubbish" in site.text
 
     def test_svg_name_in_css(self, client):
         rubbish_type1 = factories.RubbishTypeFactory()
