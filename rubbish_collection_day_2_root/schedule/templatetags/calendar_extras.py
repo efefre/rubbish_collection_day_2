@@ -56,30 +56,35 @@ def calendar_day(number, month, schedule_dates_for_address):
     date_from_calendar = datetime.strptime(
         f"{YEAR}-{month}-{number}", "%Y-%B-%d"
     ).date()
-    # ----- HOLIDAYS ----
-    if polish_holidays_list.get(date_from_calendar):
-        return format_html(f"<span class='holiday'>{number}</span>")
-    else:
-        # ----- RUBBISH ----
-        if schedule_dates_for_address.get(date_from_calendar):
-            rubbish_detail = schedule_dates_for_address.get(date_from_calendar)
-            if len(rubbish_detail) > 1:
-                rubbish_names = ", ".join(
-                    rubbish.rubbish_type.name for rubbish in rubbish_detail
-                )
-                rubbish_marks = "-".join(
-                    sorted(
-                        [rubbish.rubbish_type.css_name for rubbish in rubbish_detail]
-                    )
-                )
-            else:
-                rubbish_names = rubbish_detail[0].rubbish_type.name
-                rubbish_marks = rubbish_detail[0].rubbish_type.css_name
+
+    # ----- RUBBISH ----
+    if schedule_dates_for_address.get(date_from_calendar):
+        rubbish_detail = schedule_dates_for_address.get(date_from_calendar)
+        if len(rubbish_detail) > 1:
+            rubbish_names = ", ".join(
+                rubbish.rubbish_type.name for rubbish in rubbish_detail
+            )
+            rubbish_marks = "-".join(
+                sorted([rubbish.rubbish_type.css_name for rubbish in rubbish_detail])
+            )
+        else:
+            rubbish_names = rubbish_detail[0].rubbish_type.name
+            rubbish_marks = rubbish_detail[0].rubbish_type.css_name
+
+        # ----- HOLIDAYS ----
+        if polish_holidays_list.get(date_from_calendar):
+            return format_html(
+                f"<span class='sr-only'>{rubbish_names}</span><span class='holiday mark-rubbish {rubbish_marks.replace('#','')}-rubbish' data-toggle='tooltip' data-placement='top' title='{rubbish_names}'>{number}</span>"
+            )
+        else:
             return format_html(
                 f"<span class='sr-only'>{rubbish_names}</span><span class='mark-rubbish {rubbish_marks.replace('#','')}-rubbish' data-toggle='tooltip' data-placement='top' title='{rubbish_names}'>{number}</span>"
             )
-        else:
-            return format_html(f"<span class='day'>{number}</span>")
+    elif polish_holidays_list.get(date_from_calendar):
+        return format_html(f"<span class='holiday'>{number}</span>")
+    else:
+        return format_html(f"<span class='day'>{number}</span>")
+
 
 @register.simple_tag
 def next_year(schedule_dates_for_address):
@@ -102,5 +107,7 @@ def next_year(schedule_dates_for_address):
                 rubbish_names = rubbish_detail[0].rubbish_type.name
                 rubbish_marks = rubbish_detail[0].rubbish_type.css_name
 
-            next_year_dates.append(f"<span class='sr-only'>{rubbish_names}</span><span class='mark-rubbish {rubbish_marks.replace('#','')}-rubbish' data-toggle='tooltip' data-placement='top' title='{rubbish_names}'></span>{date}")
+            next_year_dates.append(
+                f"<span class='sr-only'>{rubbish_names}</span><span class='mark-rubbish {rubbish_marks.replace('#','')}-rubbish' data-toggle='tooltip' data-placement='top' title='{rubbish_names}'></span>{date}"
+            )
     return next_year_dates
