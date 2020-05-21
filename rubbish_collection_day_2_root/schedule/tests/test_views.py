@@ -217,19 +217,17 @@ class TestCalendarView:
 
         site = HTML(html=response)
 
+        all_dates_for_address = []
         for district in address.rubbish_district.all():
             for date in district.date.all():
-                year = int(date.date.strftime("%Y"))
-                month = date.date.strftime("%B").lower()
-                day = date.date.strftime("%d")
+                all_dates_for_address.append(date.date.strftime("%Y-%m-%d"))
 
-                polish_holidays_dict = polish_holidays(year)
-                if not polish_holidays_dict.get(date):
-                    rubbish_marks = site.find(f"div.{month} span.mark-rubbish")
+        all_marked_dates = []
+        marks = site.find("span.mark-rubbish")
+        for mark in marks:
+            all_marked_dates.append(mark.attrs.get("data-mark"))
 
-                    for mark in rubbish_marks:
-                        if int(day) is int(mark.text):
-                            assert int(mark.text) == int(day)
+        assert set(all_dates_for_address) == set(all_marked_dates)
 
     def test_next_year_dates(self, client):
         date_all_1 = factories.DateFactory(date=datetime.date(2021, 1, 4))
@@ -435,7 +433,9 @@ class TestGenerateSvgView:
         rubbish_type3 = factories.RubbishTypeFactory()
         rubbish_type4 = factories.RubbishTypeFactory()
         rubbish_type5 = factories.RubbishTypeFactory()
-        rubbish_type6 = factories.RubbishTypeFactory(name="Test", mark_color="#F1F1F1", css_name="tes")
+        rubbish_type6 = factories.RubbishTypeFactory(
+            name="Test", mark_color="#F1F1F1", css_name="tes"
+        )
 
         url = reverse(
             "schedule:svg",
@@ -452,4 +452,7 @@ class TestGenerateSvgView:
         assert f"stroke:{rubbish_type3.mark_color}" not in site.html
         assert f"stroke:{rubbish_type4.mark_color}" not in site.html
         assert f"stroke:{rubbish_type5.mark_color}" not in site.html
-        assert f'<text x="210.118px" y="170.646px" style="font-family:\'Arial Black\';font-weight:500;font-size:52px;fill:rgb(255,0,0);">!</text>' in site.html
+        assert (
+            f'<text x="210.118px" y="170.646px" style="font-family:\'Arial Black\';font-weight:500;font-size:52px;fill:rgb(255,0,0);">!</text>'
+            in site.html
+        )
