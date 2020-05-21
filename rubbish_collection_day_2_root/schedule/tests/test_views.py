@@ -217,17 +217,18 @@ class TestCalendarView:
 
         site = HTML(html=response)
 
-        all_dates_for_address = []
-        for district in address.rubbish_district.all():
-            for date in district.date.all():
-                all_dates_for_address.append(date.date.strftime("%Y-%m-%d"))
+        all_dates_for_address = set(
+            [
+                date.date.strftime("%Y-%m-%d")
+                for district in address.rubbish_district.all()
+                for date in district.date.all()
+            ]
+        )
 
-        all_marked_dates = []
         marks = site.find("span.mark-rubbish")
-        for mark in marks:
-            all_marked_dates.append(mark.attrs.get("data-mark"))
+        all_marked_dates = set([mark.attrs.get("data-mark") for mark in marks])
 
-        assert set(all_dates_for_address) == set(all_marked_dates)
+        assert all_dates_for_address == all_marked_dates
 
     def test_next_year_dates(self, client):
         date_all_1 = factories.DateFactory(date=datetime.date(2021, 1, 4))
