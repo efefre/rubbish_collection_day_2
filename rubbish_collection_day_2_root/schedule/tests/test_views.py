@@ -217,19 +217,18 @@ class TestCalendarView:
 
         site = HTML(html=response)
 
-        for district in address.rubbish_district.all():
-            for date in district.date.all():
-                year = int(date.date.strftime("%Y"))
-                month = date.date.strftime("%B").lower()
-                day = date.date.strftime("%d")
+        all_dates_for_address = set(
+            [
+                date.date.strftime("%Y-%m-%d")
+                for district in address.rubbish_district.all()
+                for date in district.date.all()
+            ]
+        )
 
-                polish_holidays_dict = polish_holidays(year)
-                if not polish_holidays_dict.get(date):
-                    rubbish_marks = site.find(f"div.{month} span.mark-rubbish")
+        marks = site.find("span.mark-rubbish")
+        all_marked_dates = set([mark.attrs.get("data-mark") for mark in marks])
 
-                    for mark in rubbish_marks:
-                        if int(day) is int(mark.text):
-                            assert int(mark.text) == int(day)
+        assert all_dates_for_address == all_marked_dates
 
     def test_next_year_dates(self, client):
         date_all_1 = factories.DateFactory(date=datetime.date(2021, 1, 4))
@@ -435,7 +434,9 @@ class TestGenerateSvgView:
         rubbish_type3 = factories.RubbishTypeFactory()
         rubbish_type4 = factories.RubbishTypeFactory()
         rubbish_type5 = factories.RubbishTypeFactory()
-        rubbish_type6 = factories.RubbishTypeFactory(name="Test", mark_color="#F1F1F1", css_name="tes")
+        rubbish_type6 = factories.RubbishTypeFactory(
+            name="Test", mark_color="#F1F1F1", css_name="tes"
+        )
 
         url = reverse(
             "schedule:svg",
@@ -452,4 +453,73 @@ class TestGenerateSvgView:
         assert f"stroke:{rubbish_type3.mark_color}" not in site.html
         assert f"stroke:{rubbish_type4.mark_color}" not in site.html
         assert f"stroke:{rubbish_type5.mark_color}" not in site.html
-        assert f'<text x="210.118px" y="170.646px" style="font-family:\'Arial Black\';font-weight:500;font-size:52px;fill:rgb(255,0,0);">!</text>' in site.html
+        assert (
+            f'<text x="210.118px" y="170.646px" style="font-family:\'Arial Black\';font-weight:500;font-size:52px;fill:rgb(255,0,0);">!</text>'
+            in site.html
+        )
+
+
+@pytest.mark.django_db
+class TestICal:
+    def test_dates_in_ical(self, client):
+        date_all_1 = factories.DateFactory()
+        date_all_2 = factories.DateFactory()
+        district_all = factories.RubbishDistrictFactory.create(
+            date=(date_all_1, date_all_2)
+        )
+
+        date_bio_1 = factories.DateFactory()
+        date_bio_2 = factories.DateFactory()
+        district_bio = factories.RubbishDistrictFactory.create(
+            date=(date_bio_1, date_bio_2)
+        )
+
+        date_rec_1 = factories.DateFactory()
+        date_rec_2 = factories.DateFactory()
+        district_rec = factories.RubbishDistrictFactory.create(
+            date=(date_rec_1, date_rec_2)
+        )
+
+        date_ash_1 = factories.DateFactory()
+        date_ash_2 = factories.DateFactory()
+        district_ash = factories.RubbishDistrictFactory.create(
+            date=(date_ash_1, date_ash_2)
+        )
+
+        date_big_1 = factories.DateFactory()
+        date_big_2 = factories.DateFactory()
+        district_big = factories.RubbishDistrictFactory.create(
+            date=(date_big_1, date_big_2)
+        )
+
+        address = factories.AddressFactory.create(
+            rubbish_district=(
+                district_all,
+                district_ash,
+                district_big,
+                district_bio,
+                district_rec,
+            )
+        )
+
+        now = datetime.datetime.utcnow()
+        all_dates_for_address_ical = [
+            date.date.strftime("%Y-%m-%d")
+            for district in address.rubbish_district.all()
+            for date in district.date.filter(date__gte=now.date())
+        ]
+
+        url = reverse("schedule:ical_calendar")
+        url = f"{url}?city={address.city}&street={address.street}"
+        response = (client.get(url)).content
+
+        site = HTML(html=response).text
+        begin_vevent = site.count("BEGIN:VEVENT")
+        description = site.count("DESCRIPTION:")
+        summary = site.count("SUMMARY:")
+        end_vevent = site.count("END:VEVENT")
+
+        assert begin_vevent == len(all_dates_for_address_ical)
+        assert description == len(all_dates_for_address_ical)
+        assert summary == len(all_dates_for_address_ical)
+        assert end_vevent == len(all_dates_for_address_ical)
