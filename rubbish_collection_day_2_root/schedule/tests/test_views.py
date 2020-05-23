@@ -457,3 +457,69 @@ class TestGenerateSvgView:
             f'<text x="210.118px" y="170.646px" style="font-family:\'Arial Black\';font-weight:500;font-size:52px;fill:rgb(255,0,0);">!</text>'
             in site.html
         )
+
+
+@pytest.mark.django_db
+class TestICal:
+    def test_dates_in_ical(self, client):
+        date_all_1 = factories.DateFactory()
+        date_all_2 = factories.DateFactory()
+        district_all = factories.RubbishDistrictFactory.create(
+            date=(date_all_1, date_all_2)
+        )
+
+        date_bio_1 = factories.DateFactory()
+        date_bio_2 = factories.DateFactory()
+        district_bio = factories.RubbishDistrictFactory.create(
+            date=(date_bio_1, date_bio_2)
+        )
+
+        date_rec_1 = factories.DateFactory()
+        date_rec_2 = factories.DateFactory()
+        district_rec = factories.RubbishDistrictFactory.create(
+            date=(date_rec_1, date_rec_2)
+        )
+
+        date_ash_1 = factories.DateFactory()
+        date_ash_2 = factories.DateFactory()
+        district_ash = factories.RubbishDistrictFactory.create(
+            date=(date_ash_1, date_ash_2)
+        )
+
+        date_big_1 = factories.DateFactory()
+        date_big_2 = factories.DateFactory()
+        district_big = factories.RubbishDistrictFactory.create(
+            date=(date_big_1, date_big_2)
+        )
+
+        address = factories.AddressFactory.create(
+            rubbish_district=(
+                district_all,
+                district_ash,
+                district_big,
+                district_bio,
+                district_rec,
+            )
+        )
+
+        now = datetime.datetime.utcnow()
+        all_dates_for_address_ical = [
+            date.date.strftime("%Y-%m-%d")
+            for district in address.rubbish_district.all()
+            for date in district.date.filter(date__gte=now.date())
+        ]
+
+        url = reverse("schedule:ical_calendar")
+        url = f"{url}?city={address.city}&street={address.street}"
+        response = (client.get(url)).content
+
+        site = HTML(html=response).text
+        begin_vevent = site.count("BEGIN:VEVENT")
+        description = site.count("DESCRIPTION:")
+        summary = site.count("SUMMARY:")
+        end_vevent = site.count("END:VEVENT")
+
+        assert begin_vevent == len(all_dates_for_address_ical)
+        assert description == len(all_dates_for_address_ical)
+        assert summary == len(all_dates_for_address_ical)
+        assert end_vevent == len(all_dates_for_address_ical)
