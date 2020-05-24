@@ -1,5 +1,6 @@
 import csv
 import datetime
+import icalendar
 from collections import defaultdict
 
 
@@ -124,41 +125,37 @@ def ical(request):
             .filter(addresses=address)
         )
 
-        now = datetime.datetime.utcnow()
-        date_dtstamp = now.strftime("%Y%m%dT%H%M%SZ")
+        date_dtstamp = datetime.datetime.utcnow()
 
-        response = HttpResponse(content_type="text/calendar")
+        cal = icalendar.Calendar()
+        cal.add("prodid", "-//Google Inc//Google Calendar 70.9054//EN")
+        cal.add("version", "2.0")
+        cal.add("calscale", "gregorian")
+        cal.add("method", "publish")
+        cal.add("x-wr-timezone", "Europe/Warsaw")
+
+        for district in rubbish_districts:
+            for date in district.date.filter(date__gte=date_dtstamp.date()):
+                date_dtstart = datetime.datetime.combine(date.date, datetime.time(6, 0))
+                date_dtend = datetime.datetime.combine(date.date, datetime.time(7, 0))
+                data_description = date.date.strftime("%d-%m-%Y")
+                event = icalendar.Event()
+                event.add("dtstart", date_dtstart)
+                event.add("dtend", date_dtend)
+                event.add("dtstamp", date_dtstamp)
+                event.add("class", "private")
+                event.add(
+                    "description",
+                    f"{district.rubbish_type.name}: {data_description}. Odpady należy wystawić do godziny 6:00.",
+                )
+                event.add(
+                    "summary",
+                    f"Odbiór odpadów: {district.rubbish_type.name} - {data_description}.",
+                )
+                cal.add_component(event)
+
+        response = HttpResponse(cal.to_ical(), content_type="text/calendar")
         response[
             "Content-Disposition"
         ] = f'attachment; filename="kalendarz-odbioru-odpadow-{repl_char(city_name)}-{repl_char(street_name)}.ics"'
-        writer = csv.writer(response)
-        writer.writerow(["BEGIN:VCALENDAR"])
-        writer.writerow(["PRODID:-//Google Inc//Google Calendar 70.9054//EN"])
-        writer.writerow(["VERSION:2.0"])
-        writer.writerow(["CALSCALE:GREGORIAN"])
-        writer.writerow(["METHOD:PUBLISH"])
-        writer.writerow(["X-WR-TIMEZONE:Europe/Warsaw"])
-
-        for district in rubbish_districts:
-            for date in district.date.filter(date__gte=now.date()):
-                date_dtstart_or_dtend = date.date.strftime("%Y%m%d")
-                data_description = date.date.strftime("%d-%m-%Y")
-                writer.writerow(["BEGIN:VEVENT"])
-                writer.writerow(["DTSTART:{}T060000Z".format(date_dtstart_or_dtend)])
-                writer.writerow(["DTEND:{}T070000Z".format(date_dtstart_or_dtend)])
-                writer.writerow(["DTSTAMP:{}".format(date_dtstamp)])
-                writer.writerow(["CLASS:PRIVATE"])
-                writer.writerow(
-                    [
-                        f"DESCRIPTION:{district.rubbish_type.name}: {data_description}. Odpady należy wystawić do godziny 6:00."
-                    ]
-                )
-                writer.writerow(
-                    [
-                        f"SUMMARY:Odbiór odpadów: {district.rubbish_type.name} - {data_description}."
-                    ]
-                )
-                writer.writerow(["END:VEVENT"])
-        writer.writerow(["END:VCALENDAR"])
-
         return response
