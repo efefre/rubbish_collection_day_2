@@ -19,9 +19,9 @@ class DateFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Date
 
-    date = factory.fuzzy.FuzzyDate(
-        datetime.date(2020, 1, 1), datetime.date(2021, 3, 31),
-    )
+    date = factory.Faker('date_between_dates',
+                         date_start=datetime.date(2020, 1, 1),
+                         date_end=datetime.date(2021, 3, 31))
 
 
 class RubbishTypeFactory(factory.django.DjangoModelFactory):
