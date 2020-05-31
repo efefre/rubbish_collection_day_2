@@ -87,11 +87,11 @@ WSGI_APPLICATION = 'rubbish_collection_day_2.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'rubbish_new',
-        'USER': 'local_admin',
-        'PASSWORD': '1234567890',
-        'HOST': '127.0.0.1',
-        'PORT': '5432'
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'db',
+        'PORT': 5432
     }
 }
 
