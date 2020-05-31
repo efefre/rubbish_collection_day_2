@@ -1,4 +1,5 @@
 {% load static %}
+{% load solo_tags %}
 <!DOCTYPE html>
 <html lang="pl">
 
@@ -235,6 +236,7 @@
     <footer>
         <div class="footer">
             <p>Ostatnia aktualizacja: <em>marzec 2020 r.</em><br />
+                {% get_solo 'schedule.ScheduleConfiguration' as config %}
                 Sprawdź, czy daty na wydruku odpowiadają danym udostępnionym przez <a href="{{config.original_schedule}}" target="_blank">Urząd Miejski w Wołominie.</a><br>
                 <a href="/info/polityka-prywatnosci" id="privacy-policy">Polityka prywatności</a></p>
         </div>

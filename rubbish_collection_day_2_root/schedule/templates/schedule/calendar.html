@@ -1,6 +1,7 @@
 {% extends "schedule/base.html" %}
 {% load calendar_extras %}
 {% load static %}
+{% load solo_tags %}
 
 
 {% block title %}
@@ -12,6 +13,7 @@
 {% endblock %}
 
 {% block search %}
+    {% get_solo 'schedule.ScheduleConfiguration' as config %}
     {% if config.maintenance_mode and user.is_authenticated or not config.maintenance_mode %}
         {% include 'schedule/search.html' %}
     {% endif %}
@@ -19,6 +21,7 @@
 
 {% block content %}
     <div id="content">
+    {% get_solo 'schedule.ScheduleConfiguration' as config %}
     {% if config.maintenance_mode and user.is_authenticated or not config.maintenance_mode %}
         <div id="calendar">
             <h2>{{config.year}}</h2>
