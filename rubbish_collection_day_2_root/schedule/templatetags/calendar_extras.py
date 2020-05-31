@@ -7,9 +7,6 @@ import collections
 
 register = template.Library()
 
-config = ScheduleConfiguration.get_solo()
-YEAR = config.year
-
 
 @register.filter
 def list_index(list, i):
@@ -51,10 +48,12 @@ def translate_day_to_pl(day):
 
 @register.simple_tag
 def calendar_day(number, month, schedule_dates_for_address):
-    polish_holidays_list = polish_holidays(YEAR)
+    config = ScheduleConfiguration.get_solo()
+    year = config.year
+    polish_holidays_list = polish_holidays(year)
 
     date_from_calendar = datetime.strptime(
-        f"{YEAR}-{month}-{number}", "%Y-%B-%d"
+        f"{year}-{month}-{number}", "%Y-%B-%d"
     ).date()
 
     # ----- RUBBISH ----
@@ -88,12 +87,14 @@ def calendar_day(number, month, schedule_dates_for_address):
 
 @register.simple_tag
 def next_year(schedule_dates_for_address):
+    config = ScheduleConfiguration.get_solo()
+    year = config.year
     next_year_dates = []
     ordered_dates = collections.OrderedDict(sorted(schedule_dates_for_address.items()))
 
     for date, rubbish_detail in ordered_dates.items():
         date_str = date.strftime("%d-%m-%Y")
-        if str(YEAR + 1) in date_str:
+        if str(year + 1) in date_str:
             if len(rubbish_detail) > 1:
                 rubbish_names = ", ".join(
                     rubbish.rubbish_type.name for rubbish in rubbish_detail
