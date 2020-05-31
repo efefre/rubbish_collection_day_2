@@ -1,5 +1,6 @@
 from django import template
 from django.utils.html import format_html
+from django.utils.functional import SimpleLazyObject
 from schedule.models import ScheduleConfiguration
 from schedule.utils import polish_holidays
 from datetime import datetime
