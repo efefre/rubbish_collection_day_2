@@ -10,7 +10,7 @@ services:
       - POSTGRES_PORT=5432
   web:
     build: .
-    command: python rubbish_collection_day_2_root/manage.py makemigrations && python rubbish_collection_day_2_root/manage.py migrate && python rubbish_collection_day_2_root/manage.py runserver 0.0.0.0:8000
+    command: bash -c "python rubbish_collection_day_2_root/manage.py makemigrations && python rubbish_collection_day_2_root/manage.py migrate && python rubbish_collection_day_2_root/manage.py runserver 0.0.0.0:8000"
     container_name: rubbish_collection_day_2
     volumes:
       - ./rubbish_collection_day_2_root:/rubbish_collection_day_2
