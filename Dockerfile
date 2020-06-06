@@ -1,9 +1,10 @@
 FROM python:3.7
 ENV PYTHONUNBUFFERED 1
 
-RUN mkdir /rubbish_collection_day_v2_project
-WORKDIR /rubbish_collection_day_v2_project
+WORKDIR /code
 
-ADD . /rubbish_collection_day_v2_project
+ADD . /code
 
 RUN pip install -r requirements.txt
+
+CMD [ "python", "manage.py", "runserver", "0.0.0.0:8000" ]
