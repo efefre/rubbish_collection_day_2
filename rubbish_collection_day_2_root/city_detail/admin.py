@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.safestring import mark_safe
 from .models import City, Street, Address
 from schedule.models import RubbishType
-from django.db.models import Case, Value, When, CharField, Count, Q
+from django.db.models import Case, Value, When, CharField, Count, Q, F
 
 
 # Register your models here.
@@ -22,8 +22,6 @@ class AddressAdmin(admin.ModelAdmin):
         "city",
         "get_rubbish_type_district",
         "rubbish_district_status",
-        "count_rubbish_districts",
-        "status_for_filter",
     )
     search_fields = ("city__name", "street__name")
     ordering = ("city", "street")
@@ -61,19 +59,30 @@ class AddressAdmin(admin.ModelAdmin):
             .get_queryset(request)
             .annotate(count_rubbish_districts=Count("rubbish_district"))
             .annotate(
+                errors_in_rubbish_districts_city_type=Count(
+                    Case(
+                        When(
+                            ~Q(rubbish_district__city_type=F("city__city_type")),
+                            then=F("rubbish_district__city_type"),
+                        ),
+                        output_field=CharField(),
+                    )
+                )
+            )
+            .annotate(
                 status_for_filter=Case(
                     When(
                         ~Q(count_rubbish_districts=count_rubbish_types),
                         then=Value("Error"),
                     ),
-                    default=Value("OK"),
+                    When(
+                        ~Q(errors_in_rubbish_districts_city_type=0),
+                        then=Value("Error"),
+                    ),
                     output_field=CharField(),
                 )
             )
         )
-
-    def count_rubbish_districts(self, obj):
-        return obj.count_rubbish_districts
 
     def status_for_filter(self, obj):
         return obj.status_for_filter
