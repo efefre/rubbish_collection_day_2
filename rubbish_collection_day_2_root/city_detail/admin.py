@@ -23,7 +23,7 @@ class AddressAdmin(admin.ModelAdmin):
         "get_rubbish_type_district",
         "rubbish_district_status",
     )
-    search_fields = ("city__name", "street__name")
+    search_fields = ("city__name", "street__name", "status_for_filter")
     ordering = ("city", "street")
     autocomplete_fields = ("city", "street")
     filter_horizontal = ("rubbish_district",)
@@ -31,7 +31,6 @@ class AddressAdmin(admin.ModelAdmin):
         "rubbish_district__name",
         "rubbish_district__city_type",
         "city",
-        "street",
     )
 
     fieldsets = [
@@ -73,11 +72,11 @@ class AddressAdmin(admin.ModelAdmin):
                 status_for_filter=Case(
                     When(
                         ~Q(count_rubbish_districts=count_rubbish_types),
-                        then=Value("Error"),
+                        then=Value("err_in_dis"),
                     ),
                     When(
                         ~Q(errors_in_rubbish_districts_city_type=0),
-                        then=Value("Error"),
+                        then=Value("err_in_cit_typ"),
                     ),
                     output_field=CharField(),
                 )
