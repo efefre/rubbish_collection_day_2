@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'city_detail',
     'schedule',
     'web_pages',
+    'import_data_for_schedule',
     'solo',
     'debug_toolbar',
 ]
