@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.utils.safestring import mark_safe
 from .models import City, Street, Address
 from schedule.models import RubbishType
+from django.db.models import Case, Value, When, CharField, Count, Q, F
 
 
 # Register your models here.
@@ -22,7 +23,7 @@ class AddressAdmin(admin.ModelAdmin):
         "get_rubbish_type_district",
         "rubbish_district_status",
     )
-    search_fields = ("city__name", "street__name")
+    search_fields = ("city__name", "street__name", "status_for_filter")
     ordering = ("city", "street")
     autocomplete_fields = ("city", "street")
     filter_horizontal = ("rubbish_district",)
@@ -30,7 +31,6 @@ class AddressAdmin(admin.ModelAdmin):
         "rubbish_district__name",
         "rubbish_district__city_type",
         "city",
-        "street",
     )
 
     fieldsets = [
@@ -49,6 +49,42 @@ class AddressAdmin(admin.ModelAdmin):
         )
 
     get_rubbish_type_district.short_description = "Przypisane rejony"
+
+    def get_queryset(self, request):
+        count_rubbish_types = RubbishType.objects.count()
+
+        return (
+            super()
+            .get_queryset(request)
+            .annotate(count_rubbish_districts=Count("rubbish_district"))
+            .annotate(
+                errors_in_rubbish_districts_city_type=Count(
+                    Case(
+                        When(
+                            ~Q(rubbish_district__city_type=F("city__city_type")),
+                            then=F("rubbish_district__city_type"),
+                        ),
+                        output_field=CharField(),
+                    )
+                )
+            )
+            .annotate(
+                status_for_filter=Case(
+                    When(
+                        ~Q(count_rubbish_districts=count_rubbish_types),
+                        then=Value("err_in_dis"),
+                    ),
+                    When(
+                        ~Q(errors_in_rubbish_districts_city_type=0),
+                        then=Value("err_in_cit_typ"),
+                    ),
+                    output_field=CharField(),
+                )
+            )
+        )
+
+    def status_for_filter(self, obj):
+        return obj.status_for_filter
 
     def rubbish_district_status(self, obj):
         count_districts = obj.rubbish_district.count()

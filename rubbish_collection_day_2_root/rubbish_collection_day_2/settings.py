@@ -47,6 +47,7 @@ INSTALLED_APPS = [
 
 INTERNAL_IPS = [
     '127.0.0.1',
+    '172.19.0.1' # docker
 ]
 
 MIDDLEWARE = [
