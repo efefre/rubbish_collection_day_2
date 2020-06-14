@@ -19,7 +19,8 @@ from django.conf import settings
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("schedule.urls"))
+    path("", include("schedule.urls")),
+    path("import-data/", include("import_data_for_schedule.urls")),
 ]
 
 if settings.DEBUG:

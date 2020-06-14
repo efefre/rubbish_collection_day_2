@@ -9,7 +9,7 @@ class City(models.Model):
         ("miasto", "Miasto"),
     ]
 
-    name = models.CharField(max_length=40, verbose_name="Miejscowość")
+    name = models.CharField(max_length=40, verbose_name="Miejscowość", unique=True)
 
     city_type = models.CharField(
         choices=CITY_TYPE_OPTION,
@@ -28,7 +28,7 @@ class City(models.Model):
 
 
 class Street(models.Model):
-    name = models.CharField(max_length=100, verbose_name="Ulica")
+    name = models.CharField(max_length=100, verbose_name="Ulica", unique=True)
 
     class Meta:
         ordering = ("name",)

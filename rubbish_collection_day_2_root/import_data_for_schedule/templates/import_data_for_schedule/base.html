@@ -1,0 +1,152 @@
+{% load static %}
+{% load solo_tags %}
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="utf-8" />
+    <title>{% block title %}{% endblock %} | Harmonogram odbioru odpadów - gmina Wołomin</title>
+    <meta name="description" content="{% block description %}{% endblock %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <link rel="shortcut icon" href="{% static 'schedule/img/favicon.ico' %}" />
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i|Roboto:300,300i,400,400i,700,700i"
+        rel="stylesheet">
+
+    <!-- Latest compiled and minified CSS - Bootstra -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+
+    <!-- Optional theme - Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+        crossorigin="anonymous">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" type="text/css" media="all" href="{% url 'schedule:mark-rubbish-css' %}?v=20200413" />
+    <link rel="stylesheet" type="text/css" media="all" href="{% static 'schedule/css/calendar.css' %}?v=20190126" />
+    <link rel="stylesheet" type="text/css" media="all" href="{% static 'schedule/css/main.css' %}?v=20190126" />
+    <link rel="stylesheet" type="text/css" media="all" href="{% static 'web_pages/css/info-pages.css' %}?v=20190126" />
+    <link rel="stylesheet" type="text/css" media="print" href="{% static 'schedule/css/print.css' %}?v=20190126">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+    <!-- Latest compiled and minified JavaScript - Bootstra -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+
+    <script>
+        $(window).on('load', function () {
+            if (!areCookiesEnabled()) $('#noCookies').modal('show');
+            else {
+                var infoCookiesRodo = getCookie("infoCookiesRodo");
+                if (infoCookiesRodo != null && infoCookiesRodo != "") return;
+                else $('#infoRodo').modal('show');
+            };
+            });
+        </script>
+</head>
+
+<body>
+    <!-- Modal no cookies -->
+    <div class="modal" tabindex="-1" role="dialog" id="noCookies">
+        <div class="modal-dialog dal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Uwaga! Nasz serwis korzysta z cookies.</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Wygląda na to, że Twoja przeglądarka nie akceptuje cookies. W związku z tym niektóre opcje
+                        serwisu mogą nie działać
+                        prawidłowo. Szczegóły w
+                        <a href="/info/polityka-prywatnosci">Polityce prywatności</a>.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Zamknij</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <nav class="navbar navbar-default" id="nav-menu">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1"
+                    aria-expanded="false">
+                    <span class="sr-only">Menu</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Wersja Beta</span>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="{% url 'schedule:home' %}">Strona główna</a></li>
+                    <li><a href="#">Dodaj ulice</a></li>
+                    <li><a href="#">Dodaj daty wywozu śmieci dla rejonu</a></li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+
+    <main class="container">
+
+        {% block search %}
+
+        {% endblock %}
+
+
+        {% block content %}
+
+        {% endblock %}
+
+        <button onclick="topFunction()" id="toTop" title="Wróć do góry"><span class="glyphicon glyphicon-arrow-up"></span></button>
+    </main>
+
+    <footer>
+        <div class="footer">
+            <p>Ostatnia aktualizacja: <em>marzec 2020 r.</em><br />
+                {% get_solo 'schedule.ScheduleConfiguration' as config %}
+                Sprawdź, czy daty na wydruku odpowiadają danym udostępnionym przez <a href="{{config.original_schedule}}" target="_blank">Urząd Miejski w Wołominie.</a><br>
+                <a href="/info/polityka-prywatnosci" id="privacy-policy">Polityka prywatności</a></p>
+        </div>
+    </footer>
+    <script>
+        // button in header
+        $('a.button').on('click', function (e) {
+            // add scroll on page without "update message"
+            if ($('.update, .info').length == 0) {
+                e.preventDefault();
+                $('html, body').animate({
+                    scrollTop: $("#search").offset().top
+                }, 1000);
+            }
+        });
+
+        window.onscroll = function () {
+            scrollFunction()
+        };
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                document.getElementById("toTop").style.display = "block";
+            } else {
+                document.getElementById("toTop").style.display = "none";
+            }
+        }
+        // When the user clicks on the button, scroll to the top of the document
+        function topFunction() {
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+        }
+
+        $(".przycisk-wiecej").on("click", function () {
+            return $(this).hasClass("active") ? ($(this).removeClass("active"), $(this).text("czytaj więcej"),
+                $(this).parent().find(".wiecej-tekstu").fadeOut()) : ($(this).addClass("active"), $(this).text(
+                "zwiń tekst"), $(this).parent().find(".wiecej-tekstu").fadeIn()), !1
+        })
+    </script>
+    <script src="{% static 'schedule/js/zgodaRodo.js' %}"></script>
+</body>
+
+</html>
