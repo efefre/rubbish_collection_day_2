@@ -79,8 +79,8 @@ class AddStreetToCityView(FormView):
         new_streets = []
         add_address = None
         street_err = []
-
         for street in streets:
+            street = street.replace('\r\n',' ')
             city_id = City.objects.get(name=city)
             try:
                 street_id = Street.objects.get(name=street.strip())
