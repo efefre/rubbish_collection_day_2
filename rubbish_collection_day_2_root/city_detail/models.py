@@ -57,4 +57,7 @@ class Address(models.Model):
         unique_together = ("city", "street")
 
     def __str__(self):
-        return f"{self.city.name}, {self.street.name}"
+        if not self.city or not self.street:
+            return "<temporary address>"
+        else:
+            return f"{self.city.name}, {self.street.name}"
