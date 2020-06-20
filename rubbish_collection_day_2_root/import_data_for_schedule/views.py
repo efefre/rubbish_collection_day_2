@@ -80,18 +80,17 @@ class AddStreetToCityView(FormView):
         add_address = None
         street_err = []
         for street in streets:
-            street = street.replace('\r\n',' ')
+            street = street.replace("\r\n", " ")
             city_id = City.objects.get(name=city)
-            try:
-                street_id = Street.objects.get(name=street.strip())
-            except Street.DoesNotExist:
-                Street.objects.create(name=street.strip())
+
+            street_id = Street.objects.get_or_create(name=street.strip())
+            if street_id[1]:
                 new_streets.append(street)
             else:
-                try:
-                    Address.objects.get(city=city_id, street=street_id)
-                except Address.DoesNotExist:
-                    Address.objects.create(city=city_id, street=street_id)
+                address = Address.objects.get_or_create(
+                    city=city_id, street=street_id[0]
+                )
+                if address[1]:
                     add_address = True
                 else:
                     street_err.append(street)
