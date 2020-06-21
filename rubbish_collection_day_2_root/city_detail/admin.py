@@ -14,6 +14,7 @@ class CityAdmin(admin.ModelAdmin):
 class StreetAdmin(admin.ModelAdmin):
     search_fields = ("name",)
     ordering = ("name",)
+    list_display = ('name', 'created_date')
 
 
 class AddressAdmin(admin.ModelAdmin):
