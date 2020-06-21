@@ -20,8 +20,8 @@ class AddressAdmin(admin.ModelAdmin):
     list_display = (
         "street",
         "city",
-        "get_rubbish_type_district",
-        "rubbish_district_status",
+        # "get_rubbish_type_district",
+        # "rubbish_district_status",
     )
     search_fields = ("city__name", "street__name", "status_for_filter")
     ordering = ("city", "street")
@@ -38,17 +38,17 @@ class AddressAdmin(admin.ModelAdmin):
         ("Rejon", {"fields": ["rubbish_district"]}),
     ]
 
-    def get_rubbish_type_district(self, obj):
-        return mark_safe(
-            " | ".join(
-                f"<b>{district.rubbish_type}</b> - {district.name} ({district.city_type.capitalize()})"
-                for district in obj.rubbish_district.all()
-                .order_by("rubbish_type")
-                .select_related("rubbish_type")
-            )
-        )
+    # def get_rubbish_type_district(self, obj):
+    #     return mark_safe(
+    #         " | ".join(
+    #             f"<b>{district.rubbish_type}</b> - {district.name} ({district.city_type.capitalize()})"
+    #             for district in obj.rubbish_district.all()
+    #             .order_by("rubbish_type")
+    #             .select_related("rubbish_type")
+    #         )
+    #     )
 
-    get_rubbish_type_district.short_description = "Przypisane rejony"
+    # get_rubbish_type_district.short_description = "Przypisane rejony"
 
     def get_queryset(self, request):
         count_rubbish_types = RubbishType.objects.count()
@@ -83,41 +83,41 @@ class AddressAdmin(admin.ModelAdmin):
             )
         )
 
-    def status_for_filter(self, obj):
-        return obj.status_for_filter
+    # def status_for_filter(self, obj):
+    #     return obj.status_for_filter
 
-    def rubbish_district_status(self, obj):
-        count_districts = obj.rubbish_district.count()
-        count_rubbish_types = RubbishType.objects.count()
-        if count_districts == count_rubbish_types:
-            city_type = obj.city.city_type
-            error_in_city_type = []
-            for district in obj.rubbish_district.all():
-                if district.city_type != city_type:
-                    error_in_city_type.append(district.rubbish_type)
+    # def rubbish_district_status(self, obj):
+    #     count_districts = obj.count_rubbish_districts
+    #     count_rubbish_types = RubbishType.objects.count()
+    #     if count_districts == count_rubbish_types:
+    #         error_in_city_type = []
+    #         city_type = obj.city.city_type
+    #         for district in obj.rubbish_district.all():
+    #             if district.city_type != city_type:
+    #                 error_in_city_type.append(district.rubbish_type)
 
-            if len(error_in_city_type) == 0:
-                return mark_safe(
-                    f"<span style='color:green'>Liczba zdefiniowanych rejonów: {count_districts}</style>"
-                )
-            else:
-                error_message = [
-                    ", ".join(rubbish_type.name for rubbish_type in error_in_city_type)
-                ]
-                return mark_safe(
-                    f"<span style='color:red'><b>Błąd</b>: {error_message[0]}</span>"
-                )
+    #         if len(error_in_city_type) == 0:
+    #             return mark_safe(
+    #                 f"<span style='color:green'>Liczba zdefiniowanych rejonów: {count_districts}</style>"
+    #             )
+    #         else:
+    #             error_message = [
+    #                 ", ".join(rubbish_type.name for rubbish_type in error_in_city_type)
+    #             ]
+    #             return mark_safe(
+    #                 f"<span style='color:red'><b>Błąd</b>: {error_message[0]}</span>"
+    #             )
 
-        if count_districts < count_rubbish_types:
-            return mark_safe(
-                f"<span style='color:red'>Liczba zdefiniowanych rejonów: {count_districts} (za mało)</style>"
-            )
-        else:
-            return mark_safe(
-                f"<span style='color:red'>Liczba zdefiniowanych rejonów: {count_districts} (za dużo)</style>"
-            )
+    #     if count_districts < count_rubbish_types:
+    #         return mark_safe(
+    #             f"<span style='color:red'>Liczba zdefiniowanych rejonów: {count_districts} (za mało)</style>"
+    #         )
+    #     else:
+    #         return mark_safe(
+    #             f"<span style='color:red'>Liczba zdefiniowanych rejonów: {count_districts} (za dużo)</style>"
+    #         )
 
-    rubbish_district_status.short_description = "Status"
+    # rubbish_district_status.short_description = "Status"
 
 
 admin.site.register(Street, StreetAdmin)
