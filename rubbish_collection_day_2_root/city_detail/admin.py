@@ -12,9 +12,9 @@ class CityAdmin(admin.ModelAdmin):
 
 
 class StreetAdmin(admin.ModelAdmin):
-    search_fields = ("name",)
+    search_fields = ("name", "created_date")
     ordering = ("name",)
-    list_display = ('name', 'created_date')
+    list_display = ("name", "created_date")
 
 
 class AddressAdmin(admin.ModelAdmin):
