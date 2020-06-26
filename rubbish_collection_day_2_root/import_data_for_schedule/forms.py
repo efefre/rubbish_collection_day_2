@@ -8,12 +8,22 @@ class UploadStreetsForm(forms.Form):
 
 
 class AddStreetsToCityForm(forms.Form):
-    city = forms.ModelChoiceField(queryset=City.objects.all(), empty_label=None, label="Miejscowość")
+    city = forms.ModelChoiceField(
+        queryset=City.objects.all(), empty_label=None, label="Miejscowość"
+    )
     streets = forms.CharField(widget=forms.Textarea, label="Ulica")
 
 
 class AddAddressToRubbishDistrictForm(forms.Form):
-    city = forms.ModelChoiceField(queryset=City.objects.all(), empty_label=None, label="Miejscowość")
-    rubbish_type = forms.ModelChoiceField(queryset=RubbishType.objects.all(), empty_label=None, label="Frakcja śmieci")
-    rubbish_districy = forms.ModelChoiceField(queryset=RubbishDistrict.objects.all(), empty_label=None, label="Rejon odbioru odpadów") 
+    city = forms.ModelChoiceField(
+        queryset=City.objects.all(), empty_label=None, label="Miejscowość"
+    )
+    rubbish_type = forms.ModelChoiceField(
+        queryset=RubbishType.objects.all(), empty_label=None, label="Frakcja śmieci"
+    )
+    rubbish_districy = forms.ModelChoiceField(
+        queryset=RubbishDistrict.objects.all(),
+        empty_label=None,
+        label="Rejon odbioru odpadów",
+    )
     streets = forms.CharField(widget=forms.Textarea, label="Ulice")
