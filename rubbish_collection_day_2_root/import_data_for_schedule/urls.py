@@ -8,4 +8,6 @@ app_name = "import_data_for_schedule"
 urlpatterns = [
     path("streets/", login_required(views.import_streets), name="import-streets"),
     path("add-streets-to-city/", login_required(views.AddStreetToCityView.as_view()), name="add-streets-to-city"),
+    path("add-address-to-district/", login_required(views.AddAddressToRubbishDistrictView.as_view()), name="add-address-to-district"),
+
 ]
