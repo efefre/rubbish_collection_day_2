@@ -4,10 +4,13 @@ from schedule.models import RubbishType, RubbishDistrict
 
 
 class UploadStreetsForm(forms.Form):
-    file = forms.FileField()
+    file = forms.FileField(label="Plik csv")
 
 
 class AddStreetsToCityForm(forms.Form):
+    city = forms.ModelChoiceField(queryset=City.objects.all(), empty_label=None, label="Miejscowość")
+    streets = forms.CharField(widget=forms.Textarea, label="Ulica")
+
 
 class AddAddressToRubbishDistrictForm(forms.Form):
     city = forms.ModelChoiceField(queryset=City.objects.all(), empty_label=None, label="Miejscowość")
