@@ -21,7 +21,7 @@ class AddAddressToRubbishDistrictForm(forms.Form):
     rubbish_type = forms.ModelChoiceField(
         queryset=RubbishType.objects.all(), empty_label=None, label="Frakcja śmieci"
     )
-    rubbish_districy = forms.ModelChoiceField(
+    rubbish_district = forms.ModelChoiceField(
         queryset=RubbishDistrict.objects.all(),
         empty_label=None,
         label="Rejon odbioru odpadów",
