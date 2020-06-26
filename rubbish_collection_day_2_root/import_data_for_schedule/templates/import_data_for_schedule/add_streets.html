@@ -1,9 +1,18 @@
 {% extends "import_data_for_schedule/base.html" %}
 
-{% block title %}Add streets to city{% endblock %}
+{% block title %}
+Adresy odbioru odpadów
+{% endblock %}
 
 {% block content %}
-<h1>Add streets to city</h1>
+<h1>Adresy odbioru odpadów</h1>
+<p>Stwórz adresy odbioru odpadów.</p>
+<ul>
+<li>Wybierz z listy miasto.</li>
+<li>Dodaj ulice oddzielne przecinkiem.</li>
+</ul>
+<p><b>Uwaga!</b> Nowe ulice zostaną dodane do bazy danych, ale automatycznie nie będą tworzyły adresu odbioru odpadów.</p>
+<hr>
 {% if messages %}
     {% for message in messages %}
         <div id="message" class="container">
