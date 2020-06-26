@@ -1,5 +1,6 @@
 from django import forms
 from city_detail.models import City
+from schedule.models import RubbishType, RubbishDistrict
 
 
 class UploadStreetsForm(forms.Form):
@@ -7,5 +8,9 @@ class UploadStreetsForm(forms.Form):
 
 
 class AddStreetsToCityForm(forms.Form):
-    city = forms.ModelChoiceField(queryset=City.objects.all(), empty_label=None)
-    streets = forms.CharField(widget=forms.Textarea)
+
+class AddAddressToRubbishDistrictForm(forms.Form):
+    city = forms.ModelChoiceField(queryset=City.objects.all(), empty_label=None, label="Miejscowość")
+    rubbish_type = forms.ModelChoiceField(queryset=RubbishType.objects.all(), empty_label=None, label="Frakcja śmieci")
+    rubbish_districy = forms.ModelChoiceField(queryset=RubbishDistrict.objects.all(), empty_label=None, label="Rejon odbioru odpadów") 
+    streets = forms.CharField(widget=forms.Textarea, label="Ulice")
