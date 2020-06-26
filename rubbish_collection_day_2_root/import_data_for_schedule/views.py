@@ -3,6 +3,7 @@ from django.shortcuts import render, reverse
 from .forms import UploadStreetsForm, AddStreetsToCityForm, AddAddressToRubbishDistrictForm
 from .utils import get_streets_names
 from city_detail.models import Street, City, Address
+from schedule.models import RubbishDistrict, RubbishType
 from django.views.generic.edit import FormView
 
 
@@ -120,3 +121,40 @@ class AddStreetToCityView(FormView):
 class AddAddressToRubbishDistrictView(FormView):
     form_class = AddAddressToRubbishDistrictForm
     template_name = "import_data_for_schedule/add_address_to_district.html"
+
+    def get_success_url(self):
+        return reverse("import_data_for_schedule:add-address-to-district")
+
+    def form_valid(self, form):
+        streets = (form.cleaned_data["streets"]).replace(", ", ",").split(",")
+        city = form.cleaned_data["city"]
+        rubbish_district = form.cleaned_data['rubbish_district']
+        context = self.get_context_data()
+
+        rubbish_district_id = RubbishDistrict.objects.get(pk=rubbish_district.pk)
+
+        add_rubbish_district = None
+        address_does_not_exist = []
+        for street in streets:
+            street_id = Street.objects.filter(name__startswith=street.strip())
+            for str_id in street_id:
+                try:
+                    address_id = Address.objects.get(city=city, street=str_id)
+                except Address.DoesNotExist:
+                    address_does_not_exist.append(str_id.name)
+                else:
+                    address_id.rubbish_district.add(rubbish_district_id)
+                    add_rubbish_district = True
+
+        if address_does_not_exist:
+            message_error = messages.error(
+                self.request,
+                f'Taki adres nie istnieje. {city}: {", ".join(address_does_not_exist)}',
+            )
+            context["message_error"] = message_error
+        if add_rubbish_district:
+            message_success = messages.success(
+                self.request, f"Dodano {rubbish_district} do wybranych adresów."
+            )
+            context["message_success"] = message_success
+        return super().form_valid(form)
