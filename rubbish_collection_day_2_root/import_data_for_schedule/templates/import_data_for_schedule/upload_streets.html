@@ -1,7 +1,11 @@
 {% extends "import_data_for_schedule/base.html" %}
 
+{% block title %}
+Importuj ulice z pliku
+{% endblock %}
+
 {% block content %}
-<h1>Upload streets</h1>
+<h1>Importuj ulice z pliku</h1>
 {% if messages %}
     {% for message in messages %}
         <div id="message" class="container">
