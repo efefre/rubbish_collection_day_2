@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import render, reverse
-from .forms import UploadStreetsForm, AddStreetsToCityForm
+from .forms import UploadStreetsForm, AddStreetsToCityForm, AddAddressToRubbishDistrictForm
 from .utils import get_streets_names
 from city_detail.models import Street, City, Address
 from django.views.generic.edit import FormView
@@ -115,3 +115,8 @@ class AddStreetToCityView(FormView):
             context["message_error"] = message_error
 
         return super().form_valid(form)
+
+
+class AddAddressToRubbishDistrictView(FormView):
+    form_class = AddAddressToRubbishDistrictForm
+    template_name = "import_data_for_schedule/add_address_to_district.html"
