@@ -1,0 +1,25 @@
+{% extends "import_data_for_schedule/base.html" %}
+
+{% block title %}
+Dodawanie dat do rejonów
+{% endblock %}
+
+{% block content %}
+<h1>Dodawanie dat do rejonów</h1>
+
+{% if messages %}
+    {% for message in messages %}
+        <div id="message" class="container">
+            <div class="alert alert-{{ message.tags }} alert-dismissible text-center" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hiden="true">&times;</span></button>
+                {{ message }}
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}
+<form method="POST" id="AddStreetForm" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit" id="add_streets" class="btn btn-default">Dodaj</button>
+</form>
+{% endblock content %}
