@@ -82,8 +82,9 @@
             <div class="collapse navbar-collapse" id="navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="{% url 'schedule:home' %}">Strona główna</a></li>
-                    <li><a href="{% url 'import_data_for_schedule:import-streets' %}">Importuj ulice z pliku</a></li>
-                    <li><a href="{% url 'import_data_for_schedule:add-streets-to-city' %}">Adresy odbioru odpadów</a></li>
+                    <li><a href="{% url 'import_data_for_schedule:import-streets' %}">Importowanie ulic</a></li>
+                    <li><a href="{% url 'import_data_for_schedule:add-streets-to-city' %}">Tworzenie adresów</a></li>
+                    <li><a href="{% url 'import_data_for_schedule:add-address-to-district' %}">Dodawanie rejonów</a></li>
                 </ul>
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
