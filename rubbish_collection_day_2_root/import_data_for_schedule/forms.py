@@ -24,3 +24,12 @@ class AddAddressToRubbishDistrictForm(forms.Form):
         label="Rejon odbioru odpadów",
     )
     streets = forms.CharField(widget=forms.Textarea, label="Ulice")
+
+
+class AddDatesToRubbishDistrictForm(forms.Form):
+    rubbish_district = forms.ModelChoiceField(
+        queryset=RubbishDistrict.objects.all(),
+        empty_label=None,
+        label="Rejon odbioru odpadów",
+    )
+    dates = forms.CharField(widget=forms.Textarea, label="Daty odbioru odpadów")
