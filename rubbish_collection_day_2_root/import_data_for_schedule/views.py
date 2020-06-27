@@ -1,10 +1,17 @@
 from django.contrib import messages
 from django.shortcuts import render, reverse
-from .forms import UploadStreetsForm, AddStreetsToCityForm, AddAddressToRubbishDistrictForm
+from .forms import (
+    UploadStreetsForm,
+    AddStreetsToCityForm,
+    AddAddressToRubbishDistrictForm,
+    AddDatesToRubbishDistrictForm,
+)
 from .utils import get_streets_names
 from city_detail.models import Street, City, Address
-from schedule.models import RubbishDistrict, RubbishType
+from schedule.models import RubbishDistrict, RubbishType, Date
 from django.views.generic.edit import FormView
+
+from datetime import datetime
 
 
 # Create your views here.
@@ -128,7 +135,7 @@ class AddAddressToRubbishDistrictView(FormView):
     def form_valid(self, form):
         streets = (form.cleaned_data["streets"]).replace(", ", ",").split(",")
         city = form.cleaned_data["city"]
-        rubbish_district = form.cleaned_data['rubbish_district']
+        rubbish_district = form.cleaned_data["rubbish_district"]
         context = self.get_context_data()
 
         rubbish_district_id = RubbishDistrict.objects.get(pk=rubbish_district.pk)
@@ -157,4 +164,44 @@ class AddAddressToRubbishDistrictView(FormView):
                 self.request, f"Dodano {rubbish_district} do wybranych adresów."
             )
             context["message_success"] = message_success
+        return super().form_valid(form)
+
+
+class AddDatesToRubbishDistrictView(FormView):
+    form_class = AddDatesToRubbishDistrictForm
+    template_name = "import_data_for_schedule/add_dates_to_district.html"
+
+    def get_success_url(self):
+        return reverse("import_data_for_schedule:add-dates-to-district")
+
+    def form_valid(self, form):
+        dates = (form.cleaned_data["dates"]).split("\n")
+        rubbish_district = form.cleaned_data["rubbish_district"]
+        rubbish_district_id = RubbishDistrict.objects.get(pk=rubbish_district.pk)
+        context = self.get_context_data()
+
+        add_date = None
+        date_does_not_exist = []
+        for date in dates:
+            converted_date = datetime.strptime(date.strip(), "%d.%m.%Y").date()
+            try:
+                date_id = Date.objects.get(date=converted_date)
+            except Date.DoesNotExist:
+                date_does_not_exist.append(date)
+            else:
+                rubbish_district_id.date.add(date_id)
+                add_date = True
+
+        if date_does_not_exist:
+            message_error = messages.error(
+                self.request,
+                f'Takie daty nie istnieją w bazie: {", ".join(date_does_not_exist)}',
+            )
+            context["message_error"] = message_error
+        if add_date:
+            message_success = messages.success(
+                self.request, f"Dodano daty do: {rubbish_district}."
+            )
+            context["message_success"] = message_success
+
         return super().form_valid(form)
