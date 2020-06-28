@@ -30,8 +30,9 @@ class AddressAdmin(admin.ModelAdmin):
     filter_horizontal = ("rubbish_district",)
     list_filter = (
         "rubbish_district__name",
+        "rubbish_district__rubbish_type",
         "rubbish_district__city_type",
-        "city",
+        "city"
     )
 
     fieldsets = [
