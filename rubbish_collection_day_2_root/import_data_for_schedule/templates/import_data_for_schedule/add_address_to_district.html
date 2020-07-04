@@ -29,7 +29,30 @@ Dodawanie adresów do rejonów
 {% endif %}
 <form method="POST" id="AddStreetForm" enctype="multipart/form-data">
     {% csrf_token %}
+    
     {{form.as_p}}
-    <button type="submit" id="add_streets" class="btn btn-default">Dodaj</button>
+    
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-address-to-district">
+        Dodaj
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="add-address-to-district" tabindex="-1" role="dialog" aria-labelledby="Dodaj daty"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Dodawanie adresów</h4>
+                </div>
+                <div class="modal-body">
+                    Czy chcesz dodać adresy <strong>do tego rejonu</strong>?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                    <button type="submit" class="btn btn-primary" id="add_streetss">Dodaj</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </form>
 {% endblock content %}

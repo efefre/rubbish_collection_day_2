@@ -8,24 +8,48 @@ Adresy odbioru odpadów
 <h1>Adresy odbioru odpadów</h1>
 <p>Stwórz adresy odbioru odpadów.</p>
 <ul>
-<li>Wybierz z listy miasto.</li>
-<li>Dodaj ulice oddzielne przecinkiem.</li>
+    <li>Wybierz z listy miasto.</li>
+    <li>Dodaj ulice oddzielne przecinkiem.</li>
 </ul>
-<p><b>Uwaga!</b> Nowe ulice zostaną dodane do bazy danych, ale automatycznie nie będą tworzyły adresu odbioru odpadów.</p>
+<p><b>Uwaga!</b> Nowe ulice zostaną dodane do bazy danych, ale automatycznie nie będą tworzyły adresu odbioru odpadów.
+</p>
 <hr>
 {% if messages %}
-    {% for message in messages %}
-        <div id="message" class="container">
-            <div class="alert alert-{{ message.tags }} alert-dismissible text-center" role="alert">
-                <button type="button" class="close" data-dismiss="alert"><span aria-hiden="true">&times;</span></button>
-                {{ message }}
-            </div>
-        </div>
-    {% endfor %}
+{% for message in messages %}
+<div id="message" class="container">
+    <div class="alert alert-{{ message.tags }} alert-dismissible text-center" role="alert">
+        <button type="button" class="close" data-dismiss="alert"><span aria-hiden="true">&times;</span></button>
+        {{ message }}
+    </div>
+</div>
+{% endfor %}
 {% endif %}
 <form method="POST" id="AddStreetForm" enctype="multipart/form-data">
     {% csrf_token %}
+    
     {{form.as_p}}
-    <button type="submit" id="add_streets" class="btn btn-default">Dodaj</button>
+
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-streets">
+        Dodaj
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="add-streets" tabindex="-1" role="dialog" aria-labelledby="Dodaj ulice"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Dodawanie ulic</h4>
+                </div>
+                <div class="modal-body">
+                    Czy chcesz dodać ulice <strong>do tej miejscowości</strong>?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                    <button type="submit" class="btn btn-primary" id="add_streetss">Dodaj</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </form>
 {% endblock content %}
