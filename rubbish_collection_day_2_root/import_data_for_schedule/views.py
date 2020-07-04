@@ -8,7 +8,7 @@ from .forms import (
 )
 from .utils import get_streets_names
 from city_detail.models import Street, City, Address
-from schedule.models import RubbishDistrict, RubbishType, Date
+from schedule.models import RubbishDistrict, Date
 from django.views.generic.edit import FormView
 
 from datetime import datetime
