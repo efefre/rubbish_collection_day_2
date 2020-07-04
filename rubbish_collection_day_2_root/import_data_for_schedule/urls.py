@@ -6,6 +6,7 @@ app_name = "import_data_for_schedule"
 
 
 urlpatterns = [
+    path("", login_required(views.ImportDataView.as_view()), name="import-data"),
     path("streets/", login_required(views.import_streets), name="import-streets"),
     path(
         "add-streets-to-city/",
