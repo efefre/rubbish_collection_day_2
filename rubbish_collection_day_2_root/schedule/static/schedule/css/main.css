@@ -306,3 +306,17 @@ footer {
   #toTop:hover {
     background-color: #3E617B;
   }
+
+  .import-data {
+      margin-bottom: 40px;
+  }
+
+  .card {
+      border: 1px solid #e6e6e6;
+      border-radius: 10px;
+      padding: 10px;
+  }
+
+  .card-title {
+      font-weight: bold;
+  }
