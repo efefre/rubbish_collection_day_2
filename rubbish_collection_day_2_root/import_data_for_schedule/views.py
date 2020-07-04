@@ -9,12 +9,15 @@ from .forms import (
 from .utils import get_streets_names
 from city_detail.models import Street, City, Address
 from schedule.models import RubbishDistrict, Date
-from django.views.generic.edit import FormView
-
+from django.views.generic import TemplateView, FormView
 from datetime import datetime
 
 
 # Create your views here.
+class ImportDataView(TemplateView):
+    template_name = "import_data_for_schedule/import_data.html"
+
+
 def import_streets(request):
     """Import streets from file and add to database"""
 
