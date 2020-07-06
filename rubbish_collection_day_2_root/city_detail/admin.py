@@ -51,39 +51,42 @@ class AddressAdmin(admin.ModelAdmin):
     #     )
 
     # get_rubbish_type_district.short_description = "Przypisane rejony"
-
+    
     def get_queryset(self, request):
-        count_rubbish_types = RubbishType.objects.count()
+        return super().get_queryset(request).select_related("city", "street")
+    
+    # def get_queryset(self, request):
+    #     count_rubbish_types = RubbishType.objects.count()
 
-        return (
-            super()
-            .get_queryset(request)
-            .annotate(count_rubbish_districts=Count("rubbish_district"))
-            .annotate(
-                errors_in_rubbish_districts_city_type=Count(
-                    Case(
-                        When(
-                            ~Q(rubbish_district__city_type=F("city__city_type")),
-                            then=F("rubbish_district__city_type"),
-                        ),
-                        output_field=CharField(),
-                    )
-                )
-            )
-            .annotate(
-                status_for_filter=Case(
-                    When(
-                        ~Q(count_rubbish_districts=count_rubbish_types),
-                        then=Value("err_in_dis"),
-                    ),
-                    When(
-                        ~Q(errors_in_rubbish_districts_city_type=0),
-                        then=Value("err_in_cit_typ"),
-                    ),
-                    output_field=CharField(),
-                )
-            )
-        )
+    #     return (
+    #         super()
+    #         .get_queryset(request)
+    #         .annotate(count_rubbish_districts=Count("rubbish_district"))
+    #         .annotate(
+    #             errors_in_rubbish_districts_city_type=Count(
+    #                 Case(
+    #                     When(
+    #                         ~Q(rubbish_district__city_type=F("city__city_type")),
+    #                         then=F("rubbish_district__city_type"),
+    #                     ),
+    #                     output_field=CharField(),
+    #                 )
+    #             )
+    #         )
+    #         .annotate(
+    #             status_for_filter=Case(
+    #                 When(
+    #                     ~Q(count_rubbish_districts=count_rubbish_types),
+    #                     then=Value("err_in_dis"),
+    #                 ),
+    #                 When(
+    #                     ~Q(errors_in_rubbish_districts_city_type=0),
+    #                     then=Value("err_in_cit_typ"),
+    #                 ),
+    #                 output_field=CharField(),
+    #             )
+    #         )
+    #     )
 
     # def status_for_filter(self, obj):
     #     return obj.status_for_filter
