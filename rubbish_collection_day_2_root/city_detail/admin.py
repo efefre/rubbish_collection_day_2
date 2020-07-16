@@ -21,7 +21,7 @@ class AddressAdmin(admin.ModelAdmin):
     list_display = (
         "street",
         "city",
-        # "get_rubbish_type_district",
+        "get_rubbish_type_district",
         # "rubbish_district_status",
     )
     search_fields = ("city__name", "street__name", "status_for_filter")
@@ -32,7 +32,7 @@ class AddressAdmin(admin.ModelAdmin):
         "rubbish_district__name",
         "rubbish_district__rubbish_type",
         "rubbish_district__city_type",
-        "city"
+        "city",
     )
 
     fieldsets = [
@@ -40,21 +40,24 @@ class AddressAdmin(admin.ModelAdmin):
         ("Rejon", {"fields": ["rubbish_district"]}),
     ]
 
-    # def get_rubbish_type_district(self, obj):
-    #     return mark_safe(
-    #         " | ".join(
-    #             f"<b>{district.rubbish_type}</b> - {district.name} ({district.city_type.capitalize()})"
-    #             for district in obj.rubbish_district.all()
-    #             .order_by("rubbish_type")
-    #             .select_related("rubbish_type")
-    #         )
-    #     )
+    def get_rubbish_type_district(self, obj):
+        rubbish_district_all = (
+            obj.rubbish_district.select_related("rubbish_type")
+            .only("name", "city_type", "rubbish_type__name")
+            .order_by("rubbish_type")
+        )
+        return mark_safe(
+            " | ".join(
+                f"<b>{district.rubbish_type}</b> - {district.name} ({district.city_type.capitalize()})"
+                for district in rubbish_district_all
+            )
+        )
 
-    # get_rubbish_type_district.short_description = "Przypisane rejony"
-    
+    get_rubbish_type_district.short_description = "Przypisane rejony"
+
     def get_queryset(self, request):
         return super().get_queryset(request).select_related("city", "street")
-    
+
     # def get_queryset(self, request):
     #     count_rubbish_types = RubbishType.objects.count()
 
