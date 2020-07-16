@@ -29,6 +29,7 @@ class City(models.Model):
 
 class Street(models.Model):
     name = models.CharField(max_length=100, verbose_name="Ulica", unique=True)
+    created_date = models.DateTimeField(auto_now_add=True, verbose_name="Data utworzenia")
 
     class Meta:
         ordering = ("name",)

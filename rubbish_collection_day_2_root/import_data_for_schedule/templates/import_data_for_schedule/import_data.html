@@ -1,0 +1,51 @@
+{% extends "import_data_for_schedule/base.html" %}
+
+{% block title %}
+Importowanie danych
+{% endblock %}
+
+{% block content %}
+<h1>Importowanie danych</h1>
+
+<div class="row import-data">
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Importowanie ulic</h5>
+          <p class="card-text">Formularz do importowania ulic z pliku csv.</p>
+          <a href="{% url 'import_data_for_schedule:import-streets' %}" class="btn btn-primary">Przejdź do formularza</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Tworzenie adresów</h5>
+          <p class="card-text">Formularz do tworzenie adresów na podstawie miejscowości i ulic z bazy.</p>
+          <a href="{% url 'import_data_for_schedule:add-streets-to-city' %}" class="btn btn-primary">Przejdź do formularza</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row import-data">
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Dodawanie rejonów</h5>
+          <p class="card-text">Formularz do adresów (punktów odbioru odpadów) do dodawania rejonów.</p>
+          <a href="{% url 'import_data_for_schedule:add-address-to-district' %}" class="btn btn-primary">Przejdź do formularza</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Dodawanie dat</h5>
+          <p class="card-text">Formularz do dodawania dat do rejonów.</p>
+          <a href="{% url 'import_data_for_schedule:add-dates-to-district' %}" class="btn btn-primary">Przejdź do formularza</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}

@@ -66,6 +66,9 @@ class RubbishDistrictAdmin(admin.ModelAdmin):
         ("Terminy odbioru odpadów", {"fields": ["date"]}),
     ]
 
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related('rubbish_type')
+
 
 class RubbishDistrictInline(admin.TabularInline):
     model = RubbishDistrict

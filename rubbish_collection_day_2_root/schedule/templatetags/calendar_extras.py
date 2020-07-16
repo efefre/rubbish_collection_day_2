@@ -45,11 +45,10 @@ def translate_day_to_pl(day):
     }
     return day_names.get(day)
 
-
+CONFIG = ScheduleConfiguration.get_solo()
 @register.simple_tag
 def calendar_day(number, month, schedule_dates_for_address):
-    config = ScheduleConfiguration.get_solo()
-    year = config.year
+    year = CONFIG.year
     polish_holidays_list = polish_holidays(year)
 
     date_from_calendar = datetime.strptime(
