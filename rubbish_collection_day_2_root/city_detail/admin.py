@@ -3,6 +3,7 @@ from django.utils.html import format_html
 from .models import City, Street, Address
 from schedule.models import RubbishType
 from django.db.models import Case, Value, When, CharField, Count, Q, F
+import collections
 
 
 # Register your models here.
@@ -21,7 +22,7 @@ class AddressAdmin(admin.ModelAdmin):
     list_display = (
         "street",
         "city",
-        "get_rubbish_type_district",
+        "all_rubbish_districts_for_address",
         # "rubbish_district_status",
     )
     search_fields = ("city__name", "street__name", "status_for_filter")
@@ -40,22 +41,40 @@ class AddressAdmin(admin.ModelAdmin):
         ("Rejon", {"fields": ["rubbish_district"]}),
     ]
 
-    def get_rubbish_type_district(self, obj):
+    def all_rubbish_districts_for_address(self, obj):
         rubbish_district_all = (
             obj.rubbish_district.select_related("rubbish_type")
             .only("name", "city_type", "rubbish_type__name")
-            .order_by("rubbish_type")
-        )
-        return format_html(
-            " | ".join(
-                f"<b>{district.rubbish_type}</b> - {district.name} ({district.city_type.capitalize()})"
-                if district.city_type == obj.city.city_type
-                else f"<span style='color: red'><b>{district.rubbish_type}</b> - {district.name} ({district.city_type.capitalize()})</span>"
-                for district in rubbish_district_all
-            )
+            .order_by("rubbish_type__name")
         )
 
-    get_rubbish_type_district.short_description = "Przypisane rejony"
+        rubbish_types = [district.rubbish_type for district in rubbish_district_all]
+        counter_rubbish_types = [
+            rubbish_type.name
+            for rubbish_type, counter in collections.Counter(rubbish_types).items()
+            if counter > 1
+        ]
+
+        if counter_rubbish_types:
+            return format_html(
+                " | ".join(
+                    f"<b>{district.rubbish_type}</b> - {district.name} ({district.city_type.capitalize()})"
+                    if district.rubbish_type.name not in counter_rubbish_types
+                    else f"<span style='color: red'><b>{district.rubbish_type}</b> - {district.name} ({district.city_type.capitalize()})</span>"
+                    for district in rubbish_district_all
+                )
+            )
+        else:
+            return format_html(
+                " | ".join(
+                    f"<b>{district.rubbish_type}</b> - {district.name} ({district.city_type.capitalize()})"
+                    if district.city_type == obj.city.city_type
+                    else f"<span style='color: red'><b>{district.rubbish_type}</b> - {district.name} ({district.city_type.capitalize()})</span>"
+                    for district in rubbish_district_all
+                )
+            )
+
+    all_rubbish_districts_for_address.short_description = "Przypisane rejony"
 
     def get_queryset(self, request):
         return super().get_queryset(request).select_related("city", "street")
