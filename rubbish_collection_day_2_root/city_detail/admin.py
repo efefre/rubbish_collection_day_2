@@ -7,7 +7,6 @@ from django.db.models import Case, Value, When, CharField, Count, Q, F, BooleanF
 import collections
 
 
-
 # Register your models here.
 class CityAdmin(admin.ModelAdmin):
     search_fields = ("name",)
@@ -25,10 +24,8 @@ class AddressAdmin(admin.ModelAdmin):
         "street",
         "city",
         "all_rubbish_districts_for_address",
-        # "rubbish_district_status",
         "status_count_rubbish_districts",
-        "status_for_filter",
-        "status_errors_in_rubbish_districts_city_type"
+        "status_city_type_in_rubbish_district",
     )
     search_fields = ("city__name", "street__name", "status_for_filter")
     ordering = ("city", "street")
@@ -101,81 +98,35 @@ class AddressAdmin(admin.ModelAdmin):
             )
             .annotate(
                 status_count_rubbish_districts=Case(
-                    When(
-                        Q(count_rubbish_districts=count_rubbish_types),
-                        then=True,
-                    ),
-                    When(
-                        ~Q(count_rubbish_districts=count_rubbish_types),
-                        then=False,
-                    ),
-                    output_field=BooleanField()
+                    When(Q(count_rubbish_districts=count_rubbish_types), then=True),
+                    When(~Q(count_rubbish_districts=count_rubbish_types), then=False),
+                    output_field=BooleanField(),
                 )
             )
             .annotate(
-                status_for_filter=Case(
-                    When(
-                        ~Q(count_rubbish_districts=count_rubbish_types),
-                        then=Value("err_in_dis"),
-                    ),
-                    When(
-                        ~Q(errors_in_rubbish_districts_city_type=0),
-                        then=Value("err_in_cit_typ"),
-                    ),
-                    output_field=CharField(),
+                status_city_type_in_rubbish_district=Case(
+                    When(Q(errors_in_rubbish_districts_city_type=0), then=True),
+                    When(~Q(errors_in_rubbish_districts_city_type=0), then=False),
+                    output_field=BooleanField(),
                 )
             )
             .select_related("city", "street")
             .prefetch_related("rubbish_district")
         )
 
-    def status_for_filter(self, obj):
-        return obj.status_for_filter
-
-    def status_errors_in_rubbish_districts_city_type(self, obj):
-        return obj.errors_in_rubbish_districts_city_type
-
     def status_count_rubbish_districts(self, obj):
         return obj.status_count_rubbish_districts
-    
+
     status_count_rubbish_districts.boolean = True
-    status_count_rubbish_districts.short_description = f"Liczba przypisanych rejonów: {RubbishType.objects.count()}"
+    status_count_rubbish_districts.short_description = (
+        f"Liczba przypisanych rejonów: {RubbishType.objects.count()}"
+    )
 
-    # def rubbish_district_status(self, obj):
-    #     count_districts = obj.count_rubbish_districts
-    #     count_rubbish_types = RubbishType.objects.count()
-    #     city_type = obj.city.city_type
-    #     rubbish_district_all = obj.rubbish_district.all()
-    #     if count_districts == count_rubbish_types:
-    #         error_in_city_type = []
-    #         for district in rubbish_district_all:
-    #             if district.city_type != city_type:
-    #                 error_in_city_type.append(district.rubbish_type)
+    def status_city_type_in_rubbish_district(self, obj):
+        return obj.status_city_type_in_rubbish_district
 
-    #         if len(error_in_city_type) == 0:
-    #             return format_html(
-    #                 f"<span style='color:green'>Liczba zdefiniowanych rejonów: {count_districts}</style>"
-    #             )
-    #         else:
-    #             error_message = [
-    #                 ", ".join(rubbish_type.name for rubbish_type in error_in_city_type)
-    #             ]
-    #             return format_html(
-    #                 f"<span style='color:red'><b>Błąd</b>: {error_message[0]}</span>"
-    #             )
-
-    #     if count_districts < count_rubbish_types:
-    #         return format_html(
-    #             f"<span style='color:red'>Liczba zdefiniowanych rejonów: {count_districts} (za mało)</style>"
-    #         )
-    #     else:
-    #         return format_html(
-    #             f"<span style='color:red'>Liczba zdefiniowanych rejonów: {count_districts} (za dużo)</style>"
-    #         )
-
-    # rubbish_district_status.short_description = "Status"
-
-    
+    status_city_type_in_rubbish_district.boolean = True
+    status_city_type_in_rubbish_district.short_description = "Typ miejscowości zgodny"
 
 
 admin.site.register(Street, StreetAdmin)
