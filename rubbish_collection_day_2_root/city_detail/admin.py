@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.utils.safestring import mark_safe
+from django.utils.html import format_html
 from .models import City, Street, Address
 from schedule.models import RubbishType
 from django.db.models import Case, Value, When, CharField, Count, Q, F
@@ -46,9 +46,11 @@ class AddressAdmin(admin.ModelAdmin):
             .only("name", "city_type", "rubbish_type__name")
             .order_by("rubbish_type")
         )
-        return mark_safe(
+        return format_html(
             " | ".join(
                 f"<b>{district.rubbish_type}</b> - {district.name} ({district.city_type.capitalize()})"
+                if district.city_type == obj.city.city_type
+                else f"<span style='color: red'><b>{district.rubbish_type}</b> - {district.name} ({district.city_type.capitalize()})</span>"
                 for district in rubbish_district_all
             )
         )
