@@ -59,19 +59,19 @@ class AddressAdmin(admin.ModelAdmin):
 
         if counter_rubbish_types:
             return format_html(
-                " | ".join(
+                " <br> ".join(
                     f"<b>{district.rubbish_type}</b> - {district.name} ({district.city_type.capitalize()})"
                     if district.rubbish_type.name not in counter_rubbish_types
-                    else f"<span style='color: red'><b><u>{district.rubbish_type}</u></b> - {district.name} ({district.city_type.capitalize()})</span>"
+                    else f"<span style='color: red'><b><u>{district.rubbish_type}</u></b></span> - {district.name} ({district.city_type.capitalize()})"
                     for district in rubbish_district_all
                 )
             )
         else:
             return format_html(
-                " | ".join(
+                " <br> ".join(
                     f"<b>{district.rubbish_type}</b> - {district.name} ({district.city_type.capitalize()})"
                     if district.city_type == obj.city.city_type
-                    else f"<span style='color: red'><b>{district.rubbish_type}</b> - {district.name} (<u>{district.city_type.capitalize()}</u>)</span>"
+                    else f"<b>{district.rubbish_type}</b> - {district.name} <span style='color: red'><b>(<u>{district.city_type.capitalize()}</u>)</b></span>"
                     for district in rubbish_district_all
                 )
             )
