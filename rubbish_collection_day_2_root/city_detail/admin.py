@@ -49,37 +49,39 @@ class AddressAdmin(admin.ModelAdmin):
     ]
 
     def all_rubbish_districts_for_address(self, obj):
-        rubbish_district_all = (
-            obj.rubbish_district.select_related("rubbish_type")
-            .only("name", "city_type", "rubbish_type__name")
-            .order_by("rubbish_type__name")
-        )
-
-        rubbish_types = [district.rubbish_type for district in rubbish_district_all]
-        counter_rubbish_types = [
-            rubbish_type.name
-            for rubbish_type, counter in collections.Counter(rubbish_types).items()
-            if counter > 1
-        ]
-
-        if counter_rubbish_types:
-            return format_html(
-                " <br> ".join(
-                    f"<b>{district.rubbish_type}</b> - {district.name} ({district.city_type.capitalize()})"
-                    if district.rubbish_type.name not in counter_rubbish_types
-                    else f"<span style='color: red'><b><u>{district.rubbish_type}</u></b></span> - {district.name} ({district.city_type.capitalize()})"
-                    for district in rubbish_district_all
-                )
+        rubbish_district_all = obj.rubbish_district
+        if rubbish_district_all.exists():
+            rubbish_district_all = (
+                rubbish_district_all.select_related("rubbish_type")
+                .only("name", "city_type", "rubbish_type__name")
+                .order_by("rubbish_type__name")
             )
-        else:
-            return format_html(
-                " <br> ".join(
-                    f"<b>{district.rubbish_type}</b> - {district.name} ({district.city_type.capitalize()})"
-                    if district.city_type == obj.city.city_type
-                    else f"<b>{district.rubbish_type}</b> - {district.name} <span style='color: red'><b>(<u>{district.city_type.capitalize()}</u>)</b></span>"
-                    for district in rubbish_district_all
+
+            rubbish_types = [district.rubbish_type for district in rubbish_district_all]
+            counter_rubbish_types = [
+                rubbish_type.name
+                for rubbish_type, counter in collections.Counter(rubbish_types).items()
+                if counter > 1
+            ]
+
+            if counter_rubbish_types:
+                return format_html(
+                    " <br> ".join(
+                        f"<b>{district.rubbish_type}</b> - {district.name} ({district.city_type.capitalize()})"
+                        if district.rubbish_type.name not in counter_rubbish_types
+                        else f"<span style='color: red'><b><u>{district.rubbish_type}</u></b></span> - {district.name} ({district.city_type.capitalize()})"
+                        for district in rubbish_district_all
+                    )
                 )
-            )
+            else:
+                return format_html(
+                    " <br> ".join(
+                        f"<b>{district.rubbish_type}</b> - {district.name} ({district.city_type.capitalize()})"
+                        if district.city_type == obj.city.city_type
+                        else f"<b>{district.rubbish_type}</b> - {district.name} <span style='color: red'><b>(<u>{district.city_type.capitalize()}</u>)</b></span>"
+                        for district in rubbish_district_all
+                    )
+                )
 
     all_rubbish_districts_for_address.short_description = format_html(
         f"Przypisane rejony<br>(docelowo: {RubbishType.objects.count()})"
