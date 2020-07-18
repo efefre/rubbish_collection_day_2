@@ -27,7 +27,12 @@ class AddressAdmin(admin.ModelAdmin):
         "status_rubbish_districts",
         "status_city_type_in_rubbish_district",
     )
-    search_fields = ("city__name", "street__name", "status_for_filter")
+    search_fields = (
+        "city__name",
+        "street__name",
+        "status_rubbish_districts",
+        "status_city_type_in_rubbish_district",
+    )
     ordering = ("city", "street")
     autocomplete_fields = ("city", "street")
     filter_horizontal = ("rubbish_district",)
@@ -76,7 +81,9 @@ class AddressAdmin(admin.ModelAdmin):
                 )
             )
 
-    all_rubbish_districts_for_address.short_description = f"Przypisane rejony (docelowo: {RubbishType.objects.count()})"
+    all_rubbish_districts_for_address.short_description = (
+        f"Przypisane rejony (docelowo: {RubbishType.objects.count()})"
+    )
 
     def get_queryset(self, request):
         count_rubbish_types = RubbishType.objects.count()
@@ -96,19 +103,29 @@ class AddressAdmin(admin.ModelAdmin):
                     )
                 )
             )
-            .annotate(distinct_count_rubbish_type=Count("rubbish_district__rubbish_type__name", distinct=True))
+            .annotate(
+                distinct_count_rubbish_type=Count(
+                    "rubbish_district__rubbish_type__name", distinct=True
+                )
+            )
             .annotate(
                 status_rubbish_districts=Case(
-                    When(~Q(count_rubbish_districts=count_rubbish_types) | Q(distinct_count_rubbish_type__lt=F("count_rubbish_districts")), then=False),
+                    When(
+                        ~Q(count_rubbish_districts=count_rubbish_types)
+                        | Q(
+                            distinct_count_rubbish_type__lt=F("count_rubbish_districts")
+                        ),
+                        then=False,
+                    ),
                     output_field=BooleanField(),
-                    default=True
+                    default=True,
                 )
             )
             .annotate(
                 status_city_type_in_rubbish_district=Case(
                     When(~Q(errors_in_rubbish_districts_city_type=0), then=False),
                     output_field=BooleanField(),
-                    default=True
+                    default=True,
                 )
             )
             .select_related("city", "street")
@@ -119,9 +136,7 @@ class AddressAdmin(admin.ModelAdmin):
         return obj.status_rubbish_districts
 
     status_rubbish_districts.boolean = True
-    status_rubbish_districts.short_description = (
-        f"Status - rejony"
-    )
+    status_rubbish_districts.short_description = f"Status - rejony"
 
     def status_city_type_in_rubbish_district(self, obj):
         return obj.status_city_type_in_rubbish_district
