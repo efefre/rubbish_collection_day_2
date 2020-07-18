@@ -146,6 +146,7 @@ class AddressAdmin(admin.ModelAdmin):
 
     status_city_type_in_rubbish_district.boolean = True
     status_city_type_in_rubbish_district.short_description = format_html("Typ miejscowości<br>(status)")
+    status_city_type_in_rubbish_district.admin_order_field = "status_city_type_in_rubbish_district"
 
 
 admin.site.register(Street, StreetAdmin)
