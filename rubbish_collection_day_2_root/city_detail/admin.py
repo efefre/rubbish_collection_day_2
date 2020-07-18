@@ -139,6 +139,7 @@ class AddressAdmin(admin.ModelAdmin):
 
     status_rubbish_districts.boolean = True
     status_rubbish_districts.short_description = format_html("Rejony<br>(status)")
+    status_rubbish_districts.admin_order_field = "status_rubbish_districts"
 
     def status_city_type_in_rubbish_district(self, obj):
         return obj.status_city_type_in_rubbish_district
