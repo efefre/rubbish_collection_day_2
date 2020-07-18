@@ -24,7 +24,7 @@ class AddressAdmin(admin.ModelAdmin):
         "street",
         "city",
         "all_rubbish_districts_for_address",
-        "status_count_rubbish_districts",
+        "status_rubbish_districts",
         "status_city_type_in_rubbish_district",
     )
     search_fields = ("city__name", "street__name", "status_for_filter")
@@ -76,7 +76,7 @@ class AddressAdmin(admin.ModelAdmin):
                 )
             )
 
-    all_rubbish_districts_for_address.short_description = "Przypisane rejony"
+    all_rubbish_districts_for_address.short_description = f"Przypisane rejony (docelowo: {RubbishType.objects.count()})"
 
     def get_queryset(self, request):
         count_rubbish_types = RubbishType.objects.count()
@@ -96,37 +96,38 @@ class AddressAdmin(admin.ModelAdmin):
                     )
                 )
             )
+            .annotate(distinct_count_rubbish_type=Count("rubbish_district__rubbish_type__name", distinct=True))
             .annotate(
-                status_count_rubbish_districts=Case(
-                    When(Q(count_rubbish_districts=count_rubbish_types), then=True),
-                    When(~Q(count_rubbish_districts=count_rubbish_types), then=False),
+                status_rubbish_districts=Case(
+                    When(~Q(count_rubbish_districts=count_rubbish_types) | Q(distinct_count_rubbish_type__lt=F("count_rubbish_districts")), then=False),
                     output_field=BooleanField(),
+                    default=True
                 )
             )
             .annotate(
                 status_city_type_in_rubbish_district=Case(
-                    When(Q(errors_in_rubbish_districts_city_type=0), then=True),
                     When(~Q(errors_in_rubbish_districts_city_type=0), then=False),
                     output_field=BooleanField(),
+                    default=True
                 )
             )
             .select_related("city", "street")
             .prefetch_related("rubbish_district")
         )
 
-    def status_count_rubbish_districts(self, obj):
-        return obj.status_count_rubbish_districts
+    def status_rubbish_districts(self, obj):
+        return obj.status_rubbish_districts
 
-    status_count_rubbish_districts.boolean = True
-    status_count_rubbish_districts.short_description = (
-        f"Liczba przypisanych rejonów: {RubbishType.objects.count()}"
+    status_rubbish_districts.boolean = True
+    status_rubbish_districts.short_description = (
+        f"Status - rejony"
     )
 
     def status_city_type_in_rubbish_district(self, obj):
         return obj.status_city_type_in_rubbish_district
 
     status_city_type_in_rubbish_district.boolean = True
-    status_city_type_in_rubbish_district.short_description = "Typ miejscowości zgodny"
+    status_city_type_in_rubbish_district.short_description = "Status - typ miejscowości"
 
 
 admin.site.register(Street, StreetAdmin)
