@@ -81,8 +81,8 @@ class AddressAdmin(admin.ModelAdmin):
                 )
             )
 
-    all_rubbish_districts_for_address.short_description = (
-        f"Przypisane rejony (docelowo: {RubbishType.objects.count()})"
+    all_rubbish_districts_for_address.short_description = format_html(
+        f"Przypisane rejony<br>(docelowo: {RubbishType.objects.count()})"
     )
 
     def get_queryset(self, request):
@@ -136,13 +136,13 @@ class AddressAdmin(admin.ModelAdmin):
         return obj.status_rubbish_districts
 
     status_rubbish_districts.boolean = True
-    status_rubbish_districts.short_description = f"Status - rejony"
+    status_rubbish_districts.short_description = format_html("Rejony<br>(status)")
 
     def status_city_type_in_rubbish_district(self, obj):
         return obj.status_city_type_in_rubbish_district
 
     status_city_type_in_rubbish_district.boolean = True
-    status_city_type_in_rubbish_district.short_description = "Status - typ miejscowości"
+    status_city_type_in_rubbish_district.short_description = format_html("Typ miejscowości<br>(status)")
 
 
 admin.site.register(Street, StreetAdmin)
