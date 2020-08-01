@@ -8,6 +8,7 @@ from .forms import (
 )
 from .utils import get_streets_names
 from city_detail.models import Street, City, Address
+from schedule.models import RubbishDistrict
 from schedule.models import RubbishDistrict, Date
 from django.views.generic import TemplateView, FormView
 from datetime import datetime
@@ -16,6 +17,18 @@ from datetime import datetime
 # Create your views here.
 class ImportDataView(TemplateView):
     template_name = "import_data_for_schedule/import_data.html"
+
+
+class LoadDistrictOptionsView(TemplateView):
+    template_name = "import_data_for_schedule/district_dropdown_list_options.html"
+
+    def get_context_data(self, **kwargs):
+        city_pk = self.request.GET.get("city")
+        city = City.objects.get(pk=city_pk)
+        districts = RubbishDistrict.objects.filter(city_type=city.city_type).order_by("rubbish_type", "name")
+        context = super().get_context_data(**kwargs)
+        context["districts"] = districts
+        return context
 
 
 def import_streets(request):
