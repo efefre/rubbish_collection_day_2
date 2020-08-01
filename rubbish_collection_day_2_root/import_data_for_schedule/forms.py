@@ -15,16 +15,25 @@ class AddStreetsToCityForm(forms.Form):
 
 
 class AddAddressToRubbishDistrictForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        choices = [(o.pk, o.name) for o in City.objects.all()]
+        self.fields["city"] = forms.ChoiceField(
+            choices=tuple([("", "---------")] + list(choices)),
+        )
+        self.fields["city"].label = "Miejscowość"
+        self.fields["rubbish_district"] = forms.ChoiceField(
+            choices=tuple([("", "---------")])
+        )
+        self.fields["rubbish_district"].label = "Rejon odbioru odpadów"
+
     city = forms.ModelChoiceField(
-        queryset=City.objects.all(), empty_label=None, label="Miejscowość"
+        queryset=City.objects.all()
     )
     rubbish_district = forms.ModelChoiceField(
         queryset=RubbishDistrict.objects.all(),
-        empty_label=None,
-        label="Rejon odbioru odpadów",
     )
     streets = forms.CharField(widget=forms.Textarea, label="Ulice")
-
 
 class AddDatesToRubbishDistrictForm(forms.Form):
     rubbish_district = forms.ModelChoiceField(

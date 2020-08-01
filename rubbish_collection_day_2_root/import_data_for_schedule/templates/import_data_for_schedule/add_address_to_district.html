@@ -27,7 +27,7 @@ Dodawanie adresów do rejonów
         </div>
     {% endfor %}
 {% endif %}
-<form method="POST" id="AddStreetForm" enctype="multipart/form-data">
+<form method="POST" id="AddStreetForm" enctype="multipart/form-data" data-districts-url="{% url 'import_data_for_schedule:ajax_load_districts_otpions' %}" novalidate autocomplete="off">
     {% csrf_token %}
     
     {{form.as_p}}
@@ -56,3 +56,22 @@ Dodawanie adresów do rejonów
     </div>
 </form>
 {% endblock content %}
+
+{% block extra_script %}
+    <script>
+    $("#id_city").change(function () {
+        var url = $("#AddStreetForm").attr("data-districts-url");
+        var cityId = $(this).val();
+
+        $.ajax({
+            url: url,
+            data: {
+                'city': cityId
+            },
+            success: function (data) {
+                $("#id_rubbish_district").html(data);
+            }
+        });
+    });
+    </script>
+{% endblock %}

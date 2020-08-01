@@ -17,7 +17,7 @@ Dodawanie dat do rejonów
         </div>
     {% endfor %}
 {% endif %}
-<form method="POST" id="AddStreetForm" enctype="multipart/form-data">
+<form method="POST" id="AddDateForm" enctype="multipart/form-data">
     {% csrf_token %}
 
     {{form.as_p}}
