@@ -113,14 +113,28 @@ class AddressAdmin(admin.ModelAdmin):
             .annotate(
                 status_rubbish_districts=Case(
                     When(
-                        ~Q(count_rubbish_districts=count_rubbish_types)
-                        | Q(
+                        Q(count_rubbish_districts=count_rubbish_types)
+                        & ~Q(
+                            distinct_count_rubbish_type__lt=F("count_rubbish_districts")
+                        ),
+                        then=True,
+                    ),
+                    When(
+                        Q(count_rubbish_districts=count_rubbish_types)
+                        & Q(
                             distinct_count_rubbish_type__lt=F("count_rubbish_districts")
                         ),
                         then=False,
                     ),
+                    When(
+                        Q(count_rubbish_districts__lt=count_rubbish_types)
+                        & Q(count_rubbish_districts__gt=0),
+                        then=False,
+                    ),
+                    When(
+                        Q(count_rubbish_districts__gt=count_rubbish_types), then=False,
+                    ),
                     output_field=BooleanField(),
-                    default=True,
                 )
             )
             .annotate(
