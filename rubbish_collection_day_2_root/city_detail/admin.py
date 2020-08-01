@@ -1,8 +1,10 @@
 from django.contrib import admin
-from django.utils.safestring import mark_safe
+from django.db.models import Prefetch
+from django.utils.html import format_html
 from .models import City, Street, Address
 from schedule.models import RubbishType
-from django.db.models import Case, Value, When, CharField, Count, Q, F
+from django.db.models import Case, Value, When, CharField, Count, Q, F, BooleanField
+import collections
 
 
 # Register your models here.
@@ -21,17 +23,23 @@ class AddressAdmin(admin.ModelAdmin):
     list_display = (
         "street",
         "city",
-        "get_rubbish_type_district",
-        # "rubbish_district_status",
+        "all_rubbish_districts_for_address",
+        "status_rubbish_districts",
+        "status_city_type_in_rubbish_district",
     )
-    search_fields = ("city__name", "street__name", "status_for_filter")
+    search_fields = (
+        "city__name",
+        "street__name",
+        "status_rubbish_districts",
+        "status_city_type_in_rubbish_district",
+    )
     ordering = ("city", "street")
     autocomplete_fields = ("city", "street")
     filter_horizontal = ("rubbish_district",)
     list_filter = (
-        "rubbish_district__name",
         "rubbish_district__rubbish_type",
         "rubbish_district__city_type",
+        "rubbish_district__name",
         "city",
     )
 
@@ -40,92 +48,127 @@ class AddressAdmin(admin.ModelAdmin):
         ("Rejon", {"fields": ["rubbish_district"]}),
     ]
 
-    def get_rubbish_type_district(self, obj):
-        rubbish_district_all = (
-            obj.rubbish_district.select_related("rubbish_type")
-            .only("name", "city_type", "rubbish_type__name")
-            .order_by("rubbish_type")
-        )
-        return mark_safe(
-            " | ".join(
-                f"<b>{district.rubbish_type}</b> - {district.name} ({district.city_type.capitalize()})"
-                for district in rubbish_district_all
+    def all_rubbish_districts_for_address(self, obj):
+        rubbish_district_all = obj.rubbish_district
+        if rubbish_district_all.exists():
+            rubbish_district_all = (
+                rubbish_district_all.select_related("rubbish_type")
+                .only("name", "city_type", "rubbish_type__name")
+                .order_by("rubbish_type__name")
             )
-        )
 
-    get_rubbish_type_district.short_description = "Przypisane rejony"
+            rubbish_types = [district.rubbish_type for district in rubbish_district_all]
+            counter_rubbish_types = [
+                rubbish_type.name
+                for rubbish_type, counter in collections.Counter(rubbish_types).items()
+                if counter > 1
+            ]
+
+            if counter_rubbish_types:
+                return format_html(
+                    " <br> ".join(
+                        f"<b>{district.rubbish_type}</b> - {district.name} ({district.city_type.capitalize()})"
+                        if district.rubbish_type.name not in counter_rubbish_types
+                        else f"<span style='color: red'><b><u>{district.rubbish_type}</u></b></span> - {district.name} ({district.city_type.capitalize()})"
+                        for district in rubbish_district_all
+                    )
+                )
+            else:
+                return format_html(
+                    " <br> ".join(
+                        f"<b>{district.rubbish_type}</b> - {district.name} ({district.city_type.capitalize()})"
+                        if district.city_type == obj.city.city_type
+                        else f"<b>{district.rubbish_type}</b> - {district.name} <span style='color: red'><b>(<u>{district.city_type.capitalize()}</u>)</b></span>"
+                        for district in rubbish_district_all
+                    )
+                )
+
+    all_rubbish_districts_for_address.short_description = format_html(
+        f"Przypisane rejony<br>(docelowo: {RubbishType.objects.count()})"
+    )
 
     def get_queryset(self, request):
-        return super().get_queryset(request).select_related("city", "street")
+        count_rubbish_types = RubbishType.objects.count()
 
-    # def get_queryset(self, request):
-    #     count_rubbish_types = RubbishType.objects.count()
+        return (
+            super()
+            .get_queryset(request)
+            .annotate(count_rubbish_districts=Count("rubbish_district"))
+            .annotate(
+                errors_in_rubbish_districts_city_type=Count(
+                    Case(
+                        When(
+                            ~Q(rubbish_district__city_type=F("city__city_type")),
+                            then=F("rubbish_district__city_type"),
+                        ),
+                        output_field=CharField(),
+                    )
+                )
+            )
+            .annotate(
+                distinct_count_rubbish_type=Count(
+                    "rubbish_district__rubbish_type__name", distinct=True
+                )
+            )
+            .annotate(
+                status_rubbish_districts=Case(
+                    When(
+                        Q(count_rubbish_districts=count_rubbish_types)
+                        & ~Q(
+                            distinct_count_rubbish_type__lt=F("count_rubbish_districts")
+                        ),
+                        then=True,
+                    ),
+                    When(
+                        Q(count_rubbish_districts=count_rubbish_types)
+                        & Q(
+                            distinct_count_rubbish_type__lt=F("count_rubbish_districts")
+                        ),
+                        then=False,
+                    ),
+                    When(
+                        Q(count_rubbish_districts__lt=count_rubbish_types)
+                        & Q(count_rubbish_districts__gt=0),
+                        then=False,
+                    ),
+                    When(
+                        Q(count_rubbish_districts__gt=count_rubbish_types), then=False,
+                    ),
+                    output_field=BooleanField(),
+                )
+            )
+            .annotate(
+                status_city_type_in_rubbish_district=Case(
+                    When(~Q(errors_in_rubbish_districts_city_type=0), then=False),
+                    When(
+                        Q(errors_in_rubbish_districts_city_type=0)
+                        & Q(distinct_count_rubbish_type__gte=1),
+                        then=True,
+                    ),
+                    output_field=BooleanField(),
+                )
+            )
+            .select_related("city", "street")
+            .prefetch_related("rubbish_district")
+        )
 
-    #     return (
-    #         super()
-    #         .get_queryset(request)
-    #         .annotate(count_rubbish_districts=Count("rubbish_district"))
-    #         .annotate(
-    #             errors_in_rubbish_districts_city_type=Count(
-    #                 Case(
-    #                     When(
-    #                         ~Q(rubbish_district__city_type=F("city__city_type")),
-    #                         then=F("rubbish_district__city_type"),
-    #                     ),
-    #                     output_field=CharField(),
-    #                 )
-    #             )
-    #         )
-    #         .annotate(
-    #             status_for_filter=Case(
-    #                 When(
-    #                     ~Q(count_rubbish_districts=count_rubbish_types),
-    #                     then=Value("err_in_dis"),
-    #                 ),
-    #                 When(
-    #                     ~Q(errors_in_rubbish_districts_city_type=0),
-    #                     then=Value("err_in_cit_typ"),
-    #                 ),
-    #                 output_field=CharField(),
-    #             )
-    #         )
-    #     )
+    def status_rubbish_districts(self, obj):
+        return obj.status_rubbish_districts
 
-    # def status_for_filter(self, obj):
-    #     return obj.status_for_filter
+    status_rubbish_districts.boolean = True
+    status_rubbish_districts.short_description = format_html("Rejony<br>(status)")
+    status_rubbish_districts.admin_order_field = "status_rubbish_districts"
 
-    # def rubbish_district_status(self, obj):
-    #     count_districts = obj.count_rubbish_districts
-    #     count_rubbish_types = RubbishType.objects.count()
-    #     if count_districts == count_rubbish_types:
-    #         error_in_city_type = []
-    #         city_type = obj.city.city_type
-    #         for district in obj.rubbish_district.all():
-    #             if district.city_type != city_type:
-    #                 error_in_city_type.append(district.rubbish_type)
+    def status_city_type_in_rubbish_district(self, obj):
+        return obj.status_city_type_in_rubbish_district
 
-    #         if len(error_in_city_type) == 0:
-    #             return mark_safe(
-    #                 f"<span style='color:green'>Liczba zdefiniowanych rejonów: {count_districts}</style>"
-    #             )
-    #         else:
-    #             error_message = [
-    #                 ", ".join(rubbish_type.name for rubbish_type in error_in_city_type)
-    #             ]
-    #             return mark_safe(
-    #                 f"<span style='color:red'><b>Błąd</b>: {error_message[0]}</span>"
-    #             )
-
-    #     if count_districts < count_rubbish_types:
-    #         return mark_safe(
-    #             f"<span style='color:red'>Liczba zdefiniowanych rejonów: {count_districts} (za mało)</style>"
-    #         )
-    #     else:
-    #         return mark_safe(
-    #             f"<span style='color:red'>Liczba zdefiniowanych rejonów: {count_districts} (za dużo)</style>"
-    #         )
-
-    # rubbish_district_status.short_description = "Status"
+    status_city_type_in_rubbish_district.boolean = True
+    status_city_type_in_rubbish_district.short_description = format_html(
+        "Typ miejscowości<br>(status)"
+    )
+    status_city_type_in_rubbish_district.admin_order_field = (
+        "status_city_type_in_rubbish_district"
+    )
 
 
 admin.site.register(Street, StreetAdmin)
