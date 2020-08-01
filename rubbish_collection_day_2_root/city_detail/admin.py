@@ -126,8 +126,12 @@ class AddressAdmin(admin.ModelAdmin):
             .annotate(
                 status_city_type_in_rubbish_district=Case(
                     When(~Q(errors_in_rubbish_districts_city_type=0), then=False),
+                    When(
+                        Q(errors_in_rubbish_districts_city_type=0)
+                        & Q(distinct_count_rubbish_type__gte=1),
+                        then=True,
+                    ),
                     output_field=BooleanField(),
-                    default=True,
                 )
             )
             .select_related("city", "street")
@@ -145,8 +149,12 @@ class AddressAdmin(admin.ModelAdmin):
         return obj.status_city_type_in_rubbish_district
 
     status_city_type_in_rubbish_district.boolean = True
-    status_city_type_in_rubbish_district.short_description = format_html("Typ miejscowości<br>(status)")
-    status_city_type_in_rubbish_district.admin_order_field = "status_city_type_in_rubbish_district"
+    status_city_type_in_rubbish_district.short_description = format_html(
+        "Typ miejscowości<br>(status)"
+    )
+    status_city_type_in_rubbish_district.admin_order_field = (
+        "status_city_type_in_rubbish_district"
+    )
 
 
 admin.site.register(Street, StreetAdmin)
