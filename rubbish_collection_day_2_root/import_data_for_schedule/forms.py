@@ -34,10 +34,20 @@ class AddAddressToRubbishDistrictForm(forms.Form):
     )
     streets = forms.CharField(widget=forms.Textarea, label="Ulice")
 
+
 class AddDatesToRubbishDistrictForm(forms.Form):
+    city_type = forms.ChoiceField(choices=[("", "---------"),
+                                           ("gmina", "Gmina"),
+                                           ("miasto", "Miasto")],
+                                  label="Typ")
+
+    rubbish_type = forms.ModelChoiceField(
+        queryset=RubbishType.objects.all(),
+        label="Frkacja śmieci",
+    )
     rubbish_district = forms.ModelChoiceField(
         queryset=RubbishDistrict.objects.all(),
-        empty_label=None,
         label="Rejon odbioru odpadów",
     )
+
     dates = forms.CharField(widget=forms.Textarea, label="Daty odbioru odpadów")
