@@ -31,6 +31,17 @@ class LoadDistrictOptionsView(TemplateView):
         context["districts"] = districts
         return context
 
+class LoadDistrictOptionsCityTypeView(TemplateView):
+    template_name = "import_data_for_schedule/district_dropdown_list_option_by_city_type.html"
+
+    def get_context_data(self, **kwargs):
+        city_type = self.request.GET.get("cityType")
+        rubbish_type_pk = self.request.GET.get("rubbishType")
+        districts = RubbishDistrict.objects.filter(city_type=city_type, rubbish_type=rubbish_type_pk).order_by("rubbish_type", "name")
+        context = super().get_context_data(**kwargs)
+        context["districts"] = districts
+        return context
+
 
 def import_streets(request):
     """Import streets from file and add to database"""
