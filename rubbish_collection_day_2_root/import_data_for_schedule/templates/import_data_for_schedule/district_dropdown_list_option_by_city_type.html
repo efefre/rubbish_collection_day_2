@@ -1,0 +1,4 @@
+<option value="">---------</option>
+{% for district in districts %}
+<option value="{{district.pk}}">{{district.city_type|title}} - {{district.rubbish_type}}: {{district.name}}</option>
+{% endfor %}
