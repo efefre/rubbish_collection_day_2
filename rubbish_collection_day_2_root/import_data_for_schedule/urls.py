@@ -23,6 +23,10 @@ urlpatterns = [
         login_required(views.LoadDistrictOptionsView.as_view()),
         name="ajax_load_districts_otpions"),
     path(
+        "ajax/load-districts-options-by-city-type/",
+        login_required(views.LoadDistrictOptionsCityTypeView.as_view()),
+        name="ajax_load_districts_otpions_city_type"),
+    path(
         "add-dates-to-district/",
         login_required(views.AddDatesToRubbishDistrictView.as_view()),
         name="add-dates-to-district",
