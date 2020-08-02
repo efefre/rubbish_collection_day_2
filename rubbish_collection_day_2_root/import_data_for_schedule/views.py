@@ -24,8 +24,9 @@ class LoadDistrictOptionsView(TemplateView):
 
     def get_context_data(self, **kwargs):
         city_pk = self.request.GET.get("city")
+        rubbish_type_pk = self.request.GET.get("rubbishType")
         city = City.objects.get(pk=city_pk)
-        districts = RubbishDistrict.objects.filter(city_type=city.city_type).order_by("rubbish_type", "name")
+        districts = RubbishDistrict.objects.filter(city_type=city.city_type, rubbish_type=rubbish_type_pk).order_by("rubbish_type", "name")
         context = super().get_context_data(**kwargs)
         context["districts"] = districts
         return context
