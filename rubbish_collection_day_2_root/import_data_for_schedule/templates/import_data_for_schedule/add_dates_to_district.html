@@ -17,7 +17,7 @@ Dodawanie dat do rejonów
         </div>
     {% endfor %}
 {% endif %}
-<form method="POST" id="AddDateForm" enctype="multipart/form-data">
+<form method="POST" id="AddDateForm" enctype="multipart/form-data" data-districts-url="{% url 'import_data_for_schedule:ajax_load_districts_otpions_city_type' %}" novalidate autocomplete="off">
     {% csrf_token %}
 
     {{form.as_p}}
@@ -46,3 +46,45 @@ Dodawanie dat do rejonów
     </div>
 </form>
 {% endblock content %}
+
+{% block extra_script %}
+<script>
+    $("#id_rubbish_type").change(function () {
+        var url = $("#AddDateForm").attr("data-districts-url");
+        var cityTypeId = $("#id_city_type").val();
+        var rubbishTypeId = $("#id_rubbish_type").val()
+
+        if (cityTypeId != "") {
+            $.ajax({
+                url: url,
+                data: {
+                    'cityType': cityTypeId,
+                    'rubbishType': rubbishTypeId
+                },
+                success: function (data) {
+                    $("#id_rubbish_district").html(data);
+                }
+            });
+        }
+    });
+
+    $("#id_city_type").change(function () {
+        var url = $("#AddDateForm").attr("data-districts-url");
+        var cityTypeId = $("#id_city_type").val();
+        var rubbishTypeId = $("#id_rubbish_type").val()
+
+        if (rubbishTypeId != "") {
+            $.ajax({
+                url: url,
+                data: {
+                    'cityType': cityTypeId,
+                    'rubbishType': rubbishTypeId
+                },
+                success: function (data) {
+                    $("#id_rubbish_district").html(data);
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}
