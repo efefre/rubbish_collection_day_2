@@ -12,11 +12,19 @@ class CityAdmin(admin.ModelAdmin):
     search_fields = ("name",)
     ordering = ("name",)
 
+class AddressInline(admin.TabularInline):
+    model = Address
+    fields = ("city",)
+    ordering = ("city", )
 
 class StreetAdmin(admin.ModelAdmin):
     search_fields = ("name", "created_date")
     ordering = ("name",)
     list_display = ("name", "created_date", "count_addresses_with_this_street")
+
+    inlines = [
+        AddressInline,
+    ]
 
     def get_queryset(self, request):
         return (
