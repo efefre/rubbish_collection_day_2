@@ -12,11 +12,31 @@ class CityAdmin(admin.ModelAdmin):
     search_fields = ("name",)
     ordering = ("name",)
 
+class AddressInline(admin.TabularInline):
+    model = Address
+    fields = ("city",)
+    ordering = ("city", )
 
 class StreetAdmin(admin.ModelAdmin):
     search_fields = ("name", "created_date")
     ordering = ("name",)
-    list_display = ("name", "created_date")
+    list_display = ("name", "created_date", "count_addresses_with_this_street")
+
+    inlines = [
+        AddressInline,
+    ]
+
+    def get_queryset(self, request):
+        return (
+            super()
+            .get_queryset(request)
+            .annotate(count_addresses_with_this_street=Count("address")))
+
+    def count_addresses_with_this_street(self, obj):
+        return obj.count_addresses_with_this_street
+
+    count_addresses_with_this_street.short_description = "Liczba adresów z ulicą"
+    count_addresses_with_this_street.admin_order_field = "count_addresses_with_this_street"
 
 
 class AddressAdmin(admin.ModelAdmin):
