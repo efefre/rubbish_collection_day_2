@@ -13,6 +13,8 @@ from schedule.models import RubbishDistrict, Date
 from django.views.generic import TemplateView, FormView
 from datetime import datetime
 
+from .replace_streets import wolomin_streets
+
 
 # Create your views here.
 class ImportDataView(TemplateView):
@@ -118,6 +120,13 @@ class AddStreetToCityView(FormView):
         for street in streets:
             street = street.replace("\r\n", " ")
             city_id = City.objects.get(name=city)
+
+            if wolomin_streets.get(street):
+                street = wolomin_streets.get(street)
+            elif '-go ' in street:
+                street = street.replace('-go ',' ')
+            elif '- go ' in street:
+                street = street.replace('- go ', ' ')
 
             street_id = Street.objects.get_or_create(name=street.strip())
             if street_id[1]:
