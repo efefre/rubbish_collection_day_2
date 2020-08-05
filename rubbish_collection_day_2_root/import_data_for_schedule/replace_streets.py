@@ -1,5 +1,5 @@
 # Streets mapping.
-# Find street if import by AddStreetsToCityForm and replace name.
+# Find a street if import by AddStreetsToCityForm and replace name.
 # Necessary because sometimes get typo in same street name in different districts.
 
 wolomin_streets = {
