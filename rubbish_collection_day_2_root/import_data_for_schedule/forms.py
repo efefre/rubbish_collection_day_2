@@ -13,6 +13,9 @@ class AddStreetsToCityForm(forms.Form):
     )
     streets = forms.CharField(widget=forms.Textarea, label="Ulica")
 
+    extra_street = forms.CharField(widget=forms.TextInput, label="Ulica, która ma przecinek w nazwie",
+                                   required=False)
+
 
 class AddAddressToRubbishDistrictForm(forms.Form):
     def __init__(self, *args, **kwargs):
