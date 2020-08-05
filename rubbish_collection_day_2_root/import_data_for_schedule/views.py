@@ -111,6 +111,9 @@ class AddStreetToCityView(FormView):
 
     def form_valid(self, form):
         streets = (form.cleaned_data["streets"]).replace(", ", ",").split(",")
+        extra_street = (form.cleaned_data["extra_street"])
+        if extra_street:
+            streets.append(extra_street)
         city = form.cleaned_data["city"]
         context = self.get_context_data()
 
