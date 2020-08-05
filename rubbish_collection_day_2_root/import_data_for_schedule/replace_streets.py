@@ -14,4 +14,6 @@ wolomin_streets = {
     "Sikorskiego (od ul. Wąskiej do ul. 1-go Maja)": "Sikorskiego (od 1 Maja do Wąskiej)",
     "E.Plater": "E. Plater",
     "Plater": "E. Plater",
+    "Boh. Westerplatte": "Bohaterów Westerplatte",
+    "Boh.Westerplatte": "Bohaterów Westerplatte",
 }
