@@ -13,7 +13,8 @@ class AddStreetsToCityForm(forms.Form):
     )
     streets = forms.CharField(widget=forms.Textarea, label="Ulica")
 
-    extra_street = forms.CharField(widget=forms.TextInput, label="Ulica, która ma przecinek w nazwie",
+    extra_street = forms.CharField(widget=forms.TextInput,
+                                   label="Ulica, która ma przecinek w nazwie",
                                    required=False)
 
 
@@ -53,4 +54,5 @@ class AddDatesToRubbishDistrictForm(forms.Form):
         label="Rejon odbioru odpadów",
     )
 
-    dates = forms.CharField(widget=forms.Textarea, label="Daty odbioru odpadów")
+    dates = forms.CharField(widget=forms.Textarea,
+                            label="Daty odbioru odpadów")
