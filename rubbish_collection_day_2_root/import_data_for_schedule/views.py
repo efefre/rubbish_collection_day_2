@@ -8,7 +8,6 @@ from .forms import (
 )
 from .utils import get_streets_names
 from city_detail.models import Street, City, Address
-from schedule.models import RubbishDistrict
 from schedule.models import RubbishDistrict, Date
 from django.views.generic import TemplateView, FormView
 from datetime import datetime
@@ -28,18 +27,25 @@ class LoadDistrictOptionsView(TemplateView):
         city_pk = self.request.GET.get("city")
         rubbish_type_pk = self.request.GET.get("rubbishType")
         city = City.objects.get(pk=city_pk)
-        districts = RubbishDistrict.objects.filter(city_type=city.city_type, rubbish_type=rubbish_type_pk).order_by("rubbish_type", "name")
+        districts = RubbishDistrict.objects.filter(
+            city_type=city.city_type, rubbish_type=rubbish_type_pk
+        ).order_by("rubbish_type", "name")
         context = super().get_context_data(**kwargs)
         context["districts"] = districts
         return context
 
+
 class LoadDistrictOptionsCityTypeView(TemplateView):
-    template_name = "import_data_for_schedule/district_dropdown_list_option_by_city_type.html"
+    template_name = (
+        "import_data_for_schedule/district_dropdown_list_option_by_city_type.html"
+    )
 
     def get_context_data(self, **kwargs):
         city_type = self.request.GET.get("cityType")
         rubbish_type_pk = self.request.GET.get("rubbishType")
-        districts = RubbishDistrict.objects.filter(city_type=city_type, rubbish_type=rubbish_type_pk).order_by("rubbish_type", "name")
+        districts = RubbishDistrict.objects.filter(
+            city_type=city_type, rubbish_type=rubbish_type_pk
+        ).order_by("rubbish_type", "name")
         context = super().get_context_data(**kwargs)
         context["districts"] = districts
         return context
@@ -111,7 +117,7 @@ class AddStreetToCityView(FormView):
 
     def form_valid(self, form):
         streets = (form.cleaned_data["streets"]).replace(", ", ",").split(",")
-        extra_street = (form.cleaned_data["extra_street"])
+        extra_street = form.cleaned_data["extra_street"]
         if extra_street:
             streets.append(extra_street)
         city = form.cleaned_data["city"]
@@ -126,10 +132,10 @@ class AddStreetToCityView(FormView):
 
             if wolomin_streets.get(street):
                 street = wolomin_streets.get(street)
-            elif '-go ' in street:
-                street = street.replace('-go ',' ')
-            elif '- go ' in street:
-                street = street.replace('- go ', ' ')
+            elif "-go " in street:
+                street = street.replace("-go ", " ")
+            elif "- go " in street:
+                street = street.replace("- go ", " ")
 
             street_id = Street.objects.get_or_create(name=street.strip())
             if street_id[1]:
