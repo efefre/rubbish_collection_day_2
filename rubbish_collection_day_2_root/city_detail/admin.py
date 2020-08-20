@@ -140,6 +140,10 @@ class AddressAdmin(admin.ModelAdmin):
             .annotate(
                 status_rubbish_districts=Case(
                     When(
+                        Q(count_rubbish_districts=0),
+                        then=False,
+                    ),
+                    When(
                         Q(count_rubbish_districts=count_rubbish_types)
                         & ~Q(
                             distinct_count_rubbish_type__lt=F("count_rubbish_districts")
