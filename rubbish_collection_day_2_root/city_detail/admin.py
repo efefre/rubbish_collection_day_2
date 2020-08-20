@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.db.models import Prefetch
 from django.utils.html import format_html
+from django.db.utils import ProgrammingError
 from .models import City, Street, Address
 from schedule.models import RubbishType
 from django.db.models import Case, Value, When, CharField, Count, Q, F, BooleanField
@@ -102,10 +103,16 @@ class AddressAdmin(admin.ModelAdmin):
                         for district in rubbish_district_all
                     )
                 )
-
-    all_rubbish_districts_for_address.short_description = format_html(
-        f"Przypisane rejony<br>(docelowo: {RubbishType.objects.count()})"
-    )
+    try:
+        RubbishType.objects.count()
+    except ProgrammingError:
+        all_rubbish_districts_for_address.short_description = format_html(
+            f"Przypisane rejony"
+        )
+    else:
+        all_rubbish_districts_for_address.short_description = format_html(
+            f"Przypisane rejony<br>(docelowo: {RubbishType.objects.count()})"
+        )
 
     def get_queryset(self, request):
         count_rubbish_types = RubbishType.objects.count()
