@@ -58,10 +58,8 @@ class AddressAdmin(admin.ModelAdmin):
     autocomplete_fields = ("city", "street")
     filter_horizontal = ("rubbish_district",)
     list_filter = (
-        "rubbish_district__rubbish_type",
-        "rubbish_district__city_type",
-        "rubbish_district__name",
         "city",
+        "rubbish_district__city_type",
     )
 
     fieldsets = [
