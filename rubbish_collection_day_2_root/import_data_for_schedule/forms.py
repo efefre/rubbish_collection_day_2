@@ -11,7 +11,7 @@ class AddStreetsToCityForm(forms.Form):
     city = forms.ModelChoiceField(
         queryset=City.objects.all(), empty_label=None, label="Miejscowość"
     )
-    streets = forms.CharField(widget=forms.Textarea, label="Ulica")
+    streets = forms.CharField(widget=forms.Textarea, label="Ulica", required=False)
 
     extra_street = forms.CharField(widget=forms.TextInput,
                                    label="Ulica, która ma przecinek w nazwie",
@@ -19,12 +19,6 @@ class AddStreetsToCityForm(forms.Form):
 
 
 class AddAddressToRubbishDistrictForm(forms.Form):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["rubbish_district"] = forms.ChoiceField(
-            choices=tuple([("", "---------")])
-        )
-
     city = forms.ModelChoiceField(
         queryset=City.objects.all(), label="Miejscowość"
     )
@@ -34,8 +28,10 @@ class AddAddressToRubbishDistrictForm(forms.Form):
     )
 
     rubbish_district = forms.ModelChoiceField(
-        queryset=RubbishDistrict.objects.all(), label="Rejon odbioru odpadów"
+        queryset=RubbishDistrict.objects.all(),
+        label="Rejon odbioru odpadów"
     )
+
     streets = forms.CharField(widget=forms.Textarea, label="Ulice")
 
 
