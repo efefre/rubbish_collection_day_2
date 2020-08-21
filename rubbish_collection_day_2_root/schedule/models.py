@@ -17,6 +17,9 @@ class ScheduleConfiguration(SingletonModel):
         help_text="Link do harmonogramu opublikowanego na stronie UM",
         default="localhost",
     )
+    last_update = models.CharField(
+        max_length=100, verbose_name="Nazwa strony", default="marzec 2020"
+    )
 
     class Meta:
         verbose_name = "Konfiguracja harmonogramu"
