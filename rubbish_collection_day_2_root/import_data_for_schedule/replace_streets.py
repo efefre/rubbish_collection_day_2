@@ -16,4 +16,5 @@ wolomin_streets = {
     "Plater": "E. Plater",
     "Boh. Westerplatte": "Bohaterów Westerplatte",
     "Boh.Westerplatte": "Bohaterów Westerplatte",
+    "Gen. Hallera": "Hallera"
 }
