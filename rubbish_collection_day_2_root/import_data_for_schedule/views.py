@@ -193,6 +193,15 @@ class AddAddressToRubbishDistrictView(FormView):
         add_rubbish_district = None
         address_does_not_exist = []
         for street in streets:
+            street = street.replace("\r\n", " ")
+
+            if wolomin_streets.get(street):
+                street = wolomin_streets.get(street)
+            elif "-go " in street:
+                street = street.replace("-go ", " ")
+            elif "- go " in street:
+                street = street.replace("- go ", " ")
+
             street_id = Street.objects.filter(name__startswith=street.strip())
             for str_id in street_id:
                 try:
