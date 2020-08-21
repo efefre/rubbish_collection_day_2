@@ -3,7 +3,7 @@ from django.db.models import Prefetch
 from django.utils.html import format_html
 from django.db.utils import ProgrammingError
 from .models import City, Street, Address
-from schedule.models import RubbishType
+from schedule.models import RubbishType, RubbishDistrict
 from django.db.models import Case, Value, When, CharField, Count, Q, F, BooleanField
 import collections
 
@@ -40,6 +40,14 @@ class StreetAdmin(admin.ModelAdmin):
     count_addresses_with_this_street.admin_order_field = "count_addresses_with_this_street"
 
 
+def add_big_rubbish_district_1(modeladmin, request, queryset):
+    type_1 = RubbishDistrict.objects.get(city_type="gmina", rubbish_type__name="wielkogabarytowe i zużyty sprzęt elektryczny i elektroniczny")
+
+    for obj in queryset:
+        obj.rubbish_district.add(type_1)
+
+add_big_rubbish_district_1.short_description = "Odpady wielkogabarytowe - gmina"
+
 class AddressAdmin(admin.ModelAdmin):
     list_display = (
         "street",
@@ -61,6 +69,7 @@ class AddressAdmin(admin.ModelAdmin):
         "city",
         "rubbish_district__city_type",
     )
+    actions = [add_big_rubbish_district_1]
 
     fieldsets = [
         ("Adres", {"fields": ["city", "street"]}),
