@@ -48,6 +48,15 @@ def add_big_rubbish_district_1(modeladmin, request, queryset):
 
 add_big_rubbish_district_1.short_description = "Odpady wielkogabarytowe - gmina"
 
+def add_big_rubbish_district_2(modeladmin, request, queryset):
+    type_2 = RubbishDistrict.objects.get(city_type="miasto", rubbish_type__name="wielkogabarytowe i zużyty sprzęt elektryczny i elektroniczny")
+
+    for obj in queryset:
+        obj.rubbish_district.add(type_2)
+
+add_big_rubbish_district_2.short_description = "Odpady wielkogabarytowe - miasto"
+
+
 class AddressAdmin(admin.ModelAdmin):
     list_display = (
         "street",
@@ -69,7 +78,7 @@ class AddressAdmin(admin.ModelAdmin):
         "city",
         "rubbish_district__city_type",
     )
-    actions = [add_big_rubbish_district_1]
+    actions = [add_big_rubbish_district_1, add_big_rubbish_district_2]
 
     fieldsets = [
         ("Adres", {"fields": ["city", "street"]}),
