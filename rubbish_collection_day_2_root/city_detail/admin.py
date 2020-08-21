@@ -79,7 +79,7 @@ class AddressAdmin(admin.ModelAdmin):
     filter_horizontal = ("rubbish_district",)
     list_filter = (
         "city",
-        "rubbish_district__city_type",
+        "city__city_type",
     )
     actions = [add_big_rubbish_district_1, add_big_rubbish_district_2]
 
