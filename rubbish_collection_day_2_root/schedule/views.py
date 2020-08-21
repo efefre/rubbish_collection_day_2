@@ -146,7 +146,7 @@ def ical(request):
                 event.add("class", "private")
                 event.add(
                     "description",
-                    f"{district.rubbish_type.name}: {data_description}. Odpady należy wystawić do godziny 6:00.",
+                    f"{(district.rubbish_type.name).upper()}: {data_description}. Odpady należy wystawić do godziny 6:00.",
                 )
                 event.add(
                     "summary",
