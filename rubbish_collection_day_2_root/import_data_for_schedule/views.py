@@ -116,8 +116,12 @@ class AddStreetToCityView(FormView):
         return reverse("import_data_for_schedule:add-streets-to-city")
 
     def form_valid(self, form):
-        streets = (form.cleaned_data["streets"]).replace(", ", ",").split(",")
+        if form.cleaned_data["streets"] !='':
+            streets = (form.cleaned_data["streets"]).replace(", ", ",").split(",")
+        else:
+            streets = []
         extra_street = form.cleaned_data["extra_street"]
+
         if extra_street:
             streets.append(extra_street)
         city = form.cleaned_data["city"]
