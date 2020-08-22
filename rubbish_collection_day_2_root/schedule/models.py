@@ -24,7 +24,8 @@ class ScheduleConfiguration(SingletonModel):
         default=False, verbose_name="Google Tag Manager (GTM)"
     )
     gtm_number = models.CharField(
-        max_length=20, verbose_name="Identyfikator kontenera GTM", default="empty_number"
+        max_length=20, verbose_name="Identyfikator kontenera GTM",
+        default="empty_number"
     )
 
     class Meta:
