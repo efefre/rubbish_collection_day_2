@@ -1,10 +1,9 @@
 from django.contrib import admin
-from django.db.models import Prefetch
 from django.utils.html import format_html
 from django.db.utils import ProgrammingError
 from .models import City, Street, Address
 from schedule.models import RubbishType, RubbishDistrict
-from django.db.models import Case, Value, When, CharField, Count, Q, F, BooleanField
+from django.db.models import Case, When, CharField, Count, Q, F, BooleanField
 import collections
 
 
@@ -13,10 +12,12 @@ class CityAdmin(admin.ModelAdmin):
     search_fields = ("name",)
     ordering = ("name",)
 
+
 class AddressInline(admin.TabularInline):
     model = Address
     fields = ("city",)
-    ordering = ("city", )
+    ordering = ("city",)
+
 
 class StreetAdmin(admin.ModelAdmin):
     search_fields = ("name", "created_date")
@@ -31,17 +32,23 @@ class StreetAdmin(admin.ModelAdmin):
         return (
             super()
             .get_queryset(request)
-            .annotate(count_addresses_with_this_street=Count("address")))
+            .annotate(count_addresses_with_this_street=Count("address"))
+        )
 
     def count_addresses_with_this_street(self, obj):
         return obj.count_addresses_with_this_street
 
     count_addresses_with_this_street.short_description = "Liczba adresów z ulicą"
-    count_addresses_with_this_street.admin_order_field = "count_addresses_with_this_street"
+    count_addresses_with_this_street.admin_order_field = (
+        "count_addresses_with_this_street"
+    )
 
 
 def add_big_rubbish_district_1(modeladmin, request, queryset):
-    type_1 = RubbishDistrict.objects.get(city_type="gmina", rubbish_type__name="wielkogabarytowe i zużyty sprzęt elektryczny i elektroniczny")
+    type_1 = RubbishDistrict.objects.get(
+        city_type="gmina",
+        rubbish_type__name="wielkogabarytowe i zużyty sprzęt elektryczny i elektroniczny",
+    )
 
     for obj in queryset:
         obj.rubbish_district.add(type_1)
@@ -51,7 +58,10 @@ add_big_rubbish_district_1.short_description = "Odpady wielkogabarytowe - gmina"
 
 
 def add_big_rubbish_district_2(modeladmin, request, queryset):
-    type_2 = RubbishDistrict.objects.get(city_type="miasto", rubbish_type__name="wielkogabarytowe i zużyty sprzęt elektryczny i elektroniczny")
+    type_2 = RubbishDistrict.objects.get(
+        city_type="miasto",
+        rubbish_type__name="wielkogabarytowe i zużyty sprzęt elektryczny i elektroniczny",
+    )
 
     for obj in queryset:
         obj.rubbish_district.add(type_2)
@@ -77,10 +87,7 @@ class AddressAdmin(admin.ModelAdmin):
     ordering = ("city", "street")
     autocomplete_fields = ("city", "street")
     filter_horizontal = ("rubbish_district",)
-    list_filter = (
-        "city",
-        "city__city_type",
-    )
+    list_filter = ("city", "city__city_type", "rubbish_district")
     actions = [add_big_rubbish_district_1, add_big_rubbish_district_2]
 
     fieldsets = [
@@ -122,6 +129,7 @@ class AddressAdmin(admin.ModelAdmin):
                         for district in rubbish_district_all
                     )
                 )
+
     try:
         RubbishType.objects.count()
     except ProgrammingError:
@@ -158,10 +166,7 @@ class AddressAdmin(admin.ModelAdmin):
             )
             .annotate(
                 status_rubbish_districts=Case(
-                    When(
-                        Q(count_rubbish_districts=0),
-                        then=False,
-                    ),
+                    When(Q(count_rubbish_districts=0), then=False,),
                     When(
                         Q(count_rubbish_districts=count_rubbish_types)
                         & ~Q(
