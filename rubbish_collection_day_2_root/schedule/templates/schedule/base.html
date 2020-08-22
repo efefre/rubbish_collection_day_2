@@ -5,7 +5,19 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>{% block title %}{% endblock %} | Harmonogram odbioru odpadów - gmina Wołomin</title>
+    {% get_solo 'schedule.ScheduleConfiguration' as config %}
+
+    {% if config.add_gtm %}
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','{{config.gtm_number}}');</script>
+    <!-- End Google Tag Manager -->
+    {% endif %}
+
+    <title>{% block title %}{% endblock %} | {{config.site_name}}</title>
     <meta name="description" content="{% block description %}{% endblock %}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
     <link rel="shortcut icon" href="{% static 'schedule/img/favicon.ico' %}" />
@@ -46,6 +58,12 @@
 </head>
 
 <body>
+    {% if config.add_gtm %}
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{config.gtm_number}}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    {% endif %}
+
     <!-- Modal no cookies -->
     <div class="modal" tabindex="-1" role="dialog" id="noCookies">
         <div class="modal-dialog dal-sm" role="document">
@@ -235,8 +253,7 @@
 
     <footer>
         <div class="footer">
-            <p>Ostatnia aktualizacja: <em>marzec 2020 r.</em><br />
-                {% get_solo 'schedule.ScheduleConfiguration' as config %}
+            <p>Ostatnia aktualizacja: <em>{{config.last_update}}</em><br />    
                 Sprawdź, czy daty na wydruku odpowiadają danym udostępnionym przez <a href="{{config.original_schedule}}" target="_blank">Urząd Miejski w Wołominie.</a><br>
                 <a href="/info/polityka-prywatnosci" id="privacy-policy">Polityka prywatności</a></p>
         </div>

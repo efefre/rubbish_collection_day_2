@@ -116,8 +116,12 @@ class AddStreetToCityView(FormView):
         return reverse("import_data_for_schedule:add-streets-to-city")
 
     def form_valid(self, form):
-        streets = (form.cleaned_data["streets"]).replace(", ", ",").split(",")
+        if form.cleaned_data["streets"] !='':
+            streets = (form.cleaned_data["streets"]).replace(", ", ",").split(",")
+        else:
+            streets = []
         extra_street = form.cleaned_data["extra_street"]
+
         if extra_street:
             streets.append(extra_street)
         city = form.cleaned_data["city"]
@@ -189,6 +193,15 @@ class AddAddressToRubbishDistrictView(FormView):
         add_rubbish_district = None
         address_does_not_exist = []
         for street in streets:
+            street = street.replace("\r\n", " ")
+
+            if wolomin_streets.get(street):
+                street = wolomin_streets.get(street)
+            elif "-go " in street:
+                street = street.replace("-go ", " ")
+            elif "- go " in street:
+                street = street.replace("- go ", " ")
+
             street_id = Street.objects.filter(name__startswith=street.strip())
             for str_id in street_id:
                 try:

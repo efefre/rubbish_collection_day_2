@@ -17,6 +17,15 @@ class ScheduleConfiguration(SingletonModel):
         help_text="Link do harmonogramu opublikowanego na stronie UM",
         default="localhost",
     )
+    last_update = models.CharField(
+        max_length=100, verbose_name="Nazwa strony", default="marzec 2020"
+    )
+    add_gtm = models.BooleanField(
+        default=False, verbose_name="Google Tag Manager (GTM)"
+    )
+    gtm_number = models.CharField(
+        max_length=20, verbose_name="Identyfikator kontenera GTM", default="empty_number"
+    )
 
     class Meta:
         verbose_name = "Konfiguracja harmonogramu"

@@ -13,6 +13,7 @@ class ScheduleConfigurationFactory(factory.django.DjangoModelFactory):
     maintenance_mode = False
     year = 2020
     original_schedule = "www.original.localhost.pl"
+    last_update = "maj 2020 r."
 
 
 class DateFactory(factory.django.DjangoModelFactory):
