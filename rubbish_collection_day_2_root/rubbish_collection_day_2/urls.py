@@ -21,6 +21,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("schedule.urls")),
     path("import-data/", include("import_data_for_schedule.urls")),
+    path("info/", include("web_pages.urls")),
 ]
 
 if settings.DEBUG:
