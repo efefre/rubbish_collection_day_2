@@ -48,7 +48,7 @@ Migrate:
 make migrate
 ```
 
-Create super user:
+Create super user (root):
 ```bash
 make createsuperuser
 ```
