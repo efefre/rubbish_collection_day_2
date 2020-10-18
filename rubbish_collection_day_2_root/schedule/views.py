@@ -6,6 +6,7 @@ from collections import defaultdict
 
 from django.http import HttpResponse
 from django.views.generic import FormView, TemplateView
+from django.shortcuts import render
 
 from city_detail.models import Address
 from schedule.forms import ChooseAddressForm
@@ -159,3 +160,7 @@ def ical(request):
             "Content-Disposition"
         ] = f'attachment; filename="kalendarz-odbioru-odpadow-{repl_char(city_name)}-{repl_char(street_name)}.ics"'
         return response
+
+
+def error_404_view(request, exception):
+    return render(request, 'schedule/404.html', status=404)
