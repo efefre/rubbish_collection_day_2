@@ -1,0 +1,20 @@
+{% extends "schedule/base.html" %}
+{% load static %}
+
+{% block title %}
+    Strona nie istnieje
+{% endblock  %}
+
+{% block description %}
+    Nie udało się znaleźć tej strony.
+{% endblock %}
+
+{% block content %}
+    <div class="error404">
+        <img src="{% static 'schedule/img/blad-404.png' %}" alt=""> 
+        <p>Niestety strona którą chcesz odwiedzić nie istnieje. <br/>
+        Przejdź do <a href="{% url 'schedule:home' %}">strony głównej</a>.</p>              
+    </div>
+
+    
+{% endblock content %}
