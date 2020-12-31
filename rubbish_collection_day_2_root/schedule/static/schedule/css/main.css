@@ -245,6 +245,7 @@ header {
 
 #content {
     position: relative;
+    overflow: hidden;
 }
 
 #content h1 {
