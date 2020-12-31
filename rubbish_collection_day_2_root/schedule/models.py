@@ -18,7 +18,7 @@ class ScheduleConfiguration(SingletonModel):
         default="localhost",
     )
     last_update = models.CharField(
-        max_length=100, verbose_name="Nazwa strony", default="marzec 2020"
+        max_length=100, verbose_name="Data aktualizacji", default="marzec 2020"
     )
     add_gtm = models.BooleanField(
         default=False, verbose_name="Google Tag Manager (GTM)"
