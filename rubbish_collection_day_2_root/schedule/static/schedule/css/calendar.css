@@ -94,9 +94,10 @@ div.month {
     color: red;
 }
 
+
 /* Temporary hide months without new dates */
-div.month.april, div.month.may, div.month.june,
+/* div.month.april, div.month.may, div.month.june,
 div.month.july, div.month.august, div.month.september,
 div.month.october, div.month.november, div.month.december {
     display: none;
-}
+} */
