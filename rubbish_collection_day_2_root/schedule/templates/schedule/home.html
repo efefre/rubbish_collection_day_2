@@ -5,7 +5,8 @@
     Strona główna
 {% endblock  %}
 {% block description %}
-    Pobierz na telefon harmonogram odbioru odpadów w gminie Wołomin - 2020 r.
+    {% get_solo 'schedule.ScheduleConfiguration' as config %}
+    Pobierz na telefon harmonogram odbioru odpadów w gminie Wołomin - {{config.year}} r.
 {% endblock %}
 
 {% block search %} 
