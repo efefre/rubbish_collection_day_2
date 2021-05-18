@@ -27,19 +27,22 @@
             <h2>{{config.year}}</h2>
             <h3 class="address">{{address}}</h3>
             <div class="sr-only">
-                <p>Daty odbioru odpadów:
-                    {% for date, districts in schedule_dates_for_address.items %}
-                    <ul>
-                        <strong>{{date}}</strong>:
-                        {% for district in districts %}
-                        <li>{{district.rubbish_type}}</li>
-                        {% endfor %}
-                    </ul>
+                <p>Daty odbioru odpadów dla wybranego adresu:
+                    {% for date, districts in schedule_dates_for_address.items%}
+                    {% if date.year == config.year %}
+                        <ul>
+                            <strong>{{date}}</strong>:
+                            {% for district in districts %}
+                            <li>{{district.rubbish_type}}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
                     {% endfor %}
                 </p>
             </div>
 
             <div id="calendar-legend">
+                <span class="sr-only">Prezentacja dat obioru odpadów dla wybranego adresu w postaci kalendarza. Każdy miesiąc przedstawiony jest jako tabelka.</span>
                 <ul>
                 {% for type in rubbish_types%}
                     <li><span class="{{type.css_name}}-rubbish"></span>{{type.name|lower}}</li>
