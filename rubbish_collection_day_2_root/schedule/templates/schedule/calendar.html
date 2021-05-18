@@ -24,22 +24,25 @@
     {% get_solo 'schedule.ScheduleConfiguration' as config %}
     {% if config.maintenance_mode and user.is_authenticated or not config.maintenance_mode %}
         <div id="calendar">
-            <h2>{{config.year}}</h2>
-            <h3 class="address">{{address}}</h3>
+            <h2 tabindex="0"><span class="sr-only">Kalendarz na rok: </span>{{config.year}}</h2>
+            <h3 class="address"><span class="sr-only">Adres odbioru odpadów: </span>{{address}}</h3>
             <div class="sr-only">
-                <p>Daty odbioru odpadów:
-                    {% for date, districts in schedule_dates_for_address.items %}
-                    <ul>
-                        <strong>{{date}}</strong>:
-                        {% for district in districts %}
-                        <li>{{district.rubbish_type}}</li>
-                        {% endfor %}
-                    </ul>
+                <p>Daty odbioru odpadów dla wybranego adresu:
+                    {% for date, districts in schedule_dates_for_address.items%}
+                    {% if date.year == config.year %}
+                        <ul>
+                            <strong>{{date}}</strong>:
+                            {% for district in districts %}
+                            <li>{{district.rubbish_type}}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
                     {% endfor %}
                 </p>
             </div>
 
             <div id="calendar-legend">
+                <span class="sr-only">Prezentacja dat obioru odpadów dla wybranego adresu w postaci kalendarza. Każdy miesiąc przedstawiony jest jako tabelka.</span>
                 <ul>
                 {% for type in rubbish_types%}
                     <li><span class="{{type.css_name}}-rubbish"></span>{{type.name|lower}}</li>
@@ -102,7 +105,7 @@
     <div class="buttons">
     <p><strong>UWAGA!</strong> Przed pobraniem/wydrukowaniem sprawdź, czy daty są zgodne z udostępnionymi przez <a href="{{link_to_original_schedule}}" target="_blank">Urząd
                     Miejski w Wołominie.</a></p>
-    <button type="submit" id="export-bottom" class="btn btn-default export_ical" onclick="window.location.href=link_to_ical"><span class="glyphicon glyphicon-save-file"></span>Pobierz na telefon</button><a class="glyphicon glyphicon-question-sign ics-help" data-toggle="tooltip" title="Plik *.ics możesz zaimportować np. w Google Calendar"></a>
+    <button type="submit" id="export-bottom" class="btn btn-default export_ical" onclick="window.location.href=link_to_ical"><span class="glyphicon glyphicon-save-file"></span>Pobierz<span class="sr-only"> kalendarz</span> na telefon</button><a class="glyphicon glyphicon-question-sign ics-help" data-toggle="tooltip" title="Plik *.ics możesz zaimportować np. w Google Calendar"></a>
     </div>
 
     {% else %}

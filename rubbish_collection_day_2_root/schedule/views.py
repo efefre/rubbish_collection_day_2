@@ -1,7 +1,7 @@
 import csv
 import datetime
 import icalendar
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 
 
 from django.http import HttpResponse
@@ -65,7 +65,7 @@ class CalendarView(TemplateView):
         context["days_names_list"] = ["Mon", "Tue", "Wed",
                                       "Thu", "Fri", "Sat", "Sun"]
         context["address"] = address
-        context["schedule_dates_for_address"] = dict(schedule_dates_for_address)
+        context["schedule_dates_for_address"] = dict(OrderedDict(sorted(schedule_dates_for_address.items())))
         context["rubbish_types"] = RubbishType.objects.all()
         context["more_than_5_rubbish_on_same_day"] = more_than_5_rubbish_on_same_day
         return context

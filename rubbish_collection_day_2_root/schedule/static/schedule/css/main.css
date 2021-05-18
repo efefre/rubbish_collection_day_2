@@ -321,3 +321,10 @@ footer {
   .card-title {
       font-weight: bold;
   }
+
+  /* WCAG */
+  *:focus {
+    outline-width: 4px;
+    outline-style: double !important;
+    outline-color: #2e6da4;
+}
