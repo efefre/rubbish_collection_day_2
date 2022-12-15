@@ -20,7 +20,7 @@ icalendar==4.0.6
 idna==2.9
 importlib-metadata==1.6.0
 inflection==0.4.0
-lxml==4.6.5
+lxml==4.9.1
 mccabe==0.6.1
 more-itertools==8.2.0
 numpy==1.22.0
